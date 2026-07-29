@@ -1,0 +1,66 @@
+{
+  "spec_version": "1.0",
+  "title": "",
+  "subtitle": "",
+  "core_message": "",
+  "audience": "",
+  "purpose": "",
+  "language": "ja",
+  "narrative": {
+    "archetype": "possibility-core-guardrails",
+    "opening_thesis": "",
+    "closing_thesis": "",
+    "tensions": []
+  },
+  "source": {
+    "title": "",
+    "uri": "",
+    "retrieved_at": null
+  },
+  "canvas": {
+    "width": 1600,
+    "height": 1000,
+    "aspect_ratio": "16:10",
+    "safe_margin": 32
+  },
+  "visual_direction": {
+    "layout": "dense-modules",
+    "style": "editorial-knowledge-map",
+    "density": "high",
+    "icon_style": "monoline",
+    "section_header_style": "solid-or-subtle-gradient",
+    "card_style": "white-outline",
+    "palette": {
+      "background": "#FFFFFF",
+      "surface": "#FFFFFF",
+      "navy": "#08245B",
+      "blue": "#0B4AA2",
+      "blue_light": "#EAF1FB",
+      "teal": "#007C89",
+      "teal_light": "#E8F5F6",
+      "gold": "#B47B00",
+      "gold_light": "#FFF5D9",
+      "text": "#16233A",
+      "muted": "#53637A",
+      "line": "#B8C7D9"
+    },
+    "typography": {
+      "font_family": "Noto Sans JP, Yu Gothic, Meiryo, sans-serif",
+      "title_px": 60,
+      "heading_px": 28,
+      "body_px": 17,
+      "caption_px": 14,
+      "title_weight": 800,
+      "heading_weight": 700,
+      "body_weight": 500
+    }
+  },
+  "reading_order": [],
+  "modules": [],
+  "footer": {
+    "source_label": "",
+    "legend": ["事実", "共通認識", "示唆", "留意点"],
+    "notes": []
+  },
+  "assumptions": []
+}

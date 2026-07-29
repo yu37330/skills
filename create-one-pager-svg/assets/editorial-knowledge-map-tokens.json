@@ -1,0 +1,48 @@
+{
+  "name": "editorial-knowledge-map",
+  "canvas": {"width": 1672, "height": 941, "safe_margin": 28},
+  "palette": {
+    "background": "#FFFFFF",
+    "surface": "#FFFFFF",
+    "navy": "#08245B",
+    "blue": "#0B4AA2",
+    "blue_light": "#EAF1FB",
+    "teal": "#007C89",
+    "teal_light": "#E8F5F6",
+    "gold": "#B47B00",
+    "gold_light": "#FFF5D9",
+    "text": "#16233A",
+    "muted": "#53637A",
+    "line": "#B8C7D9"
+  },
+  "typography": {
+    "font_family": "Noto Sans JP, Yu Gothic, Meiryo, sans-serif",
+    "title_px": 64,
+    "subtitle_px": 30,
+    "opening_thesis_px": 26,
+    "section_heading_px": 29,
+    "card_heading_px": 21,
+    "body_px": 17,
+    "caption_px": 14,
+    "closing_thesis_px": 29,
+    "title_weight": 800,
+    "heading_weight": 700,
+    "body_weight": 500
+  },
+  "shape": {
+    "card_radius": 14,
+    "card_stroke_px": 2,
+    "section_radius": 12,
+    "icon_stroke_px": 3,
+    "shadow": "none-or-subtle"
+  },
+  "composition": {
+    "header_ratio": 0.18,
+    "upper_left_ratio": 0.30,
+    "upper_center_ratio": 0.36,
+    "upper_right_ratio": 0.30,
+    "lower_left_ratio": 0.46,
+    "lower_right_ratio": 0.52,
+    "footer_ratio": 0.07
+  }
+}

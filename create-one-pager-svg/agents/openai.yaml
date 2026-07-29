@@ -1,0 +1,4 @@
+interface:
+  display_name: "One-pager SVG Creator"
+  short_description: "長文を高密度で読みやすい1枚SVGへ再構成・検証します"
+  default_prompt: "$create-one-pager-svg を使って、添付した原文からeditorial-knowledge-map形式の高密度な1枚図をSVGとPNGで作成してください。"
