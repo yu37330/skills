@@ -41,7 +41,7 @@ description: 長文記事、議事録、調査資料、仕様書を再分析し�
 
 ### 1. 原文を正規化する
 
-`agentcore-harness` では `prepare_source` を呼び、返された `job_id`、`normalized_source_uri`、`source_index_uri` を以後の工程で使用する。
+`agentcore-harness` では `prepare_source` を呼び、返された `job_id`、`job_state_uri`、`normalized_source_uri`、`source_index_uri` を以後の工程で使用する。
 
 `local` のファイル入力では次を実行する。
 
@@ -166,7 +166,7 @@ python scripts/create_manifest.py 出力フォルダ --output manifest.json
 
 完了時はSVG、PNG、Specへのリンクと、採用した `layout × style`、残っている警告を簡潔に報告する。
 
-`agentcore-harness` では `get_job_result` が `completed` を返した場合だけ完了を報告する。S3 URIまたはフロントエンド用URLを返し、Harnessの一時ファイルパスを返さない。
+`agentcore-harness` では `get_job_result` が `state=COMPLETED` を返した場合だけ完了を報告する。S3 URIまたはフロントエンド用URLを返し、Harnessの一時ファイルパスを返さない。
 
 ## 失敗条件
 

@@ -5,14 +5,14 @@
 | 項目 | 内容 |
 |---|---|
 | 文書名 | Amazon Bedrock AgentCore Harness One-pager SVG生成 仕様書 |
-| バージョン | 0.2 |
+| バージョン | 0.3 |
 | 対象 | AWS上の初期実装・PoC |
 | エージェント | Amazon Bedrock AgentCore Harness |
 | Skill | `create-one-pager-svg` |
 | Tool接続 | AgentCore Gateway |
 | Tool実装 | AWS Lambda |
 | ファイル保存 | Amazon S3 |
-| ジョブ状態 | Amazon DynamoDB |
+| ジョブ状態 | Amazon S3 `job-state.json` |
 | 画像生成モデル | 使用しない |
 
 ## 2. 目的
@@ -47,7 +47,7 @@
 - SkillはGitリポジトリからHarnessへ直接渡す。
 - 決定的処理とAWSへの読み書きだけをLambdaへ閉じ込める。
 - GatewayがLambdaをMCP互換ToolとしてHarnessへ公開する。
-- 原文と成果物をS3へ統一し、Harnessの一時ファイルシステムへ依存しない。
+- 原文、状態、中間成果物、完成成果物をS3へ統一し、Harnessの一時ファイルシステムへ依存しない。
 
 AgentCore Harnessは、モデル、system prompt、tools、skillsを宣言する構成型のManaged Agent Loopである。[AgentCore Harness公式資料](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/harness.html)
 
@@ -88,8 +88,7 @@ flowchart LR
     H --> SK["Git Skill\ncreate-one-pager-svg"]
     H --> G["AgentCore Gateway"]
     G --> L["One-pager Tools Lambda"]
-    L <--> S3["S3 job prefix"]
-    L <--> D["DynamoDB Job State"]
+    L <--> S3["S3 input・job-state・artifacts"]
     L --> CW["CloudWatch Logs / Metrics"]
     H --> O["AgentCore Observability"]
     H -->|"Job結果"| F
@@ -105,9 +104,8 @@ flowchart LR
 | Bedrockモデル | 原文の意味分析、情報構成、SVGコード生成 |
 | Git Skill | 工程、内容圧縮、レイアウト、色、組版、検証完了条件を指示 |
 | AgentCore Gateway | Lambda ToolのMCP公開、認証、Tool discovery、呼び出し中継 |
-| Lambda | S3操作、正規化、索引化、スキーマ検証、SVG検証、PNG変換、Manifest生成 |
-| S3 | 原文、中間成果物、完成成果物の正本 |
-| DynamoDB | Job状態、工程順序、再試行回数、成果物URIの管理 |
+| Lambda | S3操作、状態遷移、正規化、索引化、スキーマ検証、SVG検証、PNG変換、Manifest生成 |
+| S3 | 原文、Job状態、工程順序、再試行回数、中間成果物、完成成果物の正本 |
 | CloudWatch / Observability | Tool実行、LLM実行、エラー、レイテンシ、トークン使用量の追跡 |
 
 ## 7. Skill配布
@@ -170,7 +168,7 @@ Skillのagentcore-harnessモードと工程順に従ってください。
 原文にない固有名詞、数値、因果関係を追加しないでください。
 Spec検証成功前にSVGを生成しないでください。
 SVG検証成功前にPNG生成へ進まないでください。
-get_job_resultがcompletedを返すまで完了と報告しないでください。
+get_job_resultがstate=COMPLETEDを返すまで完了と報告しないでください。
 利用者にはSVG、PNG、Specの参照情報と警告だけを簡潔に返してください。
 ```
 
@@ -242,7 +240,7 @@ sequenceDiagram
     participant H as AgentCore Harness
     participant G as Gateway
     participant L as Lambda
-    participant S as S3/DynamoDB
+    participant S as S3
 
     UI->>S: 原文アップロード
     UI->>H: source_uri・job_id・生成条件
@@ -286,7 +284,7 @@ CREATED
 
 任意状態から `FAILED` へ遷移できる。
 
-DynamoDB更新は `job_id` と現在状態を条件にしたconditional updateとする。工程の飛び越し、古いTool応答による巻き戻り、同一Toolの重複実行を拒否する。
+状態の正本はJob prefix内の `job-state.json` とする。初回作成は `If-None-Match: *`、更新は直前に取得したETagを `If-Match` に指定する条件付きPUTとする。条件不一致は `STATE_CONFLICT` とし、工程の飛び越し、古いTool応答による巻き戻り、同一Toolの競合実行を拒否する。
 
 ## 12. Gateway・Lambda構成
 
@@ -335,6 +333,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 {
   "status": "ok",
   "job_id": "01JXYZ...",
+  "job_state_uri": "s3://.../job-state.json",
   "state": "SPEC_VALIDATED",
   "artifacts": {},
   "errors": [],
@@ -349,6 +348,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 {
   "status": "error",
   "job_id": "01JXYZ...",
+  "job_state_uri": "s3://.../job-state.json",
   "state": "CONTENT_STRUCTURED",
   "error_code": "SPEC_INVALID",
   "errors": ["modules[2].placement がキャンバス右端を超えます"],
@@ -376,6 +376,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 
 ```json
 {
+  "job_state_uri": "s3://.../job-state.json",
   "normalized_source_uri": "s3://.../normalized-source.md",
   "source_index_uri": "s3://.../source-index.json",
   "section_count": 12,
@@ -392,6 +393,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 ```json
 {
   "job_id": "string",
+  "job_state_uri": "s3://.../job-state.json",
   "section_id": "S003",
   "max_characters": 12000
 }
@@ -408,6 +410,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 ```json
 {
   "job_id": "string",
+  "job_state_uri": "s3://.../job-state.json",
   "content_structure": {}
 }
 ```
@@ -428,6 +431,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 ```json
 {
   "job_id": "string",
+  "job_state_uri": "s3://.../job-state.json",
   "spec": {}
 }
 ```
@@ -443,6 +447,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 ```json
 {
   "job_id": "string",
+  "job_state_uri": "s3://.../job-state.json",
   "svg": "<svg ...>...</svg>"
 }
 ```
@@ -465,6 +470,7 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 ```json
 {
   "job_id": "string",
+  "job_state_uri": "s3://.../job-state.json",
   "scale": 2
 }
 ```
@@ -486,7 +492,10 @@ Gateway Lambda targetはToolごとのinput schemaを定義し、LambdaはJSONを
 入力：
 
 ```json
-{"job_id": "string"}
+{
+  "job_id": "string",
+  "job_state_uri": "s3://.../job-state.json"
+}
 ```
 
 完成時：
@@ -515,6 +524,7 @@ s3://one-pager-{env}/
 │  └─ {tenant_id}/{user_id}/{job_id}/source.{ext}
 └─ jobs/
    └─ {tenant_id}/{user_id}/{job_id}/
+      ├─ job-state.json
       ├─ normalized-source.md
       ├─ source-index.json
       ├─ content-structure.json
@@ -535,20 +545,15 @@ s3://one-pager-{env}/
 - フロントエンドへは短時間の署名付きURLまたは既存配信層のURLを返す。
 - LambdaとHarnessへ必要最小限のprefix権限だけを付与する。
 - 原文と成果物にLifecycleを設定する。
+- bucket versioningを有効化し、`job-state.json` の更新履歴を復旧・監査に使用できるようにする。
+- `job-state.json` のPUTには必ず `If-None-Match` または `If-Match` を要求するbucket policyを適用する。
 
-## 15. DynamoDB仕様
+## 15. S3ジョブ状態仕様
 
-テーブル名：
-
-```text
-one-pager-jobs-{env}
-```
-
-キー：
+状態オブジェクト：
 
 ```text
-PK: tenant_id#user_id
-SK: job_id
+s3://one-pager-{env}/jobs/{tenant_id}/{user_id}/{job_id}/job-state.json
 ```
 
 主要属性：
@@ -556,6 +561,9 @@ SK: job_id
 ```json
 {
   "job_id": "string",
+  "tenant_id": "string",
+  "user_id": "string",
+  "state_version": 4,
   "state": "SPEC_VALIDATED",
   "source_uri": "s3://...",
   "artifact_prefix": "s3://.../jobs/.../",
@@ -565,11 +573,22 @@ SK: job_id
   "warnings": [],
   "created_at": "ISO-8601",
   "updated_at": "ISO-8601",
-  "expires_at": 0
+  "retention_until": "ISO-8601"
 }
 ```
 
-TTLを設定し、業務要件に合わせてJobメタデータを削除する。
+更新手順：
+
+1. `prepare_source` が `If-None-Match: *` で初期状態を作成する。
+2. 各Toolは `GetObject` で現在状態とETagを取得する。
+3. 期待する前状態と `job_id`、tenant、user、artifact prefixを検証する。
+4. 成果物を保存する。
+5. `state_version` を1増やし、取得したETagを `If-Match` に指定して状態をPUTする。
+6. `412 Precondition Failed` は `STATE_CONFLICT` として返し、`get_job_result` で再読込する。
+
+S3はPUT後の読取りに強い整合性を持ち、単一キーの更新は原子的である。条件付き書込みにより、別Toolが先に状態を更新した場合の上書きを防ぐ。[S3整合性モデル](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html#ConsistencyModel) [S3条件付き書込み](https://docs.aws.amazon.com/AmazonS3/latest/userguide/conditional-writes.html)
+
+Job削除はS3 Lifecycleで行う。`retention_until` は表示・監査用であり、削除処理の正本にはしない。
 
 ## 16. IAM要件
 
@@ -589,14 +608,14 @@ TTLを設定し、業務要件に合わせてJobメタデータを削除する�
 ### 16.3 Lambda実行Role
 
 - 対象S3 bucket・prefixのGetObject、PutObject
-- DynamoDB対象テーブルのGetItem、PutItem、UpdateItem
 - KMSのEncrypt、Decrypt、GenerateDataKey
 - CloudWatch Logs
 
 ## 17. セキュリティ要件
 
 - `source_uri` のbucketとprefixをallowlist検証する。
-- `job_id`、tenant、userの対応をDynamoDBで確認する。
+- `prepare_source` は認証済みフロントエンドが渡した `source_uri` からJob prefixを決定し、任意の出力prefixを受け取らない。
+- 各Toolは `job_state_uri` が許可bucketのJob prefix配下であり、状態内の `job_id`、tenant、user、source URIと一致することを確認する。
 - 原文を非信頼データとして扱う。
 - Harnessの `allowedTools` を `@one-pager-tools` に限定し、既定の `shell` と `file_operations` を含めない。
 - Harnessへ汎用Browser、shell経由の外部送信Toolを渡さない。
@@ -666,7 +685,7 @@ TTLを設定し、業務要件に合わせてJobメタデータを削除する�
 3. 原文をS3へアップロードする。
 4. Harnessへ `job_id` と `source_uri` を渡す。
 5. streaming responseを表示する。
-6. completed時にSVG、PNG、Specを表示する。
+6. `state=COMPLETED` のときSVG、PNG、Specを表示する。
 7. failed時にエラーコードと再実行可否を表示する。
 
 フロントエンドへLLMが生成した任意URLをそのまま表示せず、Job Resultに登録されたartifactだけを使用する。
@@ -688,8 +707,7 @@ agentcore-harness-one-pager/
 │  │  ├─ Dockerfile
 │  │  ├─ handler.py
 │  │  └─ handlers/
-│  ├─ s3/
-│  └─ dynamodb/
+│  └─ s3/
 └─ tests/
    ├─ unit/
    ├─ integration/
@@ -705,6 +723,8 @@ Harnessは構成ファイルで管理し、独自Agent loopのPythonコードを
 - S3 URI allowlist
 - tenant、user、job対応
 - 状態遷移
+- `If-None-Match` による初期状態の二重作成拒否
+- `If-Match` とETagによる競合更新拒否
 - Gateway tool name prefix除去
 - 原文正規化
 - Spec検証
@@ -715,6 +735,7 @@ Harnessは構成ファイルで管理し、独自Agent loopのPythonコードを
 
 - Git SkillをHarnessが取得できる
 - HarnessからGateway Toolを一覧・実行できる
+- `job-state.json` の競合更新が `STATE_CONFLICT` になる
 - TXTとHTMLから全成果物を生成できる
 - 不正SpecをHarnessが修正できる
 - 外部URLやscriptを含むSVGを拒否できる
@@ -737,17 +758,17 @@ Harnessは構成ファイルで管理し、独自Agent loopのPythonコードを
 1. フロントエンドから原文をS3へアップロードできる。
 2. HarnessがGitから `create-one-pager-svg` を取得・有効化する。
 3. HarnessがGateway経由でLambda Toolを呼べる。
-4. Content Structure、Spec、SVG、PNGがJob単位でS3へ保存される。
+4. `job-state.json`、Content Structure、Spec、SVG、PNGがJob単位でS3へ保存される。
 5. Spec検証前にSVG生成へ進まない。
 6. SVG検証前にPNG生成へ進まない。
-7. `get_job_result=completed` の場合だけ完成を返す。
+7. `get_job_result.state=COMPLETED` の場合だけ完成を返す。
 8. 入力・出力prefix外へアクセスできない。
 9. 原文中の命令によってToolや出力先が変更されない。
 10. 代表原文でGolden Testを合格する。
 
 ## 25. 実装順序
 
-1. S3 bucket、DynamoDB、KMSを作成する。
+1. S3 bucket、bucket policy、versioning、Lifecycle、KMSを設定する。
 2. `prepare_source` と `read_source_section` をLambdaへ実装する。
 3. 保存・検証Toolを実装する。
 4. Sharpを含むLambda container imageを作成する。

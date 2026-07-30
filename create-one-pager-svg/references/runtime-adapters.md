@@ -26,13 +26,13 @@
 
 | 工程 | Tool | 成功条件 |
 |---|---|---|
-| 原文準備 | `prepare_source` | `normalized_source_uri` と `source_index_uri` が返る |
+| 原文準備 | `prepare_source` | `job_state_uri`、`normalized_source_uri`、`source_index_uri` が返る |
 | 原文読解 | `read_source_section` | 指定sectionとEvidence用位置情報が返る |
 | 内容構造保存 | `save_content_structure` | スキーマ検証とS3保存が成功する |
 | Spec保存 | `save_one_pager_spec` | Spec検証エラーが0件になる |
 | SVG保存 | `save_svg` | XML・安全性検証エラーが0件になる |
 | PNG・Manifest | `render_finalize` | SVG、PNG、ManifestのURIが返る |
-| 最終確認 | `get_job_result` | `status=completed` になる |
+| 最終確認 | `get_job_result` | `state=COMPLETED` になる |
 
 ## 呼び出し順
 
@@ -46,11 +46,12 @@ prepare_source
   → get_job_result
 ```
 
-順序を飛ばさない。各Toolが返す `job_id` を同一ジョブの全呼び出しへ渡す。
+順序を飛ばさない。`prepare_source` が返す `job_id` と `job_state_uri` を同一ジョブの全呼び出しへ渡す。
 
 ## データ受け渡し
 
 - 原文と成果物はS3 URIで受け渡す。
+- ジョブ状態は `job-state.json` を正本とし、Tool側がS3のETag条件付き更新で工程競合を検出する。
 - 大きな本文、SVG、PNGをTool結果として返さない。
 - `read_source_section` だけは本文を最大12,000文字の範囲で返してよい。
 - `save_svg` へ渡すSVG文字列は1MB以下とする。超える場合は要素と装飾を削減する。
