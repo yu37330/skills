@@ -1,6 +1,6 @@
 ---
 name: create-one-pager-svg
-description: 長文記事、議事録、調査資料、仕様書を再分析し、内容まで読んで理解できる高密度な1枚図へ再構成して、画像生成モデルを使わずSVGとPNGを生成・検証する。ユーザーが「記事全体を1枚で俯瞰したい」「説明なしで伝わる図解」「One-pager」「高密度インフォグラフィック」「SVGで成果物を作りたい」と依頼したときに使用する。
+description: 長文記事、議事録、調査資料、仕様書を再分析し、内容まで読んで理解できる高密度な1枚図へ再構成して、画像生成モデルを使わずSVGとPNGを生成・検証する。ローカルスクリプト実行とAmazon Bedrock AgentCore Harness上のGateway・Lambda Tool実行に対応する。ユーザーが「記事全体を1枚で俯瞰したい」「説明なしで伝わる図解」「One-pager」「高密度インフォグラフィック」「SVGで成果物を作りたい」と依頼したときに使用する。
 ---
 
 # Create One-pager SVG
@@ -15,6 +15,15 @@ description: 長文記事、議事録、調査資料、仕様書を再分析し�
 - One-pager Specを、内容設計と描画の契約として必ず保存する。
 - SVGを作っただけで完了せず、構造検証、PNG化、目視確認まで行う。
 - 原文にない固有名詞、数値、因果関係を追加しない。
+
+## 実行モード
+
+最初に `references/runtime-adapters.md` を読み、利用可能なToolから実行モードを1つ選ぶ。
+
+- `agentcore-harness`: `prepare_source` などのGateway Toolが利用可能な場合。入力と成果物をS3 URIで扱い、ローカルscriptsを実行しない。
+- `local`: Gateway Toolがなく、Skill同梱scriptsを実行できる場合。ローカルファイルと出力フォルダを扱う。
+
+両方が利用可能なら、ユーザーが指定しない限り `agentcore-harness` を優先する。どちらも利用できない場合は処理を開始せず、不足しているToolを報告する。
 
 ## 入力
 
@@ -32,7 +41,9 @@ description: 長文記事、議事録、調査資料、仕様書を再分析し�
 
 ### 1. 原文を正規化する
 
-ファイル入力では次を実行する。
+`agentcore-harness` では `prepare_source` を呼び、返された `job_id`、`job_state_uri`、`normalized_source_uri`、`source_index_uri` を以後の工程で使用する。
+
+`local` のファイル入力では次を実行する。
 
 ```powershell
 python scripts/normalize_source.py 入力ファイル --output normalized-source.md
@@ -50,13 +61,17 @@ python scripts/normalize_source.py 入力ファイル --output normalized-source
 - 原文に明記された事実と、統合して得た共通認識
 - 出典位置を持つEvidence Ledger
 
+`agentcore-harness` では `read_source_section` で索引単位に本文を読み、作成した構造を `save_content_structure` へ渡す。一度に原文全体をTool結果として要求しない。
+
 ### 3. 何を1枚で伝えるか決める
 
 中心メッセージを1文に絞る。候補を内部で比較し、対象読者にとって「この記事を読む意味」が最も伝わるものを選ぶ。原文の見出し順をそのまま誌面化しない。
 
 ### 4. One-pager Specを作る
 
-`references/one-pager-spec.md` を読み、`one-pager-spec.json` を作る。作成後に検証する。
+`references/one-pager-spec.md` を読み、`one-pager-spec.json` を作る。`agentcore-harness` では `save_one_pager_spec` へSpecを渡し、成功結果が返るまでSVG生成へ進まない。
+
+`local` では作成後に次を実行する。
 
 ```powershell
 python scripts/validate_spec.py one-pager-spec.json --report spec-validation.json
@@ -97,9 +112,13 @@ python scripts/validate_spec.py one-pager-spec.json --report spec-validation.jso
 - 文章は自動改行に頼らず、`tspan` で明示的に改行する。
 - タイトルと説明文を含むアクセシビリティ要素を入れる。
 
+`agentcore-harness` ではSVG文字列を `save_svg` へ渡す。ToolがS3へ保存し、構造検証に成功した場合だけ次へ進む。SVGを会話本文へ再掲しない。
+
 ### 8. SVGを検証する
 
-まず構造検証を行う。
+`agentcore-harness` では `render_finalize` を呼ぶ。Toolは検証済みSVGからPNGとManifestを生成し、成果物URIと警告を返す。
+
+`local` ではまず構造検証を行う。
 
 ```powershell
 python scripts/validate_svg.py infographic.svg --report svg-validation.json
@@ -146,6 +165,8 @@ python scripts/create_manifest.py 出力フォルダ --output manifest.json
 ```
 
 完了時はSVG、PNG、Specへのリンクと、採用した `layout × style`、残っている警告を簡潔に報告する。
+
+`agentcore-harness` では `get_job_result` が `state=COMPLETED` を返した場合だけ完了を報告する。S3 URIまたはフロントエンド用URLを返し、Harnessの一時ファイルパスを返さない。
 
 ## 失敗条件
 
