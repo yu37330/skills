@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/grill-my-direction/branch-tree.schema.json",
+  "title": "Decision Branch Tree",
+  "type": "object",
+  "required": ["session_phase", "current_branch_id", "frontier", "branches"],
+  "properties": {
+    "session_phase": {
+      "enum": ["context_grounding", "open_exploration", "problem_framing", "direction_generation", "direction_selection", "spec_confirmation", "visualization"]
+    },
+    "current_branch_id": {"type": ["string", "null"]},
+    "frontier": {"type": "array", "items": {"type": "string"}},
+    "branches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "parent_id", "topic", "question_layer", "status", "dependencies", "outcome_impact", "uncertainty", "unlocking_power"],
+        "properties": {
+          "id": {"type": "string"},
+          "parent_id": {"type": ["string", "null"]},
+          "topic": {"type": "string"},
+          "question_layer": {"type": "string"},
+          "status": {
+            "enum": ["discovered", "ready", "active", "partially_answered", "resolved", "deferred", "blocked", "invalidated", "revisit_required", "out_of_scope"]
+          },
+          "answer": {"type": ["string", "null"]},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}},
+          "dependencies": {"type": "array", "items": {"type": "string"}},
+          "outcome_impact": {"type": "number", "minimum": 0, "maximum": 1},
+          "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+          "unlocking_power": {"type": "number", "minimum": 0, "maximum": 1},
+          "revisit_trigger": {
+            "type": ["object", "null"],
+            "properties": {
+              "type": {"type": "string"},
+              "branch_id": {"type": "string"},
+              "condition": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

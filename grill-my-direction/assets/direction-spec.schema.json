@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/grill-my-direction/direction-spec.schema.json",
+  "title": "Direction Spec",
+  "type": "object",
+  "required": ["title", "subtitle", "status"],
+  "anyOf": [
+    {
+      "required": ["problem", "key_question", "issues", "direction", "decisions", "next_actions", "risks", "open_questions", "evidence"]
+    },
+    {
+      "required": ["core_tension", "desired_change", "root_causes", "opportunities", "direction_candidates", "selected_direction", "next_experiments", "unresolved_branches"]
+    }
+  ],
+  "properties": {
+    "title": {"type": "string"},
+    "subtitle": {"type": "string"},
+    "status": {"enum": ["提案", "仮決定", "確定"]},
+    "core_tension": {
+      "type": "object",
+      "required": ["statement"],
+      "properties": {
+        "statement": {"type": "string"}
+      }
+    },
+    "desired_change": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {"type": "string"},
+        "to": {"type": "string"}
+      }
+    },
+    "root_causes": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["cause", "evidence", "confidence"],
+        "properties": {
+          "cause": {"type": "string"},
+          "evidence": {"type": "string"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_type": {"enum": ["observed", "reported", "forecast", "assumption", "unknown"]}
+        }
+      }
+    },
+    "opportunities": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["id", "opportunity", "affected_people", "importance"],
+        "properties": {
+          "id": {"type": "string"},
+          "opportunity": {"type": "string"},
+          "affected_people": {"type": "string"},
+          "importance": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "direction_candidates": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "direction", "opportunity_ids", "solves", "does_not_solve", "risks", "assumptions", "leverage", "minimum_experiment"],
+        "properties": {
+          "id": {"type": "string"},
+          "direction": {"type": "string"},
+          "opportunity_ids": {"type": "array", "maxItems": 4, "items": {"type": "string"}},
+          "solves": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+          "does_not_solve": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+          "risks": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+          "assumptions": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+          "leverage": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+          "minimum_experiment": {"type": "string"}
+        }
+      }
+    },
+    "selected_direction": {
+      "type": "object",
+      "required": ["id", "rationale"],
+      "properties": {
+        "id": {"type": "string"},
+        "rationale": {"type": "string"}
+      }
+    },
+    "evaluation_metrics": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["name", "definition", "unit_of_analysis", "denominator", "baseline", "threshold", "threshold_status", "severity_guardrail"],
+        "properties": {
+          "name": {"type": "string"},
+          "definition": {"type": "string"},
+          "unit_of_analysis": {"type": "string"},
+          "denominator": {"type": "string"},
+          "baseline": {"type": "string"},
+          "threshold": {"type": "string"},
+          "threshold_status": {"enum": ["confirmed", "proposed", "unknown"]},
+          "severity_guardrail": {"type": "string"}
+        }
+      }
+    },
+    "next_experiments": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["hypothesis", "smallest_action", "success_signal"],
+        "properties": {
+          "hypothesis": {"type": "string"},
+          "smallest_action": {"type": "string"},
+          "success_signal": {"type": "string"}
+        }
+      }
+    },
+    "unresolved_branches": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["branch_id", "reason", "revisit_trigger"],
+        "properties": {
+          "branch_id": {"type": "string"},
+          "reason": {"type": "string"},
+          "revisit_trigger": {"type": "string"},
+          "relation": {"enum": ["blocks", "required_before", "informs"]}
+        }
+      }
+    },
+    "problem": {"type": "string"},
+    "key_question": {"type": "string"},
+    "issues": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["title", "detail", "kind"],
+        "properties": {
+          "title": {"type": "string"},
+          "detail": {"type": "string"},
+          "kind": {"enum": ["事実", "認識", "予測", "仮説", "未確認"]},
+          "evidence_type": {"enum": ["observed", "reported", "forecast", "assumption", "unknown"]}
+        }
+      }
+    },
+    "direction": {
+      "type": "object",
+      "required": ["headline", "summary", "principles"],
+      "properties": {
+        "headline": {"type": "string"},
+        "summary": {"type": "string"},
+        "principles": {"type": "array", "maxItems": 3, "items": {"type": "string"}}
+      }
+    },
+    "decisions": {
+      "type": "object",
+      "required": ["continue", "change", "stop"],
+      "properties": {
+        "continue": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+        "change": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+        "stop": {"type": "array", "maxItems": 3, "items": {"type": "string"}}
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["action", "timing", "success"],
+        "properties": {
+          "action": {"type": "string"},
+          "timing": {"type": "string"},
+          "success": {"type": "string"}
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["risk", "response"],
+        "properties": {
+          "risk": {"type": "string"},
+          "response": {"type": "string"}
+        }
+      }
+    },
+    "open_questions": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+    "evidence": {"type": "array", "maxItems": 4, "items": {"type": "string"}}
+  }
+}
