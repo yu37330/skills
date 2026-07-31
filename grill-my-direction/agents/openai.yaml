@@ -1,0 +1,4 @@
+interface:
+  display_name: "方向性グリル"
+  short_description: "課題を深掘りし、意思決定と今後の方向性を1枚絵にまとめる"
+  default_prompt: "$grill-my-direction を使って、この課題を深掘りし、今後の方向性を1枚のSVGにまとめてください。"

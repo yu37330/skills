@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/grill-my-direction/direction-graph.schema.json",
+  "title": "Direction Graph",
+  "type": "object",
+  "required": ["version", "focusing_question", "nodes", "edges"],
+  "properties": {
+    "version": {"const": "1.0"},
+    "focusing_question": {"type": "string"},
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "label"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "type": {
+            "enum": [
+              "current_state",
+              "tension",
+              "root_cause",
+              "opportunity",
+              "direction_candidate",
+              "selected_direction",
+              "experiment",
+              "unresolved_branch"
+            ]
+          },
+          "label": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "relation"],
+        "properties": {
+          "source": {"type": "string", "minLength": 1},
+          "target": {"type": "string", "minLength": 1},
+          "relation": {
+            "enum": ["creates", "explains", "reveals", "addresses", "selected_as", "tests", "blocks", "required_before", "informs"]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
