@@ -1,0 +1,7 @@
+version: 1
+deck_sequences:
+  - {id: decision_first, stages: [answer, evidence, diagnosis, options, decision, action]}
+  - {id: case_for_change, stages: [context, tension, evidence, proposal, value, action]}
+  - {id: diagnostic, stages: [question, evidence, pattern, causes, implication]}
+  - {id: operating_cadence, stages: [status, variance, cause, countermeasure, owner]}
+  - {id: explain_practice, stages: [concept, example, method, exercise, recap]}

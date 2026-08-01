@@ -1,0 +1,9 @@
+version: 1
+avoid:
+  - {id: generic_gradient, machine_signal: gradient_fill, max_count: 0}
+  - {id: random_glow, machine_signal: glow_effect, max_count: 0}
+  - {id: excessive_pills, machine_signal: rounded_rectangle_ratio, max_ratio: 0.25}
+  - {id: equal_weight_cards, machine_signal: equal_area_rectangle_ratio, max_ratio: 0.5}
+  - {id: stock_icon_repetition, machine_signal: repeated_image_hash_ratio, max_ratio: 0.4}
+  - {id: decorative_title_underline, machine_signal: human_review, max_count: 0}
+allow_with_rationale: [generic_gradient, excessive_pills, equal_weight_cards, stock_icon_repetition]

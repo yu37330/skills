@@ -1,0 +1,1643 @@
+version: 1
+role_layouts:
+- id: title_answer_hero
+  role: title
+  purposes:
+  - key_message
+  variants:
+  - primary
+  - alternate
+  grid_id: hero_asymmetric
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - focal_zone
+  adjustable:
+  - main_width
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 44
+    main_items: 1
+    annotation_chars: 90
+  slots:
+  - kicker
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    kicker: label.section
+    header: headline.insight
+    main: metric.big_number
+    interpretation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    kicker:
+      x: 0.65
+      y: 0.42
+      w: 2.2
+      h: 0.28
+    header:
+      x: 0.65
+      y: 0.84
+      w: 7.6
+      h: 1.05
+    main:
+      x: 7.75
+      y: 2.05
+      w: 4.75
+      h: 3.35
+    interpretation:
+      x: 0.65
+      y: 2.35
+      w: 5.9
+      h: 1.65
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: title_editorial_split
+  role: title
+  purposes:
+  - key_message
+  variants:
+  - primary
+  - alternate
+  grid_id: editorial_split_58_42
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - column_ratio
+  adjustable:
+  - main_width
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 44
+    main_items: 2
+    annotation_chars: 100
+  slots:
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    header: headline.insight
+    main: comparison.gap
+    interpretation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.65
+      y: 1.75
+      w: 7.0
+      h: 4.55
+    interpretation:
+      x: 8.15
+      y: 2.05
+      w: 4.2
+      h: 2.55
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: evidence_big_number
+  role: evidence
+  purposes:
+  - data_proof
+  variants:
+  - primary
+  - alternate
+  grid_id: evidence_metric_focus
+  locked:
+  - outer_margin
+  - title_position
+  - metric_baseline
+  - footer_height
+  adjustable:
+  - metric_width
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 1
+    annotation_chars: 100
+  slots:
+  - tag
+  - header
+  - main
+  - annotation
+  - footer
+  default_components:
+    tag: label.fact_tag
+    header: headline.fact
+    main: metric.big_number
+    annotation: annotation.so_what
+    footer: evidence_footer.full
+  slot_frames:
+    tag:
+      x: 0.65
+      y: 0.42
+      w: 1.25
+      h: 0.3
+    header:
+      x: 0.65
+      y: 0.86
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.75
+      y: 2.05
+      w: 7.25
+      h: 3.8
+    annotation:
+      x: 8.35
+      y: 2.35
+      w: 3.9
+      h: 2.35
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: evidence_metric_gap
+  role: evidence
+  purposes:
+  - data_proof
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: evidence_metric_focus
+  locked:
+  - outer_margin
+  - title_position
+  - metric_baseline
+  - footer_height
+  - column_ratio
+  adjustable:
+  - metric_width
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 2
+    annotation_chars: 110
+  slots:
+  - tag
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    tag: label.fact_tag
+    header: headline.fact
+    main: metric_pair.gap
+    interpretation: annotation.so_what
+    footer: evidence_footer.full
+  slot_frames:
+    tag:
+      x: 0.65
+      y: 0.42
+      w: 1.25
+      h: 0.3
+    header:
+      x: 0.65
+      y: 0.86
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.75
+      y: 2.05
+      w: 7.25
+      h: 3.8
+    interpretation:
+      x: 8.35
+      y: 2.35
+      w: 3.9
+      h: 2.35
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: comparison_gap_asymmetric
+  role: comparison
+  purposes:
+  - comparison
+  - data_proof
+  variants:
+  - primary
+  - alternate
+  grid_id: comparison_60_40
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - column_ratio
+  adjustable:
+  - comparison_gap
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 2
+    annotation_chars: 110
+  slots:
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    header: headline.insight
+    main: comparison.gap
+    interpretation: annotation.so_what
+    footer: evidence_footer.full
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.65
+      y: 1.75
+      w: 7.25
+      h: 4.75
+    interpretation:
+      x: 8.35
+      y: 2.05
+      w: 3.9
+      h: 2.5
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: comparison_before_after
+  role: comparison
+  purposes:
+  - comparison
+  variants:
+  - primary
+  - alternate
+  grid_id: comparison_60_40
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - column_ratio
+  adjustable:
+  - comparison_gap
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 2
+    annotation_chars: 100
+  slots:
+  - header
+  - main
+  - annotation
+  - footer
+  default_components:
+    header: headline.insight
+    main: comparison.before_after
+    annotation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.65
+      y: 1.75
+      w: 7.25
+      h: 4.75
+    annotation:
+      x: 8.35
+      y: 2.05
+      w: 3.9
+      h: 2.5
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: synthesis_causal_spine
+  role: synthesis
+  purposes:
+  - root_cause
+  - synthesis
+  variants:
+  - primary
+  - alternate
+  grid_id: synthesis_spine
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - spine_axis
+  adjustable:
+  - node_spacing
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 5
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    header: headline.insight
+    main: synthesis.spine
+    interpretation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.85
+      y: 1.8
+      w: 11.65
+      h: 3.95
+    interpretation:
+      x: 8.4
+      y: 5.75
+      w: 3.8
+      h: 0.75
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: synthesis_system_map
+  role: synthesis
+  purposes:
+  - root_cause
+  - synthesis
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: synthesis_spine
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - system_boundary
+  adjustable:
+  - node_spacing
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 7
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - annotation
+  - footer
+  default_components:
+    header: headline.insight
+    main: synthesis.system_map
+    annotation: annotation.caveat
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.85
+      y: 1.8
+      w: 11.65
+      h: 3.95
+    annotation:
+      x: 8.4
+      y: 5.75
+      w: 3.8
+      h: 0.75
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: recommendation_choice
+  role: recommendation
+  purposes:
+  - recommendation
+  variants:
+  - primary
+  - alternate
+  grid_id: decision_canvas
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - decision_zone
+  adjustable:
+  - option_width
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 3
+    annotation_chars: 110
+  slots:
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    header: headline.decision
+    main: decision.choice
+    interpretation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.75
+      y: 1.65
+      w: 8.0
+      h: 4.85
+    interpretation:
+      x: 9.05
+      y: 2.0
+      w: 3.2
+      h: 2.6
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: recommendation_operating_model
+  role: recommendation
+  purposes:
+  - recommendation
+  variants:
+  - primary
+  - alternate
+  grid_id: decision_canvas
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - decision_zone
+  adjustable:
+  - node_spacing
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 6
+    annotation_chars: 110
+  slots:
+  - header
+  - main
+  - annotation
+  - footer
+  default_components:
+    header: headline.decision
+    main: synthesis.system_map
+    annotation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.75
+      y: 1.65
+      w: 8.0
+      h: 4.85
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: decision_matrix_native
+  role: decision
+  purposes:
+  - decision_matrix
+  variants:
+  - primary
+  - alternate
+  grid_id: decision_canvas
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - axis_origin
+  - decision_zone
+  adjustable:
+  - axis_labels
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 8
+    annotation_chars: 100
+  slots:
+  - header
+  - main
+  - decision
+  - footer
+  default_components:
+    header: headline.decision
+    main: matrix.quadrant
+    decision: decision.choice
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.75
+      y: 1.65
+      w: 8.0
+      h: 4.85
+    decision:
+      x: 9.05
+      y: 2.0
+      w: 3.2
+      h: 2.6
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: decision_criteria_table
+  role: decision
+  purposes:
+  - decision_matrix
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: decision_canvas
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - table_bounds
+  adjustable:
+  - column_widths
+  - row_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 6
+    annotation_chars: 100
+  slots:
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    header: headline.decision
+    main: decision.criteria
+    interpretation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.75
+      y: 1.65
+      w: 8.0
+      h: 4.85
+    interpretation:
+      x: 9.05
+      y: 2.0
+      w: 3.2
+      h: 2.6
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: action_roadmap
+  role: action
+  purposes:
+  - roadmap
+  variants:
+  - primary
+  - alternate
+  grid_id: action_timeline
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - timeline_axis
+  adjustable:
+  - milestone_spacing
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 5
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - action
+  - footer
+  default_components:
+    header: headline.decision
+    main: timeline.milestone
+    action: action.owner_due
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.8
+      y: 1.8
+      w: 11.75
+      h: 3.6
+    action:
+      x: 8.75
+      y: 5.55
+      w: 3.5
+      h: 0.95
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: action_poc_form
+  role: action
+  purposes:
+  - action_plan
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: action_form
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - form_columns
+  adjustable:
+  - field_height
+  - row_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 8
+    annotation_chars: 100
+  slots:
+  - header
+  - main
+  - action
+  - footer
+  default_components:
+    header: headline.decision
+    main: action.form
+    action: action.owner_due
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.75
+      y: 1.65
+      w: 8.15
+      h: 4.95
+    action:
+      x: 9.2
+      y: 1.95
+      w: 3.0
+      h: 3.2
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: evidence_chart_annotation
+  role: evidence
+  purposes:
+  - data_proof
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: evidence_metric_focus
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - chart_baseline
+  adjustable:
+  - chart_width
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 1
+    annotation_chars: 110
+  slots:
+  - tag
+  - header
+  - main
+  - annotation
+  - footer
+  default_components:
+    tag: label.fact_tag
+    header: headline.fact
+    main: chart.highlight_bar
+    annotation: annotation.so_what
+    footer: evidence_footer.full
+  slot_frames:
+    tag:
+      x: 0.65
+      y: 0.42
+      w: 1.25
+      h: 0.3
+    header:
+      x: 0.65
+      y: 0.86
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.75
+      y: 2.05
+      w: 7.25
+      h: 3.8
+    annotation:
+      x: 8.35
+      y: 2.35
+      w: 3.9
+      h: 2.35
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: reference_source_register
+  role: reference
+  purposes:
+  - reference
+  variants:
+  - primary
+  - dense
+  grid_id: reference_register
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - register_bounds
+  adjustable:
+  - column_widths
+  - row_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 10
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.fact
+    main: decision.criteria
+    footer: evidence_footer.full
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.85
+    main:
+      x: 0.75
+      y: 1.65
+      w: 11.85
+      h: 4.95
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: summary_executive_premium
+  role: title
+  purposes:
+  - key_message
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: summary_editorial_full
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - focal_zone
+  adjustable:
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 44
+    main_items: 5
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.insight
+    main: narrative.executive_summary
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.65
+      y: 1.58
+      w: 12.0
+      h: 4.98
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: key_message_evidence_premium
+  role: title
+  purposes:
+  - key_message
+  - data_proof
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: key_message_evidence_split
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - column_ratio
+  adjustable:
+  - main_width
+  - evidence_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 44
+    main_items: 4
+    annotation_chars: 100
+  slots:
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    header: headline.insight
+    main: narrative.key_message_evidence
+    interpretation: annotation.so_what
+    footer: evidence_footer.full
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.65
+      y: 1.62
+      w: 8.05
+      h: 4.86
+    interpretation:
+      x: 9.05
+      y: 2.12
+      w: 3.35
+      h: 2.45
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: chart_insight_premium
+  role: evidence
+  purposes:
+  - data_proof
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: chart_insight_68_32
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - chart_baseline
+  - column_ratio
+  adjustable:
+  - chart_width
+  - annotation_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 7
+    annotation_chars: 110
+  slots:
+  - header
+  - main
+  - annotation
+  - footer
+  default_components:
+    header: headline.fact
+    main: chart.insight
+    annotation: annotation.chart_callout
+    footer: evidence_footer.full
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.65
+      y: 1.62
+      w: 8.25
+      h: 4.86
+    annotation:
+      x: 9.18
+      y: 2.05
+      w: 3.22
+      h: 2.65
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: findings_implications_premium
+  role: synthesis
+  purposes:
+  - synthesis
+  - root_cause
+  variants:
+  - primary
+  - dense
+  grid_id: findings_implications_rows
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - row_alignment
+  adjustable:
+  - row_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 4
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.insight
+    main: narrative.findings_implications
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.65
+      y: 1.58
+      w: 12.0
+      h: 4.98
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: strategy_house_premium
+  role: synthesis
+  purposes:
+  - synthesis
+  - recommendation
+  variants:
+  - primary
+  - dense
+  grid_id: strategy_architecture_full
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - architecture_bounds
+  adjustable:
+  - choice_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 5
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.recommendation
+    main: strategy.house
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.78
+      y: 1.58
+      w: 11.74
+      h: 5.0
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: issue_tree_premium
+  role: synthesis
+  purposes:
+  - root_cause
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: tree_canvas
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - root_axis
+  adjustable:
+  - branch_count
+  - node_spacing
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 4
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.insight
+    main: strategy.issue_tree
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.78
+      y: 1.58
+      w: 11.74
+      h: 5.0
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: portfolio_matrix_premium
+  role: decision
+  purposes:
+  - decision_matrix
+  - comparison
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: matrix_with_decision
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - axis_origin
+  - decision_zone
+  adjustable:
+  - axis_labels
+  - item_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 10
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - decision
+  - footer
+  default_components:
+    header: headline.decision
+    main: strategy.portfolio_matrix
+    decision: decision.choice
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.72
+      y: 1.58
+      w: 8.5
+      h: 4.98
+    decision:
+      x: 9.55
+      y: 2.05
+      w: 2.85
+      h: 2.95
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: capability_map_premium
+  role: synthesis
+  purposes:
+  - synthesis
+  - recommendation
+  variants:
+  - primary
+  - dense
+  grid_id: capability_bands
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - band_alignment
+  adjustable:
+  - group_count
+  - item_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 5
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - interpretation
+  - footer
+  default_components:
+    header: headline.insight
+    main: strategy.capability_map
+    interpretation: annotation.so_what
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.75
+      y: 1.55
+      w: 11.85
+      h: 4.55
+    interpretation:
+      x: 8.8
+      y: 6.18
+      w: 3.6
+      h: 0.42
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: value_driver_tree_premium
+  role: synthesis
+  purposes:
+  - synthesis
+  - root_cause
+  variants:
+  - primary
+  - dense
+  grid_id: tree_canvas
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - root_axis
+  adjustable:
+  - branch_count
+  - node_spacing
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 4
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.insight
+    main: strategy.value_driver_tree
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.78
+      y: 1.58
+      w: 11.74
+      h: 5.0
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: initiative_portfolio_premium
+  role: decision
+  purposes:
+  - decision_matrix
+  - recommendation
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: initiative_portfolio_table
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - table_bounds
+  - decision_zone
+  adjustable:
+  - row_count
+  - column_widths
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 6
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - decision
+  - footer
+  default_components:
+    header: headline.decision
+    main: strategy.initiative_portfolio
+    decision: decision.choice
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.65
+      y: 1.58
+      w: 8.8
+      h: 4.98
+    decision:
+      x: 9.75
+      y: 2.0
+      w: 2.65
+      h: 3.1
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: roadmap_premium
+  role: action
+  purposes:
+  - roadmap
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: roadmap_full
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - timeline_axis
+  adjustable:
+  - phase_count
+  - item_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 5
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - action
+  - footer
+  default_components:
+    header: headline.decision
+    main: execution.roadmap
+    action: action.owner_due
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.7
+      y: 1.58
+      w: 11.9
+      h: 4.5
+    action:
+      x: 9.1
+      y: 6.15
+      w: 3.3
+      h: 0.46
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: gantt_premium
+  role: action
+  purposes:
+  - roadmap
+  - action_plan
+  variants:
+  - primary
+  - dense
+  grid_id: gantt_full
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - timeline_axis
+  - task_column
+  adjustable:
+  - period_count
+  - task_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 8
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.decision
+    main: execution.gantt
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.7
+      y: 1.58
+      w: 11.9
+      h: 5.0
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: governance_premium
+  role: action
+  purposes:
+  - action_plan
+  - recommendation
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: governance_levels
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - level_axis
+  - action_zone
+  adjustable:
+  - level_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 4
+    annotation_chars: 90
+  slots:
+  - header
+  - main
+  - action
+  - footer
+  default_components:
+    header: headline.decision
+    main: execution.governance
+    action: action.owner_due
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.75
+      y: 1.58
+      w: 8.55
+      h: 4.98
+    action:
+      x: 9.62
+      y: 2.0
+      w: 2.78
+      h: 3.1
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: kpi_cascade_premium
+  role: action
+  purposes:
+  - action_plan
+  - recommendation
+  variants:
+  - primary
+  - dense
+  grid_id: kpi_cascade_full
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - cascade_axis
+  adjustable:
+  - level_count
+  - item_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 4
+    annotation_chars: 0
+  slots:
+  - header
+  - main
+  - footer
+  default_components:
+    header: headline.decision
+    main: execution.kpi_cascade
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.72
+      y: 1.58
+      w: 11.88
+      h: 5.0
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25
+- id: recommendation_actions_premium
+  role: recommendation
+  purposes:
+  - recommendation
+  - action_plan
+  variants:
+  - primary
+  - alternate
+  - dense
+  grid_id: recommendation_actions_split
+  locked:
+  - outer_margin
+  - title_position
+  - footer_height
+  - column_ratio
+  - decision_zone
+  adjustable:
+  - action_count
+  - label_length
+  - accent_color
+  content_limits:
+    header_chars: 46
+    main_items: 4
+    annotation_chars: 100
+  slots:
+  - header
+  - main
+  - action
+  - footer
+  default_components:
+    header: headline.decision
+    main: narrative.recommendation_actions
+    action: action.owner_due
+    footer: evidence_footer.compact
+  slot_frames:
+    header:
+      x: 0.65
+      y: 0.55
+      w: 12.0
+      h: 0.82
+    main:
+      x: 0.65
+      y: 1.58
+      w: 8.15
+      h: 4.98
+    action:
+      x: 9.12
+      y: 1.95
+      w: 3.28
+      h: 3.5
+    footer:
+      x: 0.65
+      y: 6.92
+      w: 12.0
+      h: 0.25

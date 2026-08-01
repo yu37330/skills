@@ -1,0 +1,5 @@
+version: 1
+density_profiles:
+  - {id: D1, label: low, max_text_blocks: 4, max_body_chars: 170, min_body_pt: 20, preferred_duration_sec: 55}
+  - {id: D2, label: medium, max_text_blocks: 6, max_body_chars: 320, min_body_pt: 17, preferred_duration_sec: 80}
+  - {id: D3, label: high, max_text_blocks: 8, max_body_chars: 520, min_body_pt: 15, preferred_duration_sec: 105}

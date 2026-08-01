@@ -1,0 +1,18 @@
+version: 1
+claims:
+- id: E1
+  claim: 価値化には複数領域の一体設計が必要
+  source: 統合検証用デモ
+  claim_type: interpretation
+- id: E2
+  claim: 利用段階に偏りがある
+  source: 統合検証用デモ
+  claim_type: fact
+- id: E3
+  claim: 部分最適が価値化を阻む
+  source: 統合検証用デモ
+  claim_type: interpretation
+- id: E5
+  claim: 価値設計と運用能力に不足がある
+  source: 統合検証用デモ
+  claim_type: interpretation

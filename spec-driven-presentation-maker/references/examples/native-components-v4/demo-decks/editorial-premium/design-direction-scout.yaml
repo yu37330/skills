@@ -1,0 +1,19 @@
+version: 1
+status: selected
+source:
+  deck_plan: deck-plan.yaml
+  deck_plan_sha256: ea831a14010341a63391d9cf435eda8b4babce616bbc95a351a79cdfcecf5327
+  design_system_manifest: ../../../../../assets/design-system/manifest.yaml
+  design_system_sha256: e2f05dbaa42614c09ab1b2cbe12be4492a32a07b45e68cc14dd72a42d3a8af70
+representative_slide: answer
+candidates:
+- id: selected
+  label: Editorial Premium
+  style_profile: editorial_narrative
+selected:
+  id: selected
+  label: Editorial Premium
+  style_profile: editorial_narrative
+  style_spec:
+    theme: editorial
+anti_slop_required: true

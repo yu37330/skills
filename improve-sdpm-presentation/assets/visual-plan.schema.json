@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SDPM Visual Plan",
+  "type": "object",
+  "required": ["version", "source", "deck", "slides"],
+  "properties": {
+    "version": {"enum": [1, 2, 3, 4, 5, 6, 7, 8]},
+    "source": {"type": "object"},
+    "deck": {"type": "object"},
+    "slides": {"type": "array", "minItems": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"version": {"enum": [6, 7, 8]}}},
+      "then": {
+        "properties": {
+          "source": {"required": ["deck_plan", "deck_plan_sha256"]},
+          "deck": {
+            "required": ["mode", "preserve_slide_count", "rhythm", "visual_grammar_policy", "motif_policy", "renderer_policy"]
+          },
+          "slides": {
+            "items": {
+              "type": "object",
+              "required": ["slide_id", "slide_number", "intent", "attention_order", "visual_strategy", "constraints", "acceptance"],
+              "not": {
+                "anyOf": [
+                  {"required": ["key_message"]},
+                  {"required": ["consulting_frame"]},
+                  {"required": ["executive_headline"]},
+                  {"required": ["primary_evidence"]},
+                  {"required": ["so_what"]}
+                ]
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "deck": {"required": ["goal", "audience", "preserve_slide_count"]},
+          "slides": {
+            "items": {
+              "type": "object",
+              "required": ["slide_id", "slide_number", "key_message", "intent", "content_hierarchy", "visual_strategy", "constraints", "acceptance"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"version": {"const": 7}}},
+      "then": {
+        "properties": {
+          "source": {"required": ["deck_plan", "deck_plan_sha256", "design_system_manifest", "design_system_sha256"]},
+          "deck": {"required": ["design_system"]},
+          "slides": {
+            "items": {
+              "type": "object",
+              "required": ["design_resolution", "component_plan"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"version": {"const": 8}}},
+      "then": {
+        "properties": {
+          "source": {"required": ["deck_plan", "deck_plan_sha256", "design_system_manifest", "design_system_sha256", "design_direction_scout", "design_direction_sha256"]},
+          "deck": {"required": ["design_system", "anti_slop_acknowledged"]},
+          "slides": {"items": {"type": "object", "required": ["design_resolution", "component_plan", "layout_adjustments"]}}
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "id": "editorial",
+  "extends": "base",
+  "fonts": {"ja": "Yu Gothic UI", "latin": "Aptos", "display": "Yu Gothic UI", "jaFallback": "Yu Gothic"},
+  "fontSizes": {"deckTitle": 58, "slideTitle": 38, "hero": 70, "metric": 58, "lead": 25, "body": 18, "caption": 14, "source": 12},
+  "colors": {
+    "background": "#FAF8F4", "surface": "#FFFEFB", "surfaceAlt": "#F1ECE5", "surfaceStrong": "#E8DED4",
+    "text": "#29231F", "muted": "#746D66", "primary": "#263E4C", "accent": "#A45A3A", "accent2": "#657C8A",
+    "warning": "#C28B38", "danger": "#B85C5C", "success": "#5F806A", "line": "#D7CEC4", "white": "#FFFFFF", "black": "#171310"
+  },
+  "shape": {"radius": 2, "lineWidth": 1},
+  "effects": {"card": {"type": "outer", "blur": 5, "distance": 2, "direction": 135, "color": "#3A2E26", "opacity": 0.08}},
+  "density": "medium",
+  "design_dna": ["editorial_split", "high_contrast_display", "rule_lines", "warm_neutral", "asymmetric_whitespace"]
+}

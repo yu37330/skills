@@ -1,0 +1,439 @@
+version: 2
+source:
+  deck_plan: deck-plan.yaml
+  deck_plan_sha256: ea831a14010341a63391d9cf435eda8b4babce616bbc95a351a79cdfcecf5327
+  design_system_manifest: ../../../../../assets/design-system/manifest.yaml
+  design_system_sha256: de836013510e191318e7a0a4e4f2312d8fcf28576ec0f8a01e664fa8f6a377ec
+deck:
+  composition_grammar: answer_pyramid
+  theme: executive
+  style_profile: executive_clarity
+  density_profile: D1
+  deck_sequence: decision_first
+slides:
+- slide_number: 1
+  slide_id: answer
+  design_resolution:
+    role: title
+    role_layout: summary_executive_premium
+    variant: primary
+    grid_id: summary_editorial_full
+    layout_contract_sha256: 243ee41d8d3395968fc4455ce349c66b3dfb80fdb192084d1ae6cc6fcb00af8c
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.58
+        w: 12.0
+        h: 4.98
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    selection_reason: Deck Planのpurpose=key_message, relationship=connection, evidence_linkage=evidence_to_implicationからnarrative.executive_summaryを解決
+    content_metrics:
+      headline_chars: 24
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 44
+      main_items: 5
+      annotation_chars: 0
+    component_hint: narrative.executive_summary
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=connectionのRenderer Router規則による
+  component_plan:
+  - component: headline.insight
+    slot: header
+    variant: primary
+  - component: narrative.executive_summary
+    slot: main
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+- slide_number: 2
+  slide_id: evidence
+  design_resolution:
+    role: evidence
+    role_layout: chart_insight_premium
+    variant: primary
+    grid_id: chart_insight_68_32
+    layout_contract_sha256: 01a93aad1c2fc2dcc557f2c1540033e85a2bcc2b6a747565645a7cf279b2b3a9
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.62
+        w: 8.25
+        h: 4.86
+      annotation:
+        x: 9.18
+        y: 2.05
+        w: 3.22
+        h: 2.65
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    selection_reason: Deck Planのpurpose=data_proof, relationship=comparison, evidence_linkage=evidence_to_implicationからchart.insightを解決
+    content_metrics:
+      headline_chars: 26
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 46
+      main_items: 7
+      annotation_chars: 110
+    component_hint: chart.insight
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=comparisonのRenderer Router規則による
+  component_plan:
+  - component: headline.fact
+    slot: header
+    variant: primary
+  - component: chart.insight
+    slot: main
+    variant: primary
+  - component: annotation.chart_callout
+    slot: annotation
+    variant: primary
+  - component: evidence_footer.full
+    slot: footer
+    variant: primary
+- slide_number: 3
+  slide_id: diagnosis
+  design_resolution:
+    role: synthesis
+    role_layout: findings_implications_premium
+    variant: primary
+    grid_id: findings_implications_rows
+    layout_contract_sha256: 774aa7bb3b89147b5555a95f5131f61792fe3b24867a2991d0daa3712eed4d3f
+    slot_frames: &id001
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.58
+        w: 12.0
+        h: 4.98
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    selection_reason: Deck Planのpurpose=synthesis, relationship=connection, evidence_linkage=evidence_to_implicationからnarrative.findings_implicationsを解決
+    content_metrics:
+      headline_chars: 24
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 46
+      main_items: 4
+      annotation_chars: 0
+    component_hint: narrative.findings_implications
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=connectionのRenderer Router規則による
+  component_plan:
+  - component: headline.insight
+    slot: header
+    variant: primary
+  - component: narrative.findings_implications
+    slot: main
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+- slide_number: 4
+  slide_id: choice
+  design_resolution:
+    role: decision
+    role_layout: portfolio_matrix_premium
+    variant: primary
+    grid_id: matrix_with_decision
+    layout_contract_sha256: 71a11feccee94cde1d88314a40796b5d5a200b6100621fd1e115a2bd0dd2a477
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.72
+        y: 1.58
+        w: 8.5
+        h: 4.98
+      decision:
+        x: 9.55
+        y: 2.05
+        w: 2.85
+        h: 2.95
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    selection_reason: Deck Planのpurpose=decision_matrix, relationship=comparison,
+      evidence_linkage=evidence_to_actionからstrategy.portfolio_matrixを解決
+    content_metrics:
+      headline_chars: 25
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 46
+      main_items: 10
+      annotation_chars: 90
+    component_hint: strategy.portfolio_matrix
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=comparisonのRenderer Router規則による
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: strategy.portfolio_matrix
+    slot: main
+    variant: primary
+  - component: decision.choice
+    slot: decision
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+- slide_number: 5
+  slide_id: capability
+  design_resolution:
+    role: synthesis
+    role_layout: findings_implications_premium
+    variant: primary
+    grid_id: findings_implications_rows
+    layout_contract_sha256: 774aa7bb3b89147b5555a95f5131f61792fe3b24867a2991d0daa3712eed4d3f
+    slot_frames: *id001
+    selection_reason: Deck Planのpurpose=synthesis, relationship=comparison, evidence_linkage=evidence_to_implicationからnarrative.findings_implicationsを解決
+    content_metrics:
+      headline_chars: 25
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 46
+      main_items: 4
+      annotation_chars: 0
+    component_hint: narrative.findings_implications
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=comparisonのRenderer Router規則による
+  component_plan:
+  - component: headline.insight
+    slot: header
+    variant: primary
+  - component: narrative.findings_implications
+    slot: main
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+- slide_number: 6
+  slide_id: roadmap
+  design_resolution:
+    role: action
+    role_layout: roadmap_premium
+    variant: primary
+    grid_id: roadmap_full
+    layout_contract_sha256: bd44a094dd4ec1826b1f04800097b949fba413dc257ace74c649c754270ad3df
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.7
+        y: 1.58
+        w: 11.9
+        h: 4.5
+      action:
+        x: 9.1
+        y: 6.15
+        w: 3.3
+        h: 0.46
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    selection_reason: Deck Planのpurpose=roadmap, relationship=sequence, evidence_linkage=evidence_to_actionからexecution.roadmapを解決
+    content_metrics:
+      headline_chars: 20
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 46
+      main_items: 4
+      annotation_chars: 90
+    component_hint: execution.roadmap
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=sequenceのRenderer Router規則による
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: execution.roadmap
+    slot: main
+    variant: primary
+  - component: action.owner_due
+    slot: action
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+- slide_number: 7
+  slide_id: governance
+  design_resolution:
+    role: action
+    role_layout: action_poc_form
+    variant: primary
+    grid_id: action_form
+    layout_contract_sha256: b1ce7fe104d97d1f31f35ecc4b9e9e948c3d01d42b80f1b2e9f2e2fa7c2f2006
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.85
+      main:
+        x: 0.75
+        y: 1.65
+        w: 8.15
+        h: 4.95
+      action:
+        x: 9.2
+        y: 1.95
+        w: 3.0
+        h: 3.2
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    selection_reason: V8既定のpurpose=action_plan, relationship=sequence規則による
+    content_metrics:
+      headline_chars: 20
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 46
+      main_items: 6
+      annotation_chars: 100
+    component_hint: narrative.recommendation_actions
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=sequenceのRenderer Router規則による
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: action.form
+    slot: main
+    variant: primary
+  - component: action.owner_due
+    slot: action
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+- slide_number: 8
+  slide_id: decision
+  design_resolution:
+    role: recommendation
+    role_layout: recommendation_actions_premium
+    variant: primary
+    grid_id: recommendation_actions_split
+    layout_contract_sha256: 24cc7c16a62b96edc58fdc27e5cf9417d8ba3e64f7d731527329fa6595283dde
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.58
+        w: 8.15
+        h: 4.98
+      action:
+        x: 9.12
+        y: 1.95
+        w: 3.28
+        h: 3.5
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    selection_reason: Deck Planのpurpose=recommendation, relationship=connection, evidence_linkage=evidence_to_actionからnarrative.recommendation_actionsを解決
+    content_metrics:
+      headline_chars: 22
+      main_items: 1
+      annotation_chars: 17
+    selected_capacity:
+      headline_chars: 46
+      main_items: 4
+      annotation_chars: 100
+    component_hint: narrative.recommendation_actions
+  layout_adjustments: {}
+  renderer_decision:
+    selected: sdpm_native
+    fallback: baoyu_diagram
+    final_mode: native
+    reason: relationship=connectionのRenderer Router規則による
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: narrative.recommendation_actions
+    slot: main
+    variant: primary
+  - component: action.owner_due
+    slot: action
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "progressive_loading": true,
+  "profiles": [
+    {"id":"executive_clarity","label":"Executive Clarity","safe_for":["executive_decision","proposal"],"preview":{"background":"#F7F8FA","text":"#172033","accent":"#315AA9","line":"#A9B3C4","layout":"hero_asymmetric"}},
+    {"id":"swiss_evidence","label":"Swiss Evidence","safe_for":["analysis_report","executive_decision"],"preview":{"background":"#FFFFFF","text":"#111111","accent":"#E8502A","line":"#222222","layout":"editorial_split_58_42"}},
+    {"id":"editorial_narrative","label":"Editorial Narrative","safe_for":["proposal","analysis_report"],"preview":{"background":"#F4F0E8","text":"#202020","accent":"#9B3A32","line":"#8B8175","layout":"editorial_split_58_42"}},
+    {"id":"japanese_minimal","label":"Japanese Minimal","safe_for":["proposal","training"],"preview":{"background":"#FAFAF7","text":"#222522","accent":"#60756A","line":"#C9CCC4","layout":"hero_asymmetric"}},
+    {"id":"industrial_technical","label":"Industrial Technical","safe_for":["training","analysis_report"],"preview":{"background":"#F2F5F7","text":"#16222B","accent":"#087E8B","line":"#8798A5","layout":"synthesis_spine"}},
+    {"id":"data_report_precision","label":"Data Report Precision","safe_for":["operating_review","analysis_report"],"preview":{"background":"#FFFFFF","text":"#1B2733","accent":"#2C78C4","line":"#B8C2CC","layout":"evidence_metric_focus"}}
+  ]
+}

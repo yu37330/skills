@@ -1,0 +1,67 @@
+version: 1
+description: Native Componentの意味とVisual Planの視覚文法を結ぶ契約
+components:
+  - id: narrative.executive_summary
+    pattern_families: [hero, executive_summary]
+    spatial_models: [hero, editorial_split]
+    primary_primitives: [typography, layers]
+  - id: narrative.key_message_evidence
+    pattern_families: [hero, evidence]
+    spatial_models: [hero, editorial_split]
+    primary_primitives: [typography, kpi, axes]
+  - id: chart.insight
+    pattern_families: [chart, evidence]
+    spatial_models: [matrix, editorial_split]
+    primary_primitives: [axes, bars, lines]
+  - id: narrative.findings_implications
+    pattern_families: [narrative, causal, comparison]
+    spatial_models: [linear_vertical, linear_horizontal, editorial_split]
+    primary_primitives: [trace_line, layers, typography]
+  - id: strategy.portfolio_matrix
+    pattern_families: [matrix, portfolio_matrix]
+    spatial_models: [matrix]
+    primary_primitives: [decision_gates, axes, area_composition]
+  - id: strategy.prioritization_matrix
+    pattern_families: [matrix, prioritization_matrix]
+    spatial_models: [matrix]
+    primary_primitives: [decision_gates, axes, area_composition]
+  - id: strategy.initiative_portfolio
+    pattern_families: [matrix, portfolio, table]
+    spatial_models: [matrix, stack]
+    primary_primitives: [layers, decision_gates, table]
+  - id: strategy.capability_map
+    pattern_families: [card_grid, capability_map, matrix]
+    spatial_models: [stack, matrix]
+    primary_primitives: [layers, table, area_composition]
+  - id: strategy.issue_tree
+    pattern_families: [tree, issue_tree]
+    spatial_models: [tree, linear_horizontal, linear_vertical]
+    primary_primitives: [network_nodes, trace_line, branches]
+  - id: strategy.value_driver_tree
+    pattern_families: [tree, driver_tree]
+    spatial_models: [tree, linear_horizontal]
+    primary_primitives: [network_nodes, trace_line, branches]
+  - id: synthesis.system_map
+    pattern_families: [network, system_map, hub_spoke]
+    spatial_models: [network, radial, hub]
+    primary_primitives: [network_nodes, node_link]
+  - id: synthesis.spine
+    pattern_families: [flow, causal, process]
+    spatial_models: [linear_horizontal, linear_vertical]
+    primary_primitives: [trace_line, stages, kpi]
+  - id: execution.roadmap
+    pattern_families: [timeline, roadmap, sequence]
+    spatial_models: [timeline, linear_horizontal]
+    primary_primitives: [trace_line, stages, sequence]
+  - id: execution.gantt
+    pattern_families: [gantt, timeline]
+    spatial_models: [timeline, matrix]
+    primary_primitives: [bars, table, trace_line]
+  - id: execution.governance
+    pattern_families: [network, governance, hierarchy]
+    spatial_models: [network, tree, linear_vertical]
+    primary_primitives: [network_nodes, node_link, layers]
+  - id: narrative.recommendation_actions
+    pattern_families: [hero, recommendation, action]
+    spatial_models: [editorial_split, hero]
+    primary_primitives: [typography, decision_gates, layers]

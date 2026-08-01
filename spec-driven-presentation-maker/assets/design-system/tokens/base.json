@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "id": "base",
+  "canvas": {"width": 1920, "height": 1080, "marginX": 120, "marginTop": 72, "marginBottom": 64},
+  "fonts": {"ja": "Yu Gothic UI", "latin": "Aptos", "display": "Yu Gothic UI", "jaFallback": "Yu Gothic", "serifFallback": "Yu Mincho"},
+  "fontSizes": {"deckTitle": 60, "slideTitle": 40, "hero": 76, "metric": 62, "lead": 26, "body": 18, "caption": 14, "source": 12},
+  "componentFontScale": [12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 28, 30, 31, 32, 34, 36, 38, 40, 42, 44, 48, 52, 54, 58, 60, 62, 64, 70, 76],
+  "colors": {
+    "background": "#F4F7F8", "surface": "#FFFFFF", "surfaceAlt": "#EAF3F4", "surfaceStrong": "#DDEBED",
+    "text": "#123039", "muted": "#61737B", "primary": "#0C2742", "accent": "#00A6A6", "accent2": "#2B74B8",
+    "warning": "#F59E42", "danger": "#EE6B6E", "success": "#65B86A", "line": "#CBD9DC", "white": "#FFFFFF", "black": "#071B24"
+  },
+  "shape": {"radius": 18, "lineWidth": 1},
+  "effects": {
+    "card": {"type": "outer", "blur": 8, "distance": 3, "direction": 135, "color": "#0E343C", "opacity": 0.12},
+    "hero": {"type": "outer", "blur": 16, "distance": 7, "direction": 135, "color": "#061C26", "opacity": 0.18}
+  },
+  "spacing": [8, 12, 16, 24, 32, 48, 64, 96],
+  "design_dna": ["editorial_asymmetry", "large_type", "soft_surfaces", "restrained_accent", "direct_annotation"]
+}

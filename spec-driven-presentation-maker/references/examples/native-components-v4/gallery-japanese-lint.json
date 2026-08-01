@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "source_pptx_sha256": "957b9a5d68e06a02756cd7b2f7faa8ee28d349b19642f0e119f9be75b956b7da",
+  "slide_count": 45,
+  "pass": true,
+  "limitations": [
+    "PowerPointの自動折返しはOOXMLに行情報がないため4辺クロップで補完する"
+  ],
+  "issues": [
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック6に1文字行「高」"
+    },
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック7に1文字行「中」"
+    },
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック12に1文字行「高」"
+    },
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック13に1文字行「高」"
+    },
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック18に1文字行「中」"
+    },
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック19に1文字行「高」"
+    },
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック24に1文字行「中」"
+    },
+    {
+      "slide_number": 10,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック25に1文字行「中」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック12に1文字行「高」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック13に1文字行「中」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック18に1文字行「高」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック19に1文字行「高」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック24に1文字行「中」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック25に1文字行「高」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック30に1文字行「中」"
+    },
+    {
+      "slide_number": 40,
+      "severity": "warning",
+      "code": "ORPHAN_SINGLE_CHAR",
+      "evidence": "文字列ブロック31に1文字行「中」"
+    }
+  ]
+}

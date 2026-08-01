@@ -1,0 +1,22 @@
+version: 1
+grammars:
+  - id: answer_pyramid
+    deck_types: [executive_decision, proposal]
+    sequence: [title, evidence, synthesis, recommendation, decision, action]
+    rule: 冒頭で答えを示し、根拠、解釈、選択、行動へ降ろす
+  - id: diagnostic
+    deck_types: [analysis_report]
+    sequence: [title, evidence, comparison, synthesis, recommendation]
+    rule: 症状、差、原因仮説、含意の順に診断する
+  - id: editorial
+    deck_types: [analysis_report, training]
+    sequence: [title, evidence, comparison, synthesis]
+    rule: 大きな主張と証拠を交互に置き、呼吸と視点転換を作る
+  - id: operating_review
+    deck_types: [operating_review]
+    sequence: [title, evidence, comparison, decision, action]
+    rule: KPI、例外、原因、判断、担当と期限を反復可能な型で示す
+  - id: technical_explanation
+    deck_types: [training, analysis_report]
+    sequence: [title, synthesis, evidence, comparison, action]
+    rule: 全体像、構成要素、相互作用、例、適用手順の順に説明する

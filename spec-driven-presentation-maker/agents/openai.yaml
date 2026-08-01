@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Driven Presentation Maker"
+  short_description: "3方向プレビューと固定Layoutで編集可能PPTXを作成します"
+  default_prompt: "$spec-driven-presentation-maker を使って、代表ページ3案から方向を選び、Deck Plan v3とVisual Plan v8で洗練された編集可能なPowerPointを作成してください。"

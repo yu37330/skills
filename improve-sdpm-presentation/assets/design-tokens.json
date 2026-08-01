@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "usage": "Art Directionがない場合だけ使う既定値",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "marginX": 128,
+    "marginTop": 92,
+    "marginBottom": 76
+  },
+  "fonts": {
+    "fullwidth": "Yu Gothic",
+    "halfwidth": "Aptos"
+  },
+  "fontSizes": {
+    "deckTitle": 54,
+    "slideTitle": 38,
+    "lead": 28,
+    "body": 20,
+    "caption": 16
+  },
+  "colors": {
+    "background": "#F7F9FC",
+    "surface": "#FFFFFF",
+    "text": "#172033",
+    "muted": "#64748B",
+    "primary": "#2563EB",
+    "accent": "#0EA5A4",
+    "warning": "#D97706",
+    "line": "#CBD5E1"
+  },
+  "spacing": [8, 16, 24, 32, 48, 64, 96],
+  "rules": {
+    "maxBodyLinesPerBlock": 5,
+    "maxPrimaryAccents": 2,
+    "preferEqualOuterMargins": true
+  }
+}

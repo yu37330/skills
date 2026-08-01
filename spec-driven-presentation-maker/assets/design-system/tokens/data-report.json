@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "id": "data_report",
+  "extends": "base",
+  "fonts": {"ja": "Yu Gothic UI", "latin": "Aptos", "display": "Yu Gothic UI", "jaFallback": "Yu Gothic"},
+  "colors": {
+    "background": "#F7F9FC", "surface": "#FFFFFF", "surfaceAlt": "#EAF0FA", "surfaceStrong": "#DAE5F5",
+    "text": "#16212F", "muted": "#64748B", "primary": "#173E7A", "accent": "#0A9B83", "accent2": "#3D6FC2",
+    "warning": "#D8841C", "danger": "#D85F67", "success": "#3A936B", "line": "#C8D4E4", "white": "#FFFFFF", "black": "#0A1524"
+  },
+  "shape": {"radius": 12, "lineWidth": 1},
+  "density": "high",
+  "design_dna": ["data_ink", "direct_labeling", "shared_axes", "exception_highlight", "compact_evidence"]
+}
