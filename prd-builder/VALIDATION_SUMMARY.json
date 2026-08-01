@@ -1,0 +1,21 @@
+{
+  "package": "prd-builder-skill-v2",
+  "version": "2.0.0",
+  "compileall": "passed",
+  "pytest": {
+    "status": "passed",
+    "tests": 13
+  },
+  "valid_scenario": {
+    "quality_gate": "passed",
+    "score": 100,
+    "traceability": "4/4"
+  },
+  "negative_scenarios": {
+    "missing_source_id": "rejected",
+    "inferred_only_confirmed_requirement": "rejected",
+    "unmeasurable_kpi": "rejected",
+    "ambiguous_must_requirement": "rejected",
+    "blocking_tbd": "rejected"
+  }
+}

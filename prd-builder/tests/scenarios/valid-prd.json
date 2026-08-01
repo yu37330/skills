@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "schema_version": "2.0.0",
+    "prd_id": "PRD-meeting-action-extractor",
+    "project_name": "会議Action抽出システム",
+    "product_name": "会議Action抽出システム",
+    "status": "review",
+    "created_at": "2026-08-01T07:00:00+00:00",
+    "updated_at": "2026-08-01T07:00:00+00:00"
+  },
+  "executive_summary": "会議文字起こしから決定事項、担当者、期限、根拠発言を抽出し、対応漏れと認識齟齬を減らす。",
+  "background": "現在は会議終了後に参加者が手作業でActionを整理しており、共有まで平均45分を要し、担当者や期限の記載漏れが発生している。",
+  "problem_statement": "会議後に決定事項、担当者、期限が共有されず、対応漏れと認識齟齬が継続的に発生している。",
+  "product_goal": "会議終了後5分以内に、参加者が決定事項とActionを根拠発言付きで確認できる状態を実現する。",
+  "target_users": [
+    {
+      "id": "USR-001",
+      "name": "プロジェクトリーダー",
+      "needs": ["会議直後に決定事項と担当者を確認したい"]
+    },
+    {
+      "id": "USR-002",
+      "name": "会議参加者",
+      "needs": ["自分のActionと期限を根拠発言付きで確認したい"]
+    }
+  ],
+  "user_needs": [
+    "会議終了直後に対応事項を一覧で確認したい",
+    "担当者や期限が明示されていない項目を誤確定せず確認したい"
+  ],
+  "value_proposition": "全文議事録の読み直しをせず、実行に必要な決定事項とActionだけを根拠付きで確認できる。",
+  "desired_outcomes": [
+    "会議終了後5分以内にActionを確認できる",
+    "対応漏れ件数を現状比50%以上削減する"
+  ],
+  "selected_direction": "議事録全文生成より、決定事項・担当者・期限・根拠発言の抽出を優先する。",
+  "decision_rationale": "顧客ヒアリングで最大損失が議事録作成工数ではなく、対応漏れと認識齟齬であると確認されたため。",
+  "scope": [
+    "日本語会議文字起こしから決定事項、担当者、期限、根拠発言を抽出する"
+  ],
+  "out_of_scope": [
+    "会議音声の文字起こし",
+    "英語会議への対応"
+  ],
+  "user_scenarios": [
+    {
+      "id": "SCN-001",
+      "actor": "プロジェクトリーダー",
+      "situation": "会議終了直後",
+      "goal": "決定事項と未確定Actionを確認する",
+      "outcome": "根拠発言付き一覧をレビューし、担当者と期限を確定できる"
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "FR-001",
+      "priority": "Must",
+      "requirement": "システムは日本語会議文字起こしから決定事項、担当者、期限、根拠発言を抽出して一覧表示する。",
+      "rationale": "会議後の対応漏れと認識齟齬を防ぐため。",
+      "status": "confirmed",
+      "direction_refs": ["selected_direction", "scope[0]"],
+      "source_ids": ["meeting-2026-07-31"]
+    },
+    {
+      "id": "FR-002",
+      "priority": "Must",
+      "requirement": "システムは担当者または期限が発言内に明示されていない場合、その項目を未確定として人間レビューへ送る。",
+      "rationale": "AIが存在しない担当者や期限を確定値として出力することを防ぐため。",
+      "status": "confirmed",
+      "direction_refs": ["decision_rationale", "risks[0]"],
+      "source_ids": ["meeting-2026-07-31"]
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "id": "NFR-001",
+      "category": "Performance",
+      "requirement": "システムは会議終了後に登録された文字起こしを処理し、結果表示までの所要時間を5分以内にする。",
+      "measurement": "会議終了時刻からレビュー画面に結果が表示された時刻までを監視ログで計測する。",
+      "target": "95パーセンタイルで5分以内",
+      "status": "confirmed",
+      "direction_refs": ["desired_outcomes[0]"],
+      "source_ids": ["meeting-2026-07-31"]
+    },
+    {
+      "id": "NFR-002",
+      "category": "Security",
+      "requirement": "システムは会議文字起こしと抽出結果を社内認証済み利用者だけが閲覧できるようにする。",
+      "measurement": "権限のないテストアカウント100件によるアクセス試験で拒否率を測定する。",
+      "target": "拒否率100%",
+      "status": "confirmed",
+      "direction_refs": ["constraints[0]"],
+      "source_ids": ["security-standard-001"]
+    }
+  ],
+  "data_requirements": [
+    "入力文字起こしには発言者ID、発言本文、発言時刻を含める",
+    "出力には決定事項、担当者、期限、根拠発言、確定状態を含める"
+  ],
+  "ai_requirements": {
+    "applicable": true,
+    "inputs": ["日本語会議文字起こし", "発言者メタデータ", "会議日時"],
+    "outputs": ["決定事項", "担当者", "期限", "根拠発言", "確定状態"],
+    "quality_evaluation": ["承認済み評価データセットで決定事項抽出の適合率90%以上を確認する"],
+    "error_handling": ["担当者や期限が明示されない場合は推測せず未確定と出力する"],
+    "human_in_the_loop": ["未確定項目はプロジェクトリーダーがレビューして確定する"],
+    "evidence": ["各抽出項目に元の根拠発言と発言時刻を付与する"]
+  },
+  "security_compliance": [
+    "会議文字起こしと抽出結果は社内認証済み利用者に限定する",
+    "監査ログを180日間保持する"
+  ],
+  "dependencies": [
+    "発言者情報付きの日本語会議文字起こしが提供されること"
+  ],
+  "constraints": [
+    "Bedrock上で利用可能なモデルを使用する"
+  ],
+  "assumptions": [
+    "会議文字起こしには発言者情報と会議終了時刻が含まれる"
+  ],
+  "risks": [
+    {
+      "id": "RISK-001",
+      "risk": "発言に担当者が明示されず誤った担当者を推測する可能性がある",
+      "impact": "high",
+      "likelihood": "medium",
+      "mitigation": "担当者が明示されない場合は未確定として人間確認へ送る",
+      "source_ids": ["meeting-2026-07-31"]
+    }
+  ],
+  "release_strategy": [
+    "Phase 1で決定事項とAction抽出を限定チームへ提供し、30日間の精度と対応漏れを評価する",
+    "Phase 2で対象会議を拡大する"
+  ],
+  "success_metrics": [
+    {
+      "id": "MET-001",
+      "metric": "Action確認可能時間",
+      "baseline": "平均45分",
+      "target": "会議終了後5分以内",
+      "measurement": "会議終了時刻からレビュー画面表示時刻までを監視ログで計測する",
+      "frequency": "リリース後30日間は毎日、その後は週次",
+      "owner": "Product Owner",
+      "source_ids": ["meeting-2026-07-31"]
+    },
+    {
+      "id": "MET-002",
+      "metric": "対応漏れ件数",
+      "baseline": "月10件",
+      "target": "月5件以下",
+      "measurement": "期限超過かつ未着手のAction件数を月次で集計する",
+      "frequency": "月次",
+      "owner": "Project Manager",
+      "source_ids": ["meeting-2026-07-31"]
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "Q-001",
+      "question": "精度評価用データを誰が承認するか",
+      "blocking": false,
+      "owner": "Product Owner",
+      "due_date": "2026-08-15",
+      "source_ids": ["meeting-2026-07-31"]
+    }
+  ],
+  "decision_log": [
+    {
+      "id": "DEC-001",
+      "decision": "議事録全文生成より、決定事項・担当者・期限・根拠発言の抽出を優先する。",
+      "rationale": "最大損失が対応漏れと認識齟齬であると確認されたため。",
+      "owner": "Customer Product Owner",
+      "date": "2026-07-31",
+      "source_ids": ["meeting-2026-07-31"]
+    }
+  ],
+  "traceability": [
+    {
+      "requirement_id": "FR-001",
+      "direction_refs": ["selected_direction", "scope[0]"],
+      "source_ids": ["meeting-2026-07-31"],
+      "evidence": "顧客は全文議事録より決定事項、担当者、期限、根拠発言の確認を優先すると合意した。",
+      "confidence": "high"
+    },
+    {
+      "requirement_id": "FR-002",
+      "direction_refs": ["decision_rationale", "risks[0]"],
+      "source_ids": ["meeting-2026-07-31"],
+      "evidence": "担当者の誤推測が対応漏れにつながるため、明示されない場合は未確定にする方針が合意された。",
+      "confidence": "high"
+    },
+    {
+      "requirement_id": "NFR-001",
+      "direction_refs": ["desired_outcomes[0]"],
+      "source_ids": ["meeting-2026-07-31"],
+      "evidence": "会議終了後5分以内にActionを確認できることを期待成果として合意した。",
+      "confidence": "high"
+    },
+    {
+      "requirement_id": "NFR-002",
+      "direction_refs": ["constraints[0]"],
+      "source_ids": ["security-standard-001"],
+      "evidence": "社内セキュリティ標準は会議情報へのアクセスを認証済み利用者に限定している。",
+      "confidence": "high"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "meeting-2026-07-31",
+      "source_type": "meeting_transcript",
+      "status": "approved",
+      "authority": "customer",
+      "confidence": "high",
+      "source_uri": "s3://example/meeting-2026-07-31.md",
+      "meeting_date": "2026-07-31",
+      "evidence_location": "topic: Action管理"
+    },
+    {
+      "source_id": "security-standard-001",
+      "source_type": "internal_standard",
+      "status": "reference",
+      "authority": "security_department",
+      "confidence": "high",
+      "source_uri": "s3://example/security-standard.md",
+      "meeting_date": null,
+      "evidence_location": "section: data handling"
+    }
+  ]
+}
