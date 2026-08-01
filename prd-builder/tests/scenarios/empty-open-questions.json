@@ -1,0 +1,79 @@
+{
+  "schema_version": "2.0.0",
+  "project_name": "会議Action抽出システム",
+  "product_name": "会議Action抽出システム",
+  "problem_statement": "会議後に決定事項、担当者、期限が共有されず、対応漏れと認識齟齬が継続的に発生している。",
+  "target_users": [
+    {
+      "id": "USR-001",
+      "name": "プロジェクトリーダー",
+      "needs": ["会議直後に決定事項と担当者を確認したい"]
+    },
+    {
+      "id": "USR-002",
+      "name": "会議参加者",
+      "needs": ["自分のActionと期限を根拠発言付きで確認したい"]
+    }
+  ],
+  "desired_outcomes": [
+    "会議終了後5分以内にActionを確認できる",
+    "対応漏れ件数を現状比50%以上削減する"
+  ],
+  "selected_direction": "議事録全文生成より、決定事項・担当者・期限・根拠発言の抽出を優先する。",
+  "decision_rationale": "顧客ヒアリングで最大損失が議事録作成工数ではなく、対応漏れと認識齟齬であると確認されたため。",
+  "rejected_options": [
+    {
+      "option": "議事録全文の自動生成を最優先する",
+      "reason": "全文品質よりActionの確実な確認が優先課題であるため"
+    }
+  ],
+  "scope": [
+    "日本語会議文字起こしから決定事項、担当者、期限、根拠発言を抽出する"
+  ],
+  "out_of_scope": [
+    "会議音声の文字起こし",
+    "英語会議への対応"
+  ],
+  "constraints": [
+    "Bedrock上で利用可能なモデルを使用する"
+  ],
+  "assumptions": [
+    "会議文字起こしには発言者情報と会議終了時刻が含まれる"
+  ],
+  "risks": [
+    {
+      "id": "RISK-001",
+      "risk": "発言に担当者が明示されず誤った担当者を推測する可能性がある",
+      "impact": "high",
+      "likelihood": "medium",
+      "mitigation": "担当者が明示されない場合は未確定として人間確認へ送る",
+      "source_ids": ["meeting-2026-07-31"]
+    }
+  ],
+  "open_questions": [],
+  "sources": [
+    {
+      "source_id": "meeting-2026-07-31",
+      "source_type": "meeting_transcript",
+      "status": "approved",
+      "authority": "customer",
+      "confidence": "high",
+      "source_uri": "s3://example/meeting-2026-07-31.md",
+      "meeting_date": "2026-07-31",
+      "evidence_location": "topic: Action管理"
+    },
+    {
+      "source_id": "security-standard-001",
+      "source_type": "internal_standard",
+      "status": "reference",
+      "authority": "security_department",
+      "confidence": "high",
+      "source_uri": "s3://example/security-standard.md",
+      "meeting_date": null,
+      "evidence_location": "section: data handling"
+    }
+  ],
+  "approval_status": "approved",
+  "decision_date": "2026-07-31",
+  "decision_owner": "Customer Product Owner"
+}

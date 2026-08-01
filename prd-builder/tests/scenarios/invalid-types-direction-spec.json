@@ -1,0 +1,17 @@
+{
+  "schema_version": "2.0.0",
+  "project_name": "型不正サンプル",
+  "problem_statement": "形式上は長いが、target_usersなどの型が不正なDirection Specである。",
+  "target_users": "全員",
+  "desired_outcomes": "改善する",
+  "selected_direction": "すべてを自動化する方向性を採用する。",
+  "decision_rationale": "理由は後で検討する予定であるため。",
+  "scope": "全部",
+  "out_of_scope": [],
+  "constraints": [],
+  "assumptions": [],
+  "risks": [],
+  "open_questions": [],
+  "sources": "会議",
+  "approval_status": "approved"
+}
