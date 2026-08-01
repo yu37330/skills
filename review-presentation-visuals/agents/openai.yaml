@@ -1,0 +1,4 @@
+interface:
+  display_name: "資料ビジュアルレビュー"
+  short_description: "方向・固定Layout・Anti-Slopまで納品判定します"
+  default_prompt: "$review-presentation-visuals を使って、4辺QA、内容Diff、Design Direction、Locked Layout、Anti-Slopを監査し、Review version 8で評価してください。"

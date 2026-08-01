@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Presentation Visual Review",
+  "type": "object",
+  "required": ["version", "deck", "slides", "prioritized_actions"],
+  "properties": {
+    "version": {"enum": [1, 2, 3, 4, 5, 6, 7, 8]},
+    "deck": {
+      "type": "object",
+      "required": ["source", "slide_count", "inspected_slides", "critical_issues", "scores", "overall_score", "pass"]
+    },
+    "render_evidence": {"type": "object"},
+    "delivery_gates": {"type": "object"},
+    "machine_evidence": {"type": "object"},
+    "tests": {"type": "object"},
+    "slides": {"type": "array"},
+    "prioritized_actions": {"type": "array"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"version": {"enum": [6, 7, 8]}}},
+      "then": {
+        "required": ["render_evidence", "delivery_gates", "machine_evidence", "tests"],
+        "properties": {
+          "deck": {"required": ["deck_type", "repetition_policy", "major_issues", "minor_issues", "score_evidence"]},
+          "machine_evidence": {
+            "required": ["audit_report", "visual_metrics_report", "japanese_lint_report", "content_diff_report", "thresholds"]
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"version": {"const": 7}}},
+      "then": {
+        "properties": {
+          "machine_evidence": {
+            "required": ["design_system_report"]
+          },
+          "delivery_gates": {
+            "required": ["design_system_integrity"]
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"version": {"const": 8}}},
+      "then": {
+        "properties": {
+          "machine_evidence": {"required": ["design_system_report"]},
+          "delivery_gates": {"required": ["design_system_integrity", "anti_slop_integrity", "design_direction_integrity"]},
+          "tests": {"required": ["design_direction_fidelity"]}
+        }
+      }
+    }
+  ]
+}

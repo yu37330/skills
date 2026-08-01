@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "source_pptx_sha256": "d798619d57534abe2e7b250fb11fc0da56f037c24507785488c37e234d7efcc6",
+  "slide_count": 8,
+  "pass": true,
+  "limitations": [
+    "PowerPointの自動折返しはOOXMLに行情報がないため4辺クロップで補完する"
+  ],
+  "issues": [
+    {
+      "slide_number": 5,
+      "severity": "warning",
+      "code": "ASCII_WORD_SPLIT_RISK",
+      "evidence": "英字の途中改行候補「価値 KPI / M1」"
+    }
+  ]
+}

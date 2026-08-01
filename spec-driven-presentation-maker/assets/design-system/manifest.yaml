@@ -1,0 +1,66 @@
+version: 2
+id: sdpm-theme-independent-design-system
+description: テーマと構造を分離し、意味から編集可能なPowerPoint部品へ解決する設計システム
+registries:
+  components: components/registry.yaml
+  component_contracts: components/contracts.json
+  role_layouts: role-layouts/registry.yaml
+  grammars: grammars/registry.yaml
+  layout_grids: catalog/layout-grids.yaml
+  style_profiles: catalog/style-profiles.yaml
+  density_profiles: catalog/density-profiles.yaml
+  context_models: catalog/context-models.yaml
+  deck_sequences: catalog/deck-sequences.yaml
+  renderer_router: renderer-router.yaml
+  anti_slop_rules: anti-slop.yaml
+  semantic_visual_contracts: semantic-visual-contracts.yaml
+  style_selection_index: styles/selection-index.json
+themes:
+  base: tokens/base.json
+  executive: tokens/executive.json
+  editorial: tokens/editorial.json
+  technical: tokens/technical.json
+  data_report: tokens/data-report.json
+implementation:
+  - ../../sdpm_native_components/engine.py
+  - ../../sdpm_native_components/primitives.py
+  - ../../sdpm_native_components/components.py
+  - ../../sdpm_native_components/premium_components.py
+  - ../../sdpm_native_components/consulting_components.py
+  - ../../sdpm_native_components/theme.py
+  - ../../sdpm_native_components/text.py
+defaults:
+  grammar_by_deck_type:
+    executive_decision: answer_pyramid
+    proposal: answer_pyramid
+    analysis_report: diagnostic
+    operating_review: operating_review
+    training: technical_explanation
+  theme_by_deck_type:
+    executive_decision: executive
+    proposal: executive
+    analysis_report: editorial
+    operating_review: data_report
+    training: technical
+  role_by_slide_purpose:
+    key_message: title
+    data_proof: evidence
+    comparison: comparison
+    root_cause: synthesis
+    synthesis: synthesis
+    recommendation: recommendation
+    decision_matrix: decision
+    roadmap: action
+    action_plan: action
+quality:
+  minimum_component_count: 73
+  minimum_role_layout_count: 31
+  minimum_grammar_count: 5
+  minimum_theme_count: 3
+  minimum_layout_grid_count: 23
+  minimum_style_profile_count: 5
+  minimum_density_profile_count: 3
+  editable_by_default: true
+  maximum_consecutive_same_role_layout: 2
+  locked_layout_contract_required: true
+  anti_slop_audit_required: true

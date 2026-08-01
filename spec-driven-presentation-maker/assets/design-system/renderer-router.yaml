@@ -1,0 +1,17 @@
+version: 1
+routes:
+  - {relationship: change_over_time, preferred: sdpm_native, final: native_chart, fallback: sdpm_native}
+  - {relationship: comparison, preferred: sdpm_native, final: native, fallback: baoyu_diagram}
+  - {relationship: sequence, preferred: sdpm_native, final: native, fallback: baoyu_diagram}
+  - {relationship: cause_effect, preferred: baoyu_diagram, final: native_or_svg, fallback: sdpm_native}
+  - {relationship: connection, preferred: sdpm_native, final: native, fallback: baoyu_diagram}
+  - {relationship: hierarchy, preferred: baoyu_diagram, final: native_or_svg, fallback: sdpm_native}
+special_routes:
+  complex_architecture: {prototype: visual_explainer, final: rebuild_native}
+  high_density_overview: {prototype: baoyu_infographic, final: rebuild_native}
+  photo_or_emotion: {prototype: imagegen, final: raster_asset}
+rules:
+  default_renderer: sdpm_native
+  editable_final_required: true
+  external_renderer_requires_reason: true
+  prototype_is_not_final: true

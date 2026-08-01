@@ -1,0 +1,4 @@
+interface:
+  display_name: "SDPM資料ビジュアル改善"
+  short_description: "Locked LayoutとRenderer選択で資料を洗練します"
+  default_prompt: "$improve-sdpm-presentation を使って、Deck Plan v3を維持し、Visual Plan v8とLocked Role Layoutで見せ方を設計・改善してください。"

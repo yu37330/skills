@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "source_pptx_sha256": "f972e6b7a333244760c75d3b645a312d55ab682a25a611c29e883e4e9fa80eae",
+  "slide_count": 8,
+  "pass": true,
+  "limitations": [
+    "PowerPointの自動折返しはOOXMLに行情報がないため4辺クロップで補完する"
+  ],
+  "issues": []
+}

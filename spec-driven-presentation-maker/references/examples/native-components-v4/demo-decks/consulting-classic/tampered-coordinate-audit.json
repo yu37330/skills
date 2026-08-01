@@ -1,0 +1,79 @@
+{
+  "version": 2,
+  "source_pptx": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\references\\examples\\native-components-v4\\demo-decks\\consulting-classic\\tampered-coordinate-test.pptx",
+  "source_pptx_sha256": "f044e1f38ee2f1c445d6e57e2d4dd922dd3b78ab4bc80c4a6b311e8161a0cc7b",
+  "visual_plan": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\references\\examples\\native-components-v4\\demo-decks\\consulting-classic\\visual-plan-v8.yaml",
+  "visual_plan_sha256": "72aa7673ecbbae5b37bf220a9c5c4d045d657255e863bc1423776d618edaa4f7",
+  "design_system_manifest": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\assets\\design-system\\manifest.yaml",
+  "design_system_manifest_sha256": "de836013510e191318e7a0a4e4f2312d8fcf28576ec0f8a01e664fa8f6a377ec",
+  "slide_count": 8,
+  "pass": false,
+  "summary": {
+    "planned_component_count": 17,
+    "planned_role_layout_count": 8,
+    "explicit_color_token_match_ratio": 1.0,
+    "explicit_font_size_token_match_ratio": 1.0,
+    "design_token_match_ratio": 1.0,
+    "minimum_design_token_match_ratio": 0.7,
+    "component_traceability": "pptx_shape_name_and_alt_text",
+    "component_traceability_pass": true,
+    "native_element_ratio": 1.0,
+    "component_trace_coverage_ratio": 0.8929,
+    "premium_theme_composition_pass": null,
+    "component_contract_pass": true,
+    "locked_layout_contract_pass": false,
+    "locked_layout_geometry_pass": false,
+    "design_direction_selection_traceability_pass": true,
+    "anti_slop_pass": true,
+    "anti_slop_metrics": {
+      "gradient_fill_count": 0,
+      "glow_effect_count": 0,
+      "rounded_rectangle_ratio": 0.0848,
+      "equal_area_rectangle_ratio": 0.0,
+      "equal_area_rectangle_ratio_by_slide": {
+        "1": 0.6667,
+        "2": 0.4,
+        "3": 0.75,
+        "4": 0.3333,
+        "5": 0.8077,
+        "6": 0.7059,
+        "7": 0.0,
+        "8": 0.25
+      },
+      "repeated_image_hash_ratio": 0.0,
+      "equal_area_rectangle_ratio_raw": 0.8077
+    }
+  },
+  "observations": {
+    "unmatched_colors": [],
+    "unmatched_font_sizes": [],
+    "errors": [
+      "slides[1]のLocked Layout実座標違反: headline.insight / shape_moved_or_resized"
+    ],
+    "anti_slop_failures": [],
+    "component_traceability_missing": [],
+    "component_contract_violations": [],
+    "locked_layout_geometry_violations": [
+      {
+        "slide_number": 1,
+        "component_id": "headline.insight",
+        "role": "header",
+        "kind": "shape_moved_or_resized",
+        "expected_bbox_emu": [
+          594360,
+          502920,
+          10972800,
+          749808
+        ],
+        "actual_bbox_emu": [
+          1965960,
+          1143000,
+          10972800,
+          749808
+        ]
+      }
+    ],
+    "premium_theme_composition": {},
+    "limitation": "単一Themeの実デッキではTheme間構図差は非該当。Premium Galleryで同一Componentの3 Themeを比較する"
+  }
+}

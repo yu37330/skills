@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "source_pptx_sha256": "d798619d57534abe2e7b250fb11fc0da56f037c24507785488c37e234d7efcc6",
+  "slide_count": 8,
+  "similarity_threshold": 0.65,
+  "slides": [
+    {
+      "slide_number": 1,
+      "structure": {
+        "shape_count": 22,
+        "connector_count": 5,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 17,
+          "roundRect": 5
+        },
+        "rectangle_area_ratio": 0.7541,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "023e8dd6ed1f178c2a67f0a7716094aa657a420fc47bb074f0d481fbbaf81edb",
+        "whitespace_ratio": 0.8353,
+        "visual_centroid": [
+          0.4509,
+          0.326
+        ],
+        "dhash": "4123082d23c20182030203c2011313c204238302241920eb1bef848924a91b65",
+        "layout_dhash": "00d0a1c29c3c9c7c883c9c3ca63c0c3c810c0c1cc1c28000c4981b56db56001a",
+        "content_layout_dhash": "83828c3c0c3cc3829c3c0c3c83828c3c0c3c81829c3c0c1cc38280108012c0c4"
+      }
+    },
+    {
+      "slide_number": 2,
+      "structure": {
+        "shape_count": 21,
+        "connector_count": 17,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 20,
+          "roundRect": 1
+        },
+        "rectangle_area_ratio": 0.4744,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "9c53beeb6cbb84d62c60461d4e69784a17aaeece7808534cfb2e96c1fae40538",
+        "whitespace_ratio": 0.8342,
+        "visual_centroid": [
+          0.4823,
+          0.4997
+        ],
+        "dhash": "4427492913a613a711ba11a711a511ba138d138d11bf73af11e02e0b23891c65",
+        "layout_dhash": "89d086d62c482c5a2c402c582c5a2c402c722c32ae408c52ae00d1e41c76001a",
+        "content_layout_dhash": "0e422c482c5a2e5a2c402c582c5a2c402c402c722c72ac002e708c428c40ee06"
+      }
+    },
+    {
+      "slide_number": 3,
+      "structure": {
+        "shape_count": 20,
+        "connector_count": 4,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 17,
+          "roundRect": 3
+        },
+        "rectangle_area_ratio": 1.2183,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "b0b0f7f62e844cd50037e50f8909b31fdd82fc9332cfef775c427aff81d01bac",
+        "whitespace_ratio": 0.9556,
+        "visual_centroid": [
+          0.4093,
+          0.5077
+        ],
+        "dhash": "4123412dc850838ec3861831238723c31831850ec78e98201a92256325671a25",
+        "layout_dhash": "00d084d2830e1c309c30a3c61c381c3c8382187018700005a46dda9c1a98001a",
+        "content_layout_dhash": "c810818e1c301c308386881200011c3c00098002818a187018700001040d944c"
+      }
+    },
+    {
+      "slide_number": 4,
+      "structure": {
+        "shape_count": 21,
+        "connector_count": 15,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 16,
+          "ellipse": 4,
+          "roundRect": 1
+        },
+        "rectangle_area_ratio": 0.3361,
+        "ellipse_area_ratio": 0.0056,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "c5e790122ae75f769f5c9eadd577e2406118fa6a14d95c79e3ebd2169dc2b30d",
+        "whitespace_ratio": 0.9601,
+        "visual_centroid": [
+          0.389,
+          0.3805
+        ],
+        "dhash": "48254309035b0121034101490311034901890355037163893365415942d13425",
+        "layout_dhash": "81d08ce21a241a5a1ba21eb21a4a1a361e721baa9e829e128c9abea63c2a001a",
+        "content_layout_dhash": "0c201b201a1a1a621b821ea21e521b0a1a331eb61a6a9aaa1e929e228c82cc80"
+      }
+    },
+    {
+      "slide_number": 5,
+      "structure": {
+        "shape_count": 21,
+        "connector_count": 1,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 5,
+          "roundRect": 16
+        },
+        "rectangle_area_ratio": 0.6723,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "345cceb6d305f1839417e6ca6dc7bd27b9426026f62ced493f803d51146425ef",
+        "whitespace_ratio": 0.5281,
+        "visual_centroid": [
+          0.5533,
+          0.4948
+        ],
+        "dhash": "4025c02d31a9398d191d1bad318d319d33ad119d319c32af3a8785ab05a31a45",
+        "layout_dhash": "82d000d2c464c452c002c452c452c412c450c452e653c000c52c1a54ba58001a",
+        "content_layout_dhash": "0000c44cc452c002c412c452c452c412c412c452c452c412c451c6508000c444"
+      }
+    },
+    {
+      "slide_number": 6,
+      "structure": {
+        "shape_count": 25,
+        "connector_count": 4,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 17,
+          "roundRect": 8
+        },
+        "rectangle_area_ratio": 0.7739,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "06682e36f558818d5509076c6474837c694df7dcd3ed53afa054dad1aefe05f5",
+        "whitespace_ratio": 0.919,
+        "visual_centroid": [
+          0.4465,
+          0.3405
+        ],
+        "dhash": "402bc8297133cc888888cc88cc88cc88cc88cd9989904ccd554589ab01a30245",
+        "layout_dhash": "88d000d28c8c913211331133113313331131b3663322b322e8aa0254865c001a",
+        "content_layout_dhash": "00008cc8911211131133113311331133113311333332326633661332eaaaeaaa"
+      }
+    },
+    {
+      "slide_number": 7,
+      "structure": {
+        "shape_count": 14,
+        "connector_count": 3,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 11,
+          "roundRect": 3
+        },
+        "rectangle_area_ratio": 0.5119,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "8ab53fefba343d43dd88794fd5b41a4cbfaf2d2e90d3e4f5f7dfe50b339d764b",
+        "whitespace_ratio": 0.8422,
+        "visual_centroid": [
+          0.3364,
+          0.4312
+        ],
+        "dhash": "412b402d08e2069107830a6c026d026d0a4c0a4c026d426d0a4c09b108590625",
+        "layout_dhash": "80d489d20198196e090401900d80099205b1019009b2898285b09646078e001a",
+        "content_layout_dhash": "09800118096e196a01040d8205810992099201a10d9281a109b289b28180c992"
+      }
+    },
+    {
+      "slide_number": 8,
+      "structure": {
+        "shape_count": 18,
+        "connector_count": 1,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 14,
+          "roundRect": 4
+        },
+        "rectangle_area_ratio": 0.8872,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      },
+      "png": {
+        "width": 1280,
+        "height": 720,
+        "sha256": "753259b0382945e6a9da209257c2b24354db4b2013484f7f27159d6643d4bcdb",
+        "whitespace_ratio": 0.743,
+        "visual_centroid": [
+          0.2472,
+          0.5309
+        ],
+        "dhash": "4425404b129b109110911291109110951293129d909d5097529b126d12450ca5",
+        "layout_dhash": "80d28eb00d6c0e600a680d680b680b6a0c680d620a628f688964ed920dba001a",
+        "content_layout_dhash": "0c3409600a6a0e6808680e6808e80b680f6808682e6288620e6a9e6a8860ce74"
+      }
+    }
+  ],
+  "summary": {
+    "average_native_element_ratio": 1.0,
+    "raster_dominant_slides": [],
+    "high_similarity_clusters": [
+      [
+        2,
+        8
+      ]
+    ],
+    "largest_high_similarity_cluster_ratio": 0.25
+  }
+}

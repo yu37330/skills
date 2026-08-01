@@ -1,0 +1,174 @@
+version: 3
+source:
+  brief: brief.md
+  outline: outline.md
+  evidence_index: evidence-index.yaml
+deck:
+  audience: 経営層・AI/DX推進部門
+  decision_to_make: 90日PoCを開始するか
+  governing_thought: 利用量ではなく価値を生む業務と運用を設計する
+  slide_count: 8
+  approval_mode: single
+  deck_type: executive_decision
+  repetition_policy: strict
+  max_consecutive_same_role: 2
+  key_slides:
+  - 1
+  - 8
+slides:
+- slide_number: 1
+  slide_id: answer
+  slide_purpose: key_message
+  headline_type: decision
+  executive_headline: 価値創出には、顧客・業務・実行基盤を一体で変える
+  claim_type: interpretation
+  evidence_ids:
+  - E1
+  primary_evidence: 統合検証用デモの構造化根拠
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_implication
+  relationship: connection
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 価値創出には、顧客・業務・実行基盤を一体で変えるを説明する。数値は統合検証用デモ。
+- slide_number: 2
+  slide_id: evidence
+  slide_purpose: data_proof
+  headline_type: fact
+  executive_headline: 導入量より、価値へ接続したユースケースが不足している
+  claim_type: fact
+  evidence_ids:
+  - E2
+  primary_evidence: 統合検証用デモの構造化根拠
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_implication
+  relationship: comparison
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 導入量より、価値へ接続したユースケースが不足しているを説明する。数値は統合検証用デモ。
+- slide_number: 3
+  slide_id: diagnosis
+  slide_purpose: synthesis
+  headline_type: insight
+  executive_headline: 部分最適・曖昧なKPI・分断運営が価値化を止める
+  claim_type: interpretation
+  evidence_ids:
+  - E3
+  primary_evidence: 統合検証用デモの構造化根拠
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_implication
+  relationship: connection
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 部分最適・曖昧なKPI・分断運営が価値化を止めるを説明する。数値は統合検証用デモ。
+- slide_number: 4
+  slide_id: choice
+  slide_purpose: decision_matrix
+  headline_type: decision
+  executive_headline: 最初の90日は、価値が高く実装可能な領域へ集中する
+  claim_type: proposal
+  evidence_ids: []
+  primary_evidence: 本資料による提案
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_action
+  relationship: comparison
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 最初の90日は、価値が高く実装可能な領域へ集中するを説明する。数値は統合検証用デモ。
+- slide_number: 5
+  slide_id: capability
+  slide_purpose: synthesis
+  headline_type: insight
+  executive_headline: 不足はモデルではなく、価値設計と運用能力に集中する
+  claim_type: interpretation
+  evidence_ids:
+  - E5
+  primary_evidence: 統合検証用デモの構造化根拠
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_implication
+  relationship: comparison
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 不足はモデルではなく、価値設計と運用能力に集中するを説明する。数値は統合検証用デモ。
+- slide_number: 6
+  slide_id: roadmap
+  slide_purpose: roadmap
+  headline_type: recommendation
+  executive_headline: 90日で設計・実装・判定までを一巡させる
+  claim_type: proposal
+  evidence_ids: []
+  primary_evidence: 本資料による提案
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_action
+  relationship: sequence
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 90日で設計・実装・判定までを一巡させるを説明する。数値は統合検証用デモ。
+- slide_number: 7
+  slide_id: governance
+  slide_purpose: action_plan
+  headline_type: recommendation
+  executive_headline: 価値・実装・リスクを同じ会議体で判断する
+  claim_type: proposal
+  evidence_ids: []
+  primary_evidence: 本資料による提案
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_action
+  relationship: sequence
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 価値・実装・リスクを同じ会議体で判断するを説明する。数値は統合検証用デモ。
+- slide_number: 8
+  slide_id: decision
+  slide_purpose: recommendation
+  headline_type: decision
+  executive_headline: 本日は、対象業務・責任者・価値KPIを決める
+  claim_type: proposal
+  evidence_ids: []
+  primary_evidence: 本資料による提案
+  so_what: 意思決定または次の行動へ接続する
+  decision_relevance: 90日PoCの開始条件を具体化する
+  evidence_linkage: evidence_to_action
+  relationship: connection
+  must_show:
+  - 検証用デモであること
+  - 編集可能なNative要素
+  must_avoid:
+  - 外部事実との混同
+  - 因果の断定
+  notes_outline: 本日は、対象業務・責任者・価値KPIを決めるを説明する。数値は統合検証用デモ。

@@ -1,0 +1,26 @@
+version: 1
+style_profiles:
+  - id: executive_clarity
+    philosophy: Executive
+    theme: executive
+    rules: {grid: strict, typography_contrast: strong, alignment: left, color: restrained_navy, decoration: minimal, line: thin, spacing: generous}
+  - id: swiss_evidence
+    philosophy: Swiss International
+    theme: base
+    rules: {grid: mathematical, typography_contrast: very_strong, alignment: left, color: monochrome_plus_one, decoration: none, line: hairline, spacing: modular}
+  - id: editorial_narrative
+    philosophy: Editorial
+    theme: editorial
+    rules: {grid: asymmetric, typography_contrast: strong, alignment: mixed_controlled, color: ink_and_accent, decoration: editorial_rule, line: fine, spacing: paced}
+  - id: japanese_minimal
+    philosophy: Japanese Minimalism
+    theme: base
+    rules: {grid: quiet_asymmetric, typography_contrast: medium, alignment: left, color: neutral_plus_muted, decoration: none, line: sparse, spacing: very_generous}
+  - id: industrial_technical
+    philosophy: Technical
+    theme: technical
+    rules: {grid: modular, typography_contrast: medium, alignment: left, color: cool_neutral, decoration: functional, line: precise, spacing: compact}
+  - id: data_report_precision
+    philosophy: Analytical
+    theme: data_report
+    rules: {grid: chart_first, typography_contrast: medium, alignment: tabular, color: data_semantic, decoration: none, line: axis_driven, spacing: compact}

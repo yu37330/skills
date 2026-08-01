@@ -1,0 +1,58 @@
+{
+  "version": 2,
+  "source_pptx": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\references\\examples\\native-components-v4\\demo-decks\\technical-data\\demo-deck.pptx",
+  "source_pptx_sha256": "d798619d57534abe2e7b250fb11fc0da56f037c24507785488c37e234d7efcc6",
+  "visual_plan": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\references\\examples\\native-components-v4\\demo-decks\\technical-data\\visual-plan-v8.yaml",
+  "visual_plan_sha256": "2955f164eba31ec5cad26b8a9ddf820cc271de425fdb73ebb6fe7d4599f19409",
+  "design_system_manifest": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\assets\\design-system\\manifest.yaml",
+  "design_system_manifest_sha256": "de836013510e191318e7a0a4e4f2312d8fcf28576ec0f8a01e664fa8f6a377ec",
+  "slide_count": 8,
+  "pass": true,
+  "summary": {
+    "planned_component_count": 17,
+    "planned_role_layout_count": 8,
+    "explicit_color_token_match_ratio": 1.0,
+    "explicit_font_size_token_match_ratio": 1.0,
+    "design_token_match_ratio": 1.0,
+    "minimum_design_token_match_ratio": 0.7,
+    "component_traceability": "pptx_shape_name_and_alt_text",
+    "component_traceability_pass": true,
+    "native_element_ratio": 1.0,
+    "component_trace_coverage_ratio": 0.8868,
+    "premium_theme_composition_pass": null,
+    "component_contract_pass": true,
+    "locked_layout_contract_pass": true,
+    "locked_layout_geometry_pass": true,
+    "design_direction_selection_traceability_pass": true,
+    "anti_slop_pass": true,
+    "anti_slop_metrics": {
+      "gradient_fill_count": 0,
+      "glow_effect_count": 0,
+      "rounded_rectangle_ratio": 0.1934,
+      "equal_area_rectangle_ratio": 0.0,
+      "equal_area_rectangle_ratio_by_slide": {
+        "1": 0.7273,
+        "2": 0.3333,
+        "3": 0.6,
+        "4": 0.4706,
+        "5": 0.7143,
+        "6": 0.8,
+        "7": 0.6429,
+        "8": 0.5
+      },
+      "repeated_image_hash_ratio": 0.0,
+      "equal_area_rectangle_ratio_raw": 0.8
+    }
+  },
+  "observations": {
+    "unmatched_colors": [],
+    "unmatched_font_sizes": [],
+    "errors": [],
+    "anti_slop_failures": [],
+    "component_traceability_missing": [],
+    "component_contract_violations": [],
+    "locked_layout_geometry_violations": [],
+    "premium_theme_composition": {},
+    "limitation": "単一Themeの実デッキではTheme間構図差は非該当。Premium Galleryで同一Componentの3 Themeを比較する"
+  }
+}

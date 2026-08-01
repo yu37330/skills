@@ -1,0 +1,9 @@
+version: 1
+context_models:
+  - {meeting_type: executive_decision, audience: executive, duration_max: 20, density_profile: D1, style_profile: executive_clarity, deck_sequence: decision_first}
+  - {meeting_type: executive_decision, audience: mixed, duration_max: 30, density_profile: D2, style_profile: executive_clarity, deck_sequence: decision_first}
+  - {meeting_type: proposal, audience: executive, duration_max: 30, density_profile: D2, style_profile: editorial_narrative, deck_sequence: case_for_change}
+  - {meeting_type: analysis_report, audience: specialist, duration_max: 45, density_profile: D3, style_profile: swiss_evidence, deck_sequence: diagnostic}
+  - {meeting_type: operating_review, audience: mixed, duration_max: 60, density_profile: D3, style_profile: data_report_precision, deck_sequence: operating_cadence}
+  - {meeting_type: training, audience: mixed, duration_max: 90, density_profile: D2, style_profile: industrial_technical, deck_sequence: explain_practice}
+defaults: {audience: mixed, duration_minutes: 20, density_profile: D2, style_profile: executive_clarity, deck_sequence: decision_first}

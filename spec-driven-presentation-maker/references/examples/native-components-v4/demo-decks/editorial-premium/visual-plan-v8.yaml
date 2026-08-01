@@ -1,0 +1,788 @@
+version: 8
+source:
+  deck_plan: deck-plan.yaml
+  deck_plan_sha256: ea831a14010341a63391d9cf435eda8b4babce616bbc95a351a79cdfcecf5327
+  design_system_manifest: ../../../../../assets/design-system/manifest.yaml
+  design_system_sha256: e2f05dbaa42614c09ab1b2cbe12be4492a32a07b45e68cc14dd72a42d3a8af70
+  art_direction: art-direction.html
+  design_direction_scout: design-direction-scout.yaml
+  design_direction_sha256: 53cd9cf1322c3537095ca3f62ffc6797dcd776fb0ecd68ea9efbc9535c9a22fa
+deck:
+  mode: precompose
+  preserve_slide_count: true
+  design_system:
+    composition_grammar: editorial
+    theme: editorial
+    style_profile: editorial_narrative
+    density_profile: D2
+    deck_sequence: decision_first
+    anti_slop_exceptions: []
+  rhythm:
+    density_sequence:
+    - low
+    - high
+    - medium
+    - medium
+    - high
+    - medium
+    - low
+    - low
+    max_consecutive_same_pattern: 2
+  visual_grammar_policy:
+    max_box_dominant_ratio: 0.6
+    max_takeaway_band_ratio: 0.6
+    min_distinct_spatial_models: 4
+    min_distinct_primary_primitives: 4
+    max_consecutive_same_reading_path: 2
+  motif_policy:
+    max_dominant_motif_ratio: 0.4
+    max_node_line_dominant_ratio: 0.4
+    min_distinct_visual_textures: 4
+  renderer_policy:
+    all_native_rationale: 登録済みNative Componentだけで編集可能に構成できるため
+  anti_slop_acknowledged: true
+slides:
+- slide_id: answer
+  slide_number: 1
+  intent: executive_summary
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: title
+    role_layout: summary_executive_premium
+    variant: primary
+    grid_id: summary_editorial_full
+    layout_contract_sha256: 243ee41d8d3395968fc4455ce349c66b3dfb80fdb192084d1ae6cc6fcb00af8c
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.58
+        w: 12.0
+        h: 4.98
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: narrative.executive_summary
+  component_plan:
+  - component: headline.insight
+    slot: header
+    variant: primary
+  - component: narrative.executive_summary
+    slot: main
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: narrative.executive_summary_editorial
+    pattern_family: hero
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: showpiece
+    density: low
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=connectionのRouter規則による
+    visual_grammar:
+      spatial_model: hero
+      primary_primitive: typography
+      reading_path: focal
+      container_dependency: low
+      takeaway_band: false
+      distinctive_feature: narrative.executive_summary固有の構図
+    motif_fingerprint:
+      visual_texture: typographic
+      node_usage: none
+      connector_usage: none
+      signature_tokens:
+      - token: typographic_focal
+        role: dominant
+      dominant_motif: narrative.executive_summary
+    composition_bias: asymmetric
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 価値創出には、顧客・業務・実行基盤を一体で変える
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}
+- slide_id: evidence
+  slide_number: 2
+  intent: data_insight
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: evidence
+    role_layout: chart_insight_premium
+    variant: primary
+    grid_id: chart_insight_68_32
+    layout_contract_sha256: 01a93aad1c2fc2dcc557f2c1540033e85a2bcc2b6a747565645a7cf279b2b3a9
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.62
+        w: 8.25
+        h: 4.86
+      annotation:
+        x: 9.18
+        y: 2.05
+        w: 3.22
+        h: 2.65
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: chart.insight
+  component_plan:
+  - component: headline.fact
+    slot: header
+    variant: primary
+  - component: chart.insight
+    slot: main
+    variant: primary
+  - component: annotation.chart_callout
+    slot: annotation
+    variant: primary
+  - component: evidence_footer.full
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: chart.insight_editorial
+    pattern_family: chart
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: standard
+    density: high
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=comparisonのRouter規則による
+    visual_grammar:
+      spatial_model: matrix
+      primary_primitive: axes
+      reading_path: scan_columns
+      container_dependency: low
+      takeaway_band: false
+      distinctive_feature: chart.insight固有の構図
+    motif_fingerprint:
+      visual_texture: axis_plot
+      node_usage: none
+      connector_usage: none
+      signature_tokens:
+      - token: axis_frame
+        role: dominant
+      dominant_motif: chart.insight
+    composition_bias: balanced
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 導入量より、価値へ接続したユースケースが不足している
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}
+- slide_id: diagnosis
+  slide_number: 3
+  intent: cause_effect
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: synthesis
+    role_layout: findings_implications_premium
+    variant: primary
+    grid_id: findings_implications_rows
+    layout_contract_sha256: 774aa7bb3b89147b5555a95f5131f61792fe3b24867a2991d0daa3712eed4d3f
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.58
+        w: 12.0
+        h: 4.98
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: narrative.findings_implications
+  component_plan:
+  - component: headline.insight
+    slot: header
+    variant: primary
+  - component: narrative.findings_implications
+    slot: main
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: narrative.findings_implications_editorial
+    pattern_family: narrative
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: standard
+    density: medium
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=connectionのRouter規則による
+    visual_grammar:
+      spatial_model: linear_vertical
+      primary_primitive: trace_line
+      reading_path: top_to_bottom
+      container_dependency: low
+      takeaway_band: false
+      distinctive_feature: narrative.findings_implications固有の構図
+    motif_fingerprint:
+      visual_texture: trace
+      node_usage: none
+      connector_usage: supporting
+      signature_tokens:
+      - token: thin_straight_connectors
+        role: dominant
+      dominant_motif: narrative.findings_implications
+    composition_bias: asymmetric
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 部分最適・曖昧なKPI・分断運営が価値化を止める
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}
+- slide_id: choice
+  slide_number: 4
+  intent: matrix
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: decision
+    role_layout: portfolio_matrix_premium
+    variant: primary
+    grid_id: matrix_with_decision
+    layout_contract_sha256: 71a11feccee94cde1d88314a40796b5d5a200b6100621fd1e115a2bd0dd2a477
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.72
+        y: 1.58
+        w: 8.5
+        h: 4.98
+      decision:
+        x: 9.55
+        y: 2.05
+        w: 2.85
+        h: 2.95
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: strategy.portfolio_matrix
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: strategy.portfolio_matrix
+    slot: main
+    variant: primary
+  - component: decision.choice
+    slot: decision
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: strategy.portfolio_matrix_editorial
+    pattern_family: matrix
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: standard
+    density: medium
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=comparisonのRouter規則による
+    visual_grammar:
+      spatial_model: matrix
+      primary_primitive: decision_gates
+      reading_path: spatial
+      container_dependency: low
+      takeaway_band: false
+      distinctive_feature: strategy.portfolio_matrix固有の構図
+    motif_fingerprint:
+      visual_texture: area_composition
+      node_usage: supporting
+      connector_usage: supporting
+      signature_tokens:
+      - token: circular_nodes
+        role: dominant
+      dominant_motif: strategy.portfolio_matrix
+    composition_bias: balanced
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 最初の90日は、価値が高く実装可能な領域へ集中する
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}
+- slide_id: capability
+  slide_number: 5
+  intent: architecture
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: synthesis
+    role_layout: capability_map_premium
+    variant: primary
+    grid_id: capability_bands
+    layout_contract_sha256: bc7fa92b596923665f8ebd43df3484c43f2b107a2a1bd49ff07080e6dd908712
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.75
+        y: 1.55
+        w: 11.85
+        h: 4.55
+      interpretation:
+        x: 8.8
+        y: 6.18
+        w: 3.6
+        h: 0.42
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: strategy.capability_map
+  component_plan:
+  - component: headline.insight
+    slot: header
+    variant: primary
+  - component: strategy.capability_map
+    slot: main
+    variant: primary
+  - component: annotation.so_what
+    slot: interpretation
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: strategy.capability_map_editorial
+    pattern_family: card_grid
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: standard
+    density: high
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=comparisonのRouter規則による
+    visual_grammar:
+      spatial_model: stack
+      primary_primitive: layers
+      reading_path: scan_columns
+      container_dependency: high
+      takeaway_band: false
+      distinctive_feature: strategy.capability_map固有の構図
+    motif_fingerprint:
+      visual_texture: table
+      node_usage: none
+      connector_usage: none
+      signature_tokens:
+      - token: rounded_cards
+        role: dominant
+      dominant_motif: strategy.capability_map
+    composition_bias: balanced
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 不足はモデルではなく、価値設計と運用能力に集中する
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}
+- slide_id: roadmap
+  slide_number: 6
+  intent: roadmap
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: action
+    role_layout: roadmap_premium
+    variant: primary
+    grid_id: roadmap_full
+    layout_contract_sha256: bd44a094dd4ec1826b1f04800097b949fba413dc257ace74c649c754270ad3df
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.7
+        y: 1.58
+        w: 11.9
+        h: 4.5
+      action:
+        x: 9.1
+        y: 6.15
+        w: 3.3
+        h: 0.46
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: execution.roadmap
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: execution.roadmap
+    slot: main
+    variant: primary
+  - component: action.owner_due
+    slot: action
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: execution.roadmap_editorial
+    pattern_family: timeline
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: standard
+    density: medium
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=sequenceのRouter規則による
+    visual_grammar:
+      spatial_model: timeline
+      primary_primitive: trace_line
+      reading_path: left_to_right
+      container_dependency: low
+      takeaway_band: false
+      distinctive_feature: execution.roadmap固有の構図
+    motif_fingerprint:
+      visual_texture: form
+      node_usage: supporting
+      connector_usage: supporting
+      signature_tokens:
+      - token: numbered_nodes
+        role: dominant
+      dominant_motif: execution.roadmap
+    composition_bias: balanced
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 90日で設計・実装・判定までを一巡させる
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}
+- slide_id: governance
+  slide_number: 7
+  intent: architecture
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: action
+    role_layout: governance_premium
+    variant: primary
+    grid_id: governance_levels
+    layout_contract_sha256: 16dcd98ef06f88d6127b05b43d41086f8590544add26fe2ccb30a89d815ffcc7
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.75
+        y: 1.58
+        w: 8.55
+        h: 4.98
+      action:
+        x: 9.62
+        y: 2.0
+        w: 2.78
+        h: 3.1
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: execution.governance
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: execution.governance
+    slot: main
+    variant: primary
+  - component: action.owner_due
+    slot: action
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: execution.governance_editorial
+    pattern_family: network
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: standard
+    density: low
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=sequenceのRouter規則による
+    visual_grammar:
+      spatial_model: network
+      primary_primitive: network_nodes
+      reading_path: top_to_bottom
+      container_dependency: low
+      takeaway_band: false
+      distinctive_feature: execution.governance固有の構図
+    motif_fingerprint:
+      visual_texture: node_link
+      node_usage: dominant
+      connector_usage: dominant
+      signature_tokens:
+      - token: thin_curved_connectors
+        role: dominant
+      dominant_motif: execution.governance
+    composition_bias: balanced
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 価値・実装・リスクを同じ会議体で判断する
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}
+- slide_id: decision
+  slide_number: 8
+  intent: decision
+  attention_order:
+  - headline
+  - visual_anchor
+  - implication
+  design_resolution:
+    role: recommendation
+    role_layout: recommendation_actions_premium
+    variant: primary
+    grid_id: recommendation_actions_split
+    layout_contract_sha256: 24cc7c16a62b96edc58fdc27e5cf9417d8ba3e64f7d731527329fa6595283dde
+    slot_frames:
+      header:
+        x: 0.65
+        y: 0.55
+        w: 12.0
+        h: 0.82
+      main:
+        x: 0.65
+        y: 1.58
+        w: 8.15
+        h: 4.98
+      action:
+        x: 9.12
+        y: 1.95
+        w: 3.28
+        h: 3.5
+      footer:
+        x: 0.65
+        y: 6.92
+        w: 12.0
+        h: 0.25
+    component_hint: narrative.recommendation_actions
+  component_plan:
+  - component: headline.decision
+    slot: header
+    variant: primary
+  - component: narrative.recommendation_actions
+    slot: main
+    variant: primary
+  - component: action.owner_due
+    slot: action
+    variant: primary
+  - component: evidence_footer.compact
+    slot: footer
+    variant: primary
+  visual_strategy:
+    pattern: narrative.recommendation_actions_editorial
+    pattern_family: hero
+    change_level: compose
+    renderer: sdpm_native
+    integration_mode: native
+    emphasis: showpiece
+    density: low
+    rationale: 意味に適合する登録済みPremium Componentを使用するため
+    renderer_decision:
+      considered:
+      - sdpm_native
+      - baoyu_diagram
+      selected: sdpm_native
+      reason: relationship=connectionのRouter規則による
+    visual_grammar:
+      spatial_model: editorial_split
+      primary_primitive: typography
+      reading_path: z_pattern
+      container_dependency: low
+      takeaway_band: false
+      distinctive_feature: narrative.recommendation_actions固有の構図
+    motif_fingerprint:
+      visual_texture: kpi_editorial
+      node_usage: none
+      connector_usage: none
+      signature_tokens:
+      - token: large_color_fields
+        role: dominant
+      dominant_motif: narrative.recommendation_actions
+    composition_bias: asymmetric
+    safe_area:
+      title: strict
+      footer: strict
+      edge_inset_px: 48
+  constraints:
+    preserve_content: true
+    editable_required: true
+    max_text_blocks: 8
+  acceptance:
+    visual_anchor: 本日は、対象業務・責任者・価値KPIを決める
+    must_show:
+    - Component IDの追跡情報
+    must_avoid:
+    - 文字切れ
+    - 重なり
+  layout_adjustments: {}

@@ -1,0 +1,140 @@
+version: 1
+coordinate_system: {width: 13.333, height: 7.5, unit: inch}
+grids:
+  - id: hero_asymmetric
+    slots:
+      kicker: {x: 0.65, y: 0.42, w: 2.2, h: 0.28}
+      header: {x: 0.65, y: 0.84, w: 7.6, h: 1.05}
+      main: {x: 7.75, y: 2.05, w: 4.75, h: 3.35}
+      interpretation: {x: 0.65, y: 2.35, w: 5.9, h: 1.65}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: editorial_split_58_42
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.85}
+      main: {x: 0.65, y: 1.75, w: 7.0, h: 4.55}
+      interpretation: {x: 8.15, y: 2.05, w: 4.2, h: 2.55}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: evidence_metric_focus
+    slots:
+      tag: {x: 0.65, y: 0.42, w: 1.25, h: 0.3}
+      header: {x: 0.65, y: 0.86, w: 12.0, h: 0.82}
+      main: {x: 0.75, y: 2.05, w: 7.25, h: 3.8}
+      annotation: {x: 8.35, y: 2.35, w: 3.9, h: 2.35}
+      interpretation: {x: 8.35, y: 2.35, w: 3.9, h: 2.35}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: comparison_60_40
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.85}
+      main: {x: 0.65, y: 1.75, w: 7.25, h: 4.75}
+      annotation: {x: 8.35, y: 2.05, w: 3.9, h: 2.5}
+      interpretation: {x: 8.35, y: 2.05, w: 3.9, h: 2.5}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: synthesis_spine
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.85}
+      main: {x: 0.85, y: 1.8, w: 11.65, h: 3.95}
+      annotation: {x: 8.4, y: 5.75, w: 3.8, h: 0.75}
+      interpretation: {x: 8.4, y: 5.75, w: 3.8, h: 0.75}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: decision_canvas
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.85}
+      main: {x: 0.75, y: 1.65, w: 8.0, h: 4.85}
+      decision: {x: 9.05, y: 2.0, w: 3.2, h: 2.6}
+      interpretation: {x: 9.05, y: 2.0, w: 3.2, h: 2.6}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: action_timeline
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.85}
+      main: {x: 0.8, y: 1.8, w: 11.75, h: 3.6}
+      action: {x: 8.75, y: 5.55, w: 3.5, h: 0.95}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: action_form
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.85}
+      main: {x: 0.75, y: 1.65, w: 8.15, h: 4.95}
+      action: {x: 9.2, y: 1.95, w: 3.0, h: 3.2}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: reference_register
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.85}
+      main: {x: 0.75, y: 1.65, w: 11.85, h: 4.95}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: summary_editorial_full
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.65, y: 1.58, w: 12.0, h: 4.98}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: key_message_evidence_split
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.65, y: 1.62, w: 8.05, h: 4.86}
+      interpretation: {x: 9.05, y: 2.12, w: 3.35, h: 2.45}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: chart_insight_68_32
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.65, y: 1.62, w: 8.25, h: 4.86}
+      annotation: {x: 9.18, y: 2.05, w: 3.22, h: 2.65}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: findings_implications_rows
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.65, y: 1.58, w: 12.0, h: 4.98}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: strategy_architecture_full
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.78, y: 1.58, w: 11.74, h: 5.0}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: tree_canvas
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.78, y: 1.58, w: 11.74, h: 5.0}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: matrix_with_decision
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.72, y: 1.58, w: 8.5, h: 4.98}
+      decision: {x: 9.55, y: 2.05, w: 2.85, h: 2.95}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: capability_bands
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.75, y: 1.55, w: 11.85, h: 4.55}
+      interpretation: {x: 8.8, y: 6.18, w: 3.6, h: 0.42}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: initiative_portfolio_table
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.65, y: 1.58, w: 8.8, h: 4.98}
+      decision: {x: 9.75, y: 2.0, w: 2.65, h: 3.1}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: roadmap_full
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.7, y: 1.58, w: 11.9, h: 4.5}
+      action: {x: 9.1, y: 6.15, w: 3.3, h: 0.46}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: gantt_full
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.7, y: 1.58, w: 11.9, h: 5.0}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: governance_levels
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.75, y: 1.58, w: 8.55, h: 4.98}
+      action: {x: 9.62, y: 2.0, w: 2.78, h: 3.1}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: kpi_cascade_full
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.72, y: 1.58, w: 11.88, h: 5.0}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}
+  - id: recommendation_actions_split
+    slots:
+      header: {x: 0.65, y: 0.55, w: 12.0, h: 0.82}
+      main: {x: 0.65, y: 1.58, w: 8.15, h: 4.98}
+      action: {x: 9.12, y: 1.95, w: 3.28, h: 3.5}
+      footer: {x: 0.65, y: 6.92, w: 12.0, h: 0.25}

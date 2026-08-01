@@ -1,0 +1,1470 @@
+version: 2
+components:
+- id: action.form
+  kind: action
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: PoC・企画・実行条件を入力するフォーム。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+  optional_content:
+  - fields
+- id: action.owner_due
+  kind: action
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 責任者・期限・状態をまとめる。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+  optional_content:
+  - owner
+  - due
+  - status
+- id: annotation.caveat
+  kind: annotation
+  slots:
+  - annotation
+  - interpretation
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 注意・限定条件を低い視覚ウェイトで示す。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+- id: annotation.chart_callout
+  kind: annotation
+  slots:
+  - annotation
+  - interpretation
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  use_when: グラフ上の点と接続する注釈。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - label
+  - anchor
+- id: annotation.so_what
+  kind: annotation
+  slots:
+  - annotation
+  - interpretation
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 結論・示唆を強い色面で示す。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+- id: chart.bullet
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 複数KPIの目標達成度を並列表示するとき
+  avoid_when: 変化要因や時系列を説明するとき
+  content_limits:
+    recommended_items: 3〜8
+  benchmark_tier: consulting
+  required_content:
+  - items
+- id: chart.heatmap
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 多数の比較結果を俯瞰するとき
+  avoid_when: 絶対値の精密比較が必要な場合
+  content_limits:
+    recommended_rows: 3〜8
+    recommended_columns: 3〜8
+    value_scale: 0〜3
+  benchmark_tier: consulting
+  required_content:
+  - rows
+  - columns
+  - values
+- id: chart.highlight_bar
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4_alias
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 既存V8のDeck PlanまたはRole Layoutとの互換性を維持するとき
+  avoid_when: 新規設計ではchart.insightを優先する
+  content_limits:
+    recommended_items: 3〜7 bars
+    minimum_font_size: 11
+  benchmark_tier: compatibility
+  required_content:
+  - items
+  - insight
+  alias_of: chart.insight
+- id: chart.horizontal_bar
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: カテゴリ間の大きさを正確に比較するとき
+  avoid_when: 時系列推移や構成比
+  content_limits:
+    recommended_items: 3〜10
+  benchmark_tier: consulting
+  required_content:
+  - items
+- id: chart.insight
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 棒グラフの差とそこから得る示唆を同時に伝えるとき
+  avoid_when: 時系列・相関・構成比が主張の中心のとき
+  content_limits:
+    recommended_items: 3〜7 bars
+    minimum_font_size: 11
+  benchmark_tier: premium
+  required_content:
+  - items
+  - insight
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: &id001
+    executive: consulting_classic
+    editorial: editorial_premium
+    technical: technical_data
+  premium: true
+- id: chart.line_forecast
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 実績と見通しを同一軸で示すとき
+  avoid_when: 離散カテゴリ比較
+  content_limits:
+    recommended_points: 4〜12
+    recommended_forecast_points: 1〜5
+  benchmark_tier: consulting
+  required_content:
+  - actual
+- id: chart.progress_rows
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: ラベル・プログレスバー・直接値を統合した比較チャート。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: chart.scatter_bubble
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 市場・商品・施策の2軸評価と規模を示すとき
+  avoid_when: 順序や因果を示すとき
+  content_limits:
+    recommended_items: 3〜12
+    axis_range: 0〜1
+  benchmark_tier: consulting
+  required_content:
+  - items
+- id: chart.sensitivity_matrix
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 価格・数量など2変数のシナリオ分析を示すとき
+  avoid_when: カテゴリの単純比較
+  content_limits:
+    recommended_rows: 3〜7
+    recommended_columns: 3〜7
+  benchmark_tier: consulting
+  required_content:
+  - rows
+  - columns
+  - values
+- id: chart.slope
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 2時点の変化方向を直接ラベルするSlope chart。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: chart.stacked_bar
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 構成比を示す編集可能な積み上げバー。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: chart.trend_line
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4_alias
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 既存V8のDeck PlanまたはRole Layoutとの互換性を維持するとき
+  avoid_when: 新規設計ではchart.line_forecastを優先する
+  content_limits:
+    recommended_points: 4〜12
+    recommended_forecast_points: 1〜5
+  benchmark_tier: compatibility
+  required_content:
+  - actual
+  alias_of: chart.line_forecast
+- id: chart.waterfall
+  kind: chart
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 増減要因と累積値を示すWaterfall。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: comparison.before_after
+  kind: comparison
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: Before/Afterの変化を示す。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - left
+  - right
+  optional_content:
+  - left_title
+  - right_title
+- id: comparison.current_future
+  kind: comparison
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 現状を抑え、将来像を強く見せる。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - left
+  - right
+  optional_content:
+  - left_title
+  - right_title
+- id: comparison.gap
+  kind: comparison
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 左右の差を強調する非対称比較。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - left
+  - right
+  optional_content:
+  - separator
+- id: comparison.pro_con
+  kind: comparison
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 賛否・利点欠点を同じ視覚ウェイトで比較。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - left
+  - right
+  optional_content:
+  - left_title
+  - right_title
+- id: decision.choice
+  kind: decision
+  slots:
+  - main
+  - decision
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 複数選択肢と選択状態を示す。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - question
+  - options
+  optional_content:
+  - selected
+- id: decision.criteria
+  kind: decision
+  slots:
+  - main
+  - decision
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 評価基準・判定表。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - rows
+  optional_content:
+  - columns
+- id: evidence_footer.compact
+  kind: evidence
+  slots:
+  - footer
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  use_when: 短い出典フッター。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+  optional_content:
+  - text
+  - source
+  - page
+- id: evidence_footer.full
+  kind: evidence
+  slots:
+  - footer
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 出典・ページ・図表・母集団・回答方式を分離表示。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - source
+  optional_content:
+  - claim_type
+  - page
+  - figure
+  - sample
+  - response_type
+- id: execution.gantt
+  kind: execution
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 詳細な実行時期と重なりを示すとき
+  avoid_when: ストーリーや戦略方針の説明
+  content_limits:
+    recommended_periods: 4〜8
+    recommended_tasks: 3〜8
+  benchmark_tier: premium
+  required_content:
+  - periods
+  - tasks
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: execution.governance
+  kind: execution
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 会議体と判断権限を整理するとき
+  avoid_when: 業務プロセスや組織全体の詳細表示
+  content_limits:
+    recommended_levels: 3〜4
+    max_detail_lines: 2
+  benchmark_tier: premium
+  required_content:
+  - levels
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: execution.initiative_card
+  kind: execution
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 施策ポートフォリオや個別施策概要を示すとき
+  avoid_when: 複雑な根拠分析や詳細工程
+  content_limits:
+    recommended_metrics: 1〜3
+    max_description_lines: 5
+  benchmark_tier: consulting
+  required_content:
+  - title
+  - description
+- id: execution.kpi_cascade
+  kind: execution
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 経営目標と現場指標の接続を示すとき
+  avoid_when: 横並び比較や時系列
+  content_limits:
+    recommended_levels: 2〜3
+    recommended_items: 2〜4 per level
+  benchmark_tier: premium
+  required_content:
+  - top
+  - levels
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: execution.raci
+  kind: execution
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 実行責任と関与方法を明確化するとき
+  avoid_when: 役割が多すぎる大規模組織図
+  content_limits:
+    recommended_roles: 3〜6
+    recommended_rows: 3〜8
+  benchmark_tier: consulting
+  required_content:
+  - roles
+  - rows
+- id: execution.roadmap
+  kind: execution
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 3〜5フェーズの実行計画を経営層へ示すとき
+  avoid_when: タスク日程の詳細管理
+  content_limits:
+    recommended_phases: 3〜5
+    recommended_items: 2〜4 per phase
+  benchmark_tier: premium
+  required_content:
+  - phases
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: execution.workstream_plan
+  kind: execution
+  slots:
+  - main
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: プログラム全体の実行体制を示すとき
+  avoid_when: 工程間の依存関係が主題のとき
+  content_limits:
+    recommended_workstreams: 3〜5
+    recommended_items: 2〜5 per workstream
+  benchmark_tier: consulting
+  required_content:
+  - workstreams
+- id: framework.hub_spoke
+  kind: framework
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 中心と周辺要素の接続関係を示す。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - center
+  - items
+- id: framework.layers
+  kind: framework
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 階層・成熟度・基盤を色面の積層で示す。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: headline.decision
+  kind: headline
+  slots:
+  - header
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 判断事項を示す濃色見出し。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+- id: headline.fact
+  kind: headline
+  slots:
+  - header
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 事実を示す結論見出し。下線で根拠ページを示す。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+- id: headline.insight
+  kind: headline
+  slots:
+  - header
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 解釈・洞察を示す結論見出し。左アクセント線を持つ。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+- id: headline.recommendation
+  kind: headline
+  slots:
+  - header
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 推奨・提案を示す結論見出し。警告色の細帯を持つ。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+- id: insight.summary_strip
+  kind: insight
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 3〜5個の重要数値をトップルール付き編集カードで統合。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: kpi.row
+  kind: metric
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 横一列のKPI。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: kpi.tiles
+  kind: metric
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 2〜6個のKPIタイル。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items
+- id: label.fact_tag
+  kind: label
+  slots:
+  - tag
+  - kicker
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  use_when: 事実タグ。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+- id: label.interpretation_tag
+  kind: label
+  slots:
+  - tag
+  - kicker
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  use_when: 解釈タグ。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+- id: label.proposal_tag
+  kind: label
+  slots:
+  - tag
+  - kicker
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  use_when: 提案タグ。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+- id: label.section
+  kind: label
+  slots:
+  - tag
+  - kicker
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  use_when: セクションキッカー。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+- id: matrix.quadrant
+  kind: matrix
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 2軸マトリクスと配置項目。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+  optional_content:
+  - x_label
+  - y_label
+  - quadrants
+  - items
+- id: metric.before_after
+  kind: metric
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 2つの数値ブロックによる前後比較。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - before
+  - after
+- id: metric.big_number
+  kind: metric
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 単一の重要数値。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - value
+  - label
+  optional_content:
+  - note
+- id: metric.delta
+  kind: metric
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 前後値と変化量。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - before
+  - after
+  optional_content:
+  - delta
+  - label
+- id: metric_pair.gap
+  kind: metric
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 2指標の差を主役にする。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - left
+  - right
+  optional_content:
+  - separator
+  - implication
+- id: narrative.executive_summary
+  kind: narrative
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 会議冒頭で主要結論を短時間で共有するとき
+  avoid_when: 独立したKPIだけを並べたいとき
+  content_limits:
+    recommended_items: 3〜5
+    max_title_lines: 2
+    max_body_lines: 3
+  benchmark_tier: premium
+  required_content:
+  - items
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: narrative.findings_implications
+  kind: narrative
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 分析結果から経営上の意味を直接示すとき
+  avoid_when: 単なる事実一覧や時系列説明
+  content_limits:
+    recommended_items: 2〜4
+    max_finding_lines: 3
+    max_implication_lines: 3
+  benchmark_tier: premium
+  required_content:
+  - items
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: narrative.key_message_evidence
+  kind: narrative
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 一つの結論を2〜4個の数値・事実で裏付けるとき
+  avoid_when: 根拠同士の因果や時系列が主役のとき
+  content_limits:
+    recommended_items: 2〜4 evidence
+    minimum_font_size: 12
+  benchmark_tier: premium
+  required_content:
+  - message
+  - evidence
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: narrative.recommendation_actions
+  kind: narrative
+  slots:
+  - main
+  - decision
+  - action
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 結論と次の行動を同時に合意したいとき
+  avoid_when: 根拠説明が主目的のページ
+  content_limits:
+    recommended_actions: 2〜4
+    max_recommendation_lines: 5
+  benchmark_tier: premium
+  required_content:
+  - recommendation
+  - actions
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: narrative.scr
+  kind: narrative
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 提案の論理を1枚で圧縮するとき
+  avoid_when: 複数の並列論点や詳細分析
+  content_limits:
+    fixed_sections: 3
+    max_lines_per_section: 5
+  benchmark_tier: consulting
+  required_content:
+  - situation
+  - complication
+  - resolution
+- id: process.customer_journey
+  kind: process
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 顧客体験の問題点と改善機会を示すとき
+  avoid_when: 内部業務だけの工程説明
+  content_limits:
+    recommended_stages: 3〜6
+    fixed_rows: 4
+  benchmark_tier: consulting
+  required_content:
+  - stages
+- id: process.gate
+  kind: process
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 判断ゲートとYes/No分岐。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - before
+  - question
+  - 'yes'
+  - 'no'
+- id: process.stage
+  kind: process
+  slots:
+  - main
+  implementation: native_components_v4_alias
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 既存V8のDeck PlanまたはRole Layoutとの互換性を維持するとき
+  avoid_when: 新規設計ではprocess.stage_flowを優先する
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: compatibility
+  required_content:
+  - stages
+  alias_of: process.stage_flow
+- id: process.stage_flow
+  kind: process
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 順序のある3〜6段階フロー。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - stages
+- id: process.swimlane
+  kind: process
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 部門横断プロセスと責任分担を示すとき
+  avoid_when: 単純な3ステップ説明
+  content_limits:
+    recommended_lanes: 2〜5
+    recommended_stages: 3〜7
+  benchmark_tier: consulting
+  required_content:
+  - lanes
+  - stages
+- id: quote.editorial
+  kind: quote
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 大きな引用符とタイポグラフィを主役にする引用表現。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - text
+  optional_content:
+  - attribution
+- id: strategy.capability_map
+  kind: strategy
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 変革に必要な能力とギャップを整理するとき
+  avoid_when: 詳細な組織責任や工程計画
+  content_limits:
+    recommended_groups: 2〜5
+    recommended_items: 2〜5 per group
+  benchmark_tier: premium
+  required_content:
+  - groups
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: strategy.house
+  kind: strategy
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 事業戦略全体を階層的に俯瞰するとき
+  avoid_when: 単一施策や詳細ロードマップ
+  content_limits:
+    recommended_choices: 3〜4
+    recommended_initiatives: 2〜5
+    recommended_enablers: 2〜4
+  benchmark_tier: premium
+  required_content:
+  - aspiration
+  - choices
+  - foundation
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: strategy.initiative_portfolio
+  kind: strategy
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 選定済み施策を実行観点で比較・管理するとき
+  avoid_when: 施策間の時系列や依存関係が中心のとき
+  content_limits:
+    recommended_items: 3〜6 initiatives
+    minimum_font_size: 10
+  benchmark_tier: premium
+  required_content:
+  - items
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: strategy.issue_tree
+  kind: strategy
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 問題構造化や分析計画を示すとき
+  avoid_when: 時系列や因果の説明
+  content_limits:
+    recommended_branches: 2〜4
+    recommended_children: 1〜3 per branch
+  benchmark_tier: premium
+  required_content:
+  - root
+  - branches
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: strategy.portfolio_matrix
+  kind: strategy
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 候補を2軸と規模で比較し、優先順位を決めるとき
+  avoid_when: 軸が一つしかない、または厳密な表比較が必要なとき
+  content_limits:
+    recommended_items: 3〜10 items
+    minimum_font_size: 10
+  benchmark_tier: premium
+  required_content:
+  - items
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: strategy.prioritization_matrix
+  kind: strategy
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 複数施策の選択と優先順位を議論するとき
+  avoid_when: 比較軸が共通でない候補
+  content_limits:
+    recommended_items: 3〜10
+    axis_range: 0〜1
+  benchmark_tier: premium
+  required_content:
+  - items
+- id: strategy.value_driver_tree
+  kind: strategy
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: KPI設計や価値創出ロジックを示すとき
+  avoid_when: 組織図やプロセスフロー
+  content_limits:
+    recommended_drivers: 2〜4
+    recommended_subdrivers: 1〜3
+  benchmark_tier: premium
+  required_content:
+  - root
+  - drivers
+  design_systems:
+  - consulting_classic
+  - editorial_premium
+  - technical_data
+  theme_mapping: *id001
+  premium: true
+- id: synthesis.causal_spine
+  kind: synthesis
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 原因→現象→解釈→打ち手を一本の軸で統合。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content: []
+  optional_content:
+  - items
+  - cause
+  - phenomenon
+  - interpretation
+  - action
+- id: synthesis.spine
+  kind: synthesis
+  slots:
+  - main
+  implementation: native_components_v4_alias
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 既存V8のDeck PlanまたはRole Layoutとの互換性を維持するとき
+  avoid_when: 新規設計ではsynthesis.causal_spineを優先する
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: compatibility
+  required_content: []
+  optional_content:
+  - items
+  - cause
+  - phenomenon
+  - interpretation
+  - action
+  alias_of: synthesis.causal_spine
+- id: synthesis.system_map
+  kind: framework
+  slots:
+  - main
+  implementation: native_components_v4_alias
+  editable: true
+  variants:
+  - primary
+  - dense
+  use_when: 既存V8のDeck PlanまたはRole Layoutとの互換性を維持するとき
+  avoid_when: 新規設計ではframework.hub_spokeを優先する
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: compatibility
+  required_content:
+  - center
+  - items
+  alias_of: framework.hub_spoke
+- id: timeline.milestone
+  kind: timeline
+  slots:
+  - main
+  implementation: native_components_v4
+  editable: true
+  variants:
+  - primary
+  - alternate
+  - dense
+  use_when: 時系列マイルストーン。を伝えるとき
+  avoid_when: 内容の関係性が異なる場合、または情報量が上限を超える場合
+  content_limits:
+    recommended_items: 用途に応じて2〜6
+    minimum_font_size: 12
+  benchmark_tier: core
+  required_content:
+  - items

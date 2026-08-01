@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "source": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\references\\examples\\native-components-v4\\premium-gallery-integrated.pptx",
+  "slide_count": 45,
+  "premium_component_count": 15,
+  "premium_component_ids": [
+    "chart.insight",
+    "execution.gantt",
+    "execution.governance",
+    "execution.kpi_cascade",
+    "execution.roadmap",
+    "narrative.executive_summary",
+    "narrative.findings_implications",
+    "narrative.key_message_evidence",
+    "narrative.recommendation_actions",
+    "strategy.capability_map",
+    "strategy.house",
+    "strategy.initiative_portfolio",
+    "strategy.issue_tree",
+    "strategy.portfolio_matrix",
+    "strategy.value_driver_tree"
+  ],
+  "theme_count": 3,
+  "traced_all_slides": true,
+  "trace_coverage_ratio": 0.777,
+  "native_element_ratio": 1.0,
+  "premium_theme_composition": {
+    "chart.insight": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "execution.gantt": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "execution.governance": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "execution.kpi_cascade": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "execution.roadmap": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "narrative.executive_summary": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "narrative.findings_implications": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "narrative.key_message_evidence": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "narrative.recommendation_actions": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "strategy.capability_map": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "strategy.house": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "strategy.initiative_portfolio": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "strategy.issue_tree": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "strategy.portfolio_matrix": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    },
+    "strategy.value_driver_tree": {
+      "observed_slides": 3,
+      "unique_composition_signatures": 3,
+      "pass": true
+    }
+  },
+  "premium_theme_composition_pass": true,
+  "japanese_lint_pass": true,
+  "pass": true
+}

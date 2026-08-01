@@ -1,0 +1,1576 @@
+{
+  "version": 1,
+  "source_pptx": "C:\\Users\\yu_37330\\Documents\\インフォグラフィック\\skill-builds-v8-native-components-v4\\v8_native_v4_handoff\\current-v8\\spec-driven-presentation-maker\\references\\examples\\native-components-v4\\demo-decks\\technical-data\\demo-deck.pptx",
+  "source_pptx_sha256": "d798619d57534abe2e7b250fb11fc0da56f037c24507785488c37e234d7efcc6",
+  "slide_count": 8,
+  "slides": [
+    {
+      "slide_number": 1,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 価値創出には、顧客・業務・実行基盤を一体で変える 顧客価値・業務設計・実行基盤を同時に変える S01 顧客を選ぶ 成果が明確な重点顧客に集中 S02 業務を変える 個人利用からプロセス実装へ S03 基盤を整える データ・人材・統制を横断運用 S04 90 日で判断 価値 KPI で継続可否を決める 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 1 / 8",
+      "text_sha256": "00b0488ca2d3b9d20aeb70d1e814aa8c2facdc689599cc43e0e8f524d309ca9d",
+      "content_inventory_sha256": "acdf18ceae8d0c8e8acae9ac80d29d740040b6b985c248ab397d9d90677762a5",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "価値創出には、顧客・業務・実行基盤を一体で変える",
+          "explicit_lines": [
+            "価値創出には、顧客・業務・実行基盤を一体で変える"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "顧客価値・業務設計・実行基盤を同時に変える",
+          "explicit_lines": [
+            "顧客価値・業務設計・実行基盤を同時に変える"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 20.0
+        },
+        {
+          "text": "S01",
+          "explicit_lines": [
+            "S01"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "顧客を選ぶ",
+          "explicit_lines": [
+            "顧客を選ぶ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 17.0
+        },
+        {
+          "text": "成果が明確な重点顧客に集中",
+          "explicit_lines": [
+            "成果が明確な重点顧客に集中"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "S02",
+          "explicit_lines": [
+            "S02"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "業務を変える",
+          "explicit_lines": [
+            "業務を変える"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 17.0
+        },
+        {
+          "text": "個人利用からプロセス実装へ",
+          "explicit_lines": [
+            "個人利用からプロセス実装へ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "S03",
+          "explicit_lines": [
+            "S03"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "基盤を整える",
+          "explicit_lines": [
+            "基盤を整える"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 17.0
+        },
+        {
+          "text": "データ・人材・統制を横断運用",
+          "explicit_lines": [
+            "データ・人材・統制を横断運用"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "S04",
+          "explicit_lines": [
+            "S04"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "90 日で判断",
+          "explicit_lines": [
+            "90 日で判断"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 17.0
+        },
+        {
+          "text": "価値 KPI で継続可否を決める",
+          "explicit_lines": [
+            "価値 KPI で継続可否を決める"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "1 / 8",
+          "explicit_lines": [
+            "1 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "1",
+        "1",
+        "2",
+        "3",
+        "4",
+        "8",
+        "90"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "Components",
+        "DATA",
+        "KPI",
+        "Native",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "TECHNICAL",
+        "v4"
+      ],
+      "notes": "価値創出には、顧客・業務・実行基盤を一体で変えるを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "59bcc518cedb9de347aa1ede5c5887c04e42bc270af2979b3489dd6de4dd8017",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 22,
+        "connector_count": 5,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 17,
+          "roundRect": 5
+        },
+        "rectangle_area_ratio": 0.7541,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    },
+    {
+      "slide_number": 2,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 導入量より、価値へ接続したユースケースが不足している ANNOTATION 個人効率化 82 部門業務 55 全社プロセス 31 顧客価値 18 INTERPRETATION 利用は広がる一方、変革領域への組込みは限定的 数値は検証用デモ 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 2 / 8",
+      "text_sha256": "1801d49f0c4d6d2d1de477e2a32e89a1684f0752e01fd4e342110e79d6eae07f",
+      "content_inventory_sha256": "c0dc0c14a98c807c3983b513b79a717edd5935d211e5df686997d5e831ee3167",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "導入量より、価値へ接続したユースケースが不足している",
+          "explicit_lines": [
+            "導入量より、価値へ接続したユースケースが不足している"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "ANNOTATION",
+          "explicit_lines": [
+            "ANNOTATION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "個人効率化",
+          "explicit_lines": [
+            "個人効率化"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "82",
+          "explicit_lines": [
+            "82"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "部門業務",
+          "explicit_lines": [
+            "部門業務"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "55",
+          "explicit_lines": [
+            "55"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "全社プロセス",
+          "explicit_lines": [
+            "全社プロセス"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "31",
+          "explicit_lines": [
+            "31"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "顧客価値",
+          "explicit_lines": [
+            "顧客価値"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 14.0
+        },
+        {
+          "text": "18",
+          "explicit_lines": [
+            "18"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "INTERPRETATION",
+          "explicit_lines": [
+            "INTERPRETATION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "利用は広がる一方、変革領域への組込みは限定的",
+          "explicit_lines": [
+            "利用は広がる一方、変革領域への組込みは限定的"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 22.0
+        },
+        {
+          "text": "数値は検証用デモ",
+          "explicit_lines": [
+            "数値は検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "2 / 8",
+          "explicit_lines": [
+            "2 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "18",
+        "2",
+        "31",
+        "55",
+        "8",
+        "82"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "ANNOTATION",
+        "Components",
+        "DATA",
+        "INTERPRETATION",
+        "Native",
+        "TECHNICAL",
+        "v4"
+      ],
+      "notes": "導入量より、価値へ接続したユースケースが不足しているを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "413c47111c404dc8e7cf80ea11907320fe54ade1e3ac2bc416a1f9f59235f02d",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 21,
+        "connector_count": 17,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 20,
+          "roundRect": 1
+        },
+        "rectangle_area_ratio": 0.4744,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    },
+    {
+      "slide_number": 3,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 部分最適・曖昧な KPI ・分断運営が価値化を止める ID OBSERVATION LINK ACTION F-01 個人利用で止まり業務責任者が不在 業務オーナーを先に置く F-02 時間削減だけを成果として追跡 顧客・収益 KPI へ接続 F-03 データ・ IT ・現場が別々に推進 横断ガバナンスで統合 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 3 / 8",
+      "text_sha256": "a69a71acd153a66465c548dcfc72f894bc55d63ef7da7240a6f9d419c5ca94c0",
+      "content_inventory_sha256": "7f24c8dc0ec460aa0ae1f0daaa886bffb9dacf5eac5589667ccd575ada64820f",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "部分最適・曖昧な KPI ・分断運営が価値化を止める",
+          "explicit_lines": [
+            "部分最適・曖昧な KPI ・分断運営が価値化を止める"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "ID",
+          "explicit_lines": [
+            "ID"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "OBSERVATION",
+          "explicit_lines": [
+            "OBSERVATION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "LINK",
+          "explicit_lines": [
+            "LINK"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "ACTION",
+          "explicit_lines": [
+            "ACTION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "F-01",
+          "explicit_lines": [
+            "F-01"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "個人利用で止まり業務責任者が不在",
+          "explicit_lines": [
+            "個人利用で止まり業務責任者が不在"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "業務オーナーを先に置く",
+          "explicit_lines": [
+            "業務オーナーを先に置く"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "F-02",
+          "explicit_lines": [
+            "F-02"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "時間削減だけを成果として追跡",
+          "explicit_lines": [
+            "時間削減だけを成果として追跡"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "顧客・収益 KPI へ接続",
+          "explicit_lines": [
+            "顧客・収益 KPI へ接続"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "F-03",
+          "explicit_lines": [
+            "F-03"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "データ・ IT ・現場が別々に推進",
+          "explicit_lines": [
+            "データ・ IT ・現場が別々に推進"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "横断ガバナンスで統合",
+          "explicit_lines": [
+            "横断ガバナンスで統合"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "3 / 8",
+          "explicit_lines": [
+            "3 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "01",
+        "02",
+        "03",
+        "3",
+        "8"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "ACTION",
+        "Components",
+        "DATA",
+        "F-01",
+        "F-02",
+        "F-03",
+        "ID",
+        "IT",
+        "KPI",
+        "LINK",
+        "Native",
+        "OBSERVATION",
+        "TECHNICAL",
+        "v4"
+      ],
+      "notes": "部分最適・曖昧な KPI ・分断運営が価値化を止めるを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "acb5aabfb5709a9966f03e78322a553fe244a4135f43e5f07a3187bd5c1143b4",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 20,
+        "connector_count": 4,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 17,
+          "roundRect": 3
+        },
+        "rectangle_area_ratio": 1.2183,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    },
+    {
+      "slide_number": 4,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 最初の 90 日は、価値が高く実装可能な領域へ集中する DECISION 問い合わせ解決 需要予測 開発支援 議事録 実装容易性 価値インパクト PRIORITY SCORE 問い合わせ解決 62 需要予測 42 開発支援 23 議事録 23 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 4 / 8",
+      "text_sha256": "09e066f00f06621cae7346f08e081cdacfa19da1197d792293c4ab57aa1f9e96",
+      "content_inventory_sha256": "717db7d00f2ac456726f0b52201ef37f45328f5b2e6c8edbe75fb647ccdb95b4",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "最初の 90 日は、価値が高く実装可能な領域へ集中する",
+          "explicit_lines": [
+            "最初の 90 日は、価値が高く実装可能な領域へ集中する"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "DECISION",
+          "explicit_lines": [
+            "DECISION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "問い合わせ解決",
+          "explicit_lines": [
+            "問い合わせ解決"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "需要予測",
+          "explicit_lines": [
+            "需要予測"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "開発支援",
+          "explicit_lines": [
+            "開発支援"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "議事録",
+          "explicit_lines": [
+            "議事録"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "実装容易性",
+          "explicit_lines": [
+            "実装容易性"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "価値インパクト",
+          "explicit_lines": [
+            "価値インパクト"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "PRIORITY SCORE",
+          "explicit_lines": [
+            "PRIORITY SCORE"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "問い合わせ解決",
+          "explicit_lines": [
+            "問い合わせ解決"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "62",
+          "explicit_lines": [
+            "62"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "需要予測",
+          "explicit_lines": [
+            "需要予測"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "42",
+          "explicit_lines": [
+            "42"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "開発支援",
+          "explicit_lines": [
+            "開発支援"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "23",
+          "explicit_lines": [
+            "23"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "議事録",
+          "explicit_lines": [
+            "議事録"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "23",
+          "explicit_lines": [
+            "23"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "4 / 8",
+          "explicit_lines": [
+            "4 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "23",
+        "23",
+        "4",
+        "42",
+        "62",
+        "8",
+        "90"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "Components",
+        "DATA",
+        "DECISION",
+        "Native",
+        "PRIORITY",
+        "SCORE",
+        "TECHNICAL",
+        "v4"
+      ],
+      "notes": "最初の 90 日は、価値が高く実装可能な領域へ集中するを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "567addb76e3aa2a114481b89fb44e8b9fdefb3500ce44df335b8a037b8a46541",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 21,
+        "connector_count": 15,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 16,
+          "ellipse": 4,
+          "roundRect": 1
+        },
+        "rectangle_area_ratio": 0.3361,
+        "ellipse_area_ratio": 0.0056,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    },
+    {
+      "slide_number": 5,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 不足はモデルではなく、価値設計と運用能力に集中する INTERPRETATION CAPABILITY C01 C02 C03 顧客 課題定義 M2 価値 KPI M1 検証設計 M2 業務 標準化 M2 例外処理 M1 定着運用 M2 基盤 データ M2 人材 M2 統制 M1 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 5 / 8",
+      "text_sha256": "4921e7b5b3c13930663ff2ee3ff364e774917647b062c6369f0aa8f63620eb26",
+      "content_inventory_sha256": "e62b01fed92497197787f78a4af07fbc3f1e0b7e1919c38ecfb2a323b216ffe2",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "不足はモデルではなく、価値設計と運用能力に集中する",
+          "explicit_lines": [
+            "不足はモデルではなく、価値設計と運用能力に集中する"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "INTERPRETATION",
+          "explicit_lines": [
+            "INTERPRETATION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "CAPABILITY",
+          "explicit_lines": [
+            "CAPABILITY"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "C01",
+          "explicit_lines": [
+            "C01"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "C02",
+          "explicit_lines": [
+            "C02"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "C03",
+          "explicit_lines": [
+            "C03"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "顧客",
+          "explicit_lines": [
+            "顧客"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "課題定義 M2",
+          "explicit_lines": [
+            "課題定義",
+            "M2"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "価値 KPI M1",
+          "explicit_lines": [
+            "価値 KPI",
+            "M1"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "検証設計 M2",
+          "explicit_lines": [
+            "検証設計",
+            "M2"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "業務",
+          "explicit_lines": [
+            "業務"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "標準化 M2",
+          "explicit_lines": [
+            "標準化",
+            "M2"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "例外処理 M1",
+          "explicit_lines": [
+            "例外処理",
+            "M1"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "定着運用 M2",
+          "explicit_lines": [
+            "定着運用",
+            "M2"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "基盤",
+          "explicit_lines": [
+            "基盤"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "データ M2",
+          "explicit_lines": [
+            "データ",
+            "M2"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "人材 M2",
+          "explicit_lines": [
+            "人材",
+            "M2"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "統制 M1",
+          "explicit_lines": [
+            "統制",
+            "M1"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "5 / 8",
+          "explicit_lines": [
+            "5 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "1",
+        "2",
+        "3",
+        "5",
+        "8"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "C01",
+        "C02",
+        "C03",
+        "CAPABILITY",
+        "Components",
+        "DATA",
+        "INTERPRETATION",
+        "KPI",
+        "M1",
+        "M2",
+        "Native",
+        "TECHNICAL",
+        "v4"
+      ],
+      "notes": "不足はモデルではなく、価値設計と運用能力に集中するを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "305549e88022d2c4e7ecaa353f62611d0f3c2c43278e89af6a001987b148dc17",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 21,
+        "connector_count": 1,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 5,
+          "roundRect": 16
+        },
+        "rectangle_area_ratio": 0.6723,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    },
+    {
+      "slide_number": 6,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 90 日で設計・実装・判定までを一巡させる ACTION P01 0-30 日 設計 1. 業務課題 2. 価値 KPI P02 31-60 日 実装 1. データ接続 2. 現場検証 P03 61-80 日 定着 1. 例外処理 2. 運用標準 P04 81-90 日 判定 1. 効果測定 2. 拡大判断 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 6 / 8",
+      "text_sha256": "46ea03271a29dc20cdddcdc65465ac8c74dc1fbaaac0a98271d2e1ff613e27ba",
+      "content_inventory_sha256": "2a638959a7660958c8d3c61293b34b296fc0628c023daa280945b1b714094505",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "90 日で設計・実装・判定までを一巡させる",
+          "explicit_lines": [
+            "90 日で設計・実装・判定までを一巡させる"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "ACTION",
+          "explicit_lines": [
+            "ACTION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "P01 0-30 日",
+          "explicit_lines": [
+            "P01  0-30 日"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "設計",
+          "explicit_lines": [
+            "設計"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "1. 業務課題",
+          "explicit_lines": [
+            "1. 業務課題"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "2. 価値 KPI",
+          "explicit_lines": [
+            "2. 価値 KPI"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "P02 31-60 日",
+          "explicit_lines": [
+            "P02  31-60 日"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "実装",
+          "explicit_lines": [
+            "実装"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "1. データ接続",
+          "explicit_lines": [
+            "1. データ接続"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "2. 現場検証",
+          "explicit_lines": [
+            "2. 現場検証"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "P03 61-80 日",
+          "explicit_lines": [
+            "P03  61-80 日"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "定着",
+          "explicit_lines": [
+            "定着"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "1. 例外処理",
+          "explicit_lines": [
+            "1. 例外処理"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "2. 運用標準",
+          "explicit_lines": [
+            "2. 運用標準"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "P04 81-90 日",
+          "explicit_lines": [
+            "P04  81-90 日"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "判定",
+          "explicit_lines": [
+            "判定"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "1. 効果測定",
+          "explicit_lines": [
+            "1. 効果測定"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "2. 拡大判断",
+          "explicit_lines": [
+            "2. 拡大判断"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "6 / 8",
+          "explicit_lines": [
+            "6 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "-30",
+        "-60",
+        "-80",
+        "-90",
+        "0",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "3",
+        "31",
+        "4",
+        "6",
+        "61",
+        "8",
+        "81",
+        "90"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "ACTION",
+        "Components",
+        "DATA",
+        "KPI",
+        "Native",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "TECHNICAL",
+        "v4"
+      ],
+      "notes": "90 日で設計・実装・判定までを一巡させるを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "e444095a12f2308fb9d79269962e01b16b9218bdbb2ea106bb4ced22d4eacd06",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 25,
+        "connector_count": 4,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 17,
+          "roundRect": 8
+        },
+        "rectangle_area_ratio": 0.7739,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    },
+    {
+      "slide_number": 7,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 価値・実装・リスクを同じ会議体で判断する ACTION GOV-01 Steering Committee 隔週・投資判断 GOV-02 Value Office 週次・価値 /KPI GOV-03 Delivery Teams 日次・実装 / 運用 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 7 / 8",
+      "text_sha256": "b48f641da56e20b3a591c011565b0007f22a13b963c9a2448d1aad29954e6aaa",
+      "content_inventory_sha256": "25c12fb6383da9bef8385d377ab0d3696fa8a09150982a969010f2ba6238ac69",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "価値・実装・リスクを同じ会議体で判断する",
+          "explicit_lines": [
+            "価値・実装・リスクを同じ会議体で判断する"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "ACTION",
+          "explicit_lines": [
+            "ACTION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "GOV-01",
+          "explicit_lines": [
+            "GOV-01"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "Steering Committee",
+          "explicit_lines": [
+            "Steering Committee"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "隔週・投資判断",
+          "explicit_lines": [
+            "隔週・投資判断"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "GOV-02",
+          "explicit_lines": [
+            "GOV-02"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "Value Office",
+          "explicit_lines": [
+            "Value Office"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "週次・価値 /KPI",
+          "explicit_lines": [
+            "週次・価値 /KPI"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "GOV-03",
+          "explicit_lines": [
+            "GOV-03"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "Delivery Teams",
+          "explicit_lines": [
+            "Delivery Teams"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 15.0
+        },
+        {
+          "text": "日次・実装 / 運用",
+          "explicit_lines": [
+            "日次・実装 / 運用"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "7 / 8",
+          "explicit_lines": [
+            "7 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "01",
+        "02",
+        "03",
+        "7",
+        "8"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "ACTION",
+        "Committee",
+        "Components",
+        "DATA",
+        "Delivery",
+        "GOV-01",
+        "GOV-02",
+        "GOV-03",
+        "KPI",
+        "Native",
+        "Office",
+        "Steering",
+        "TECHNICAL",
+        "Teams",
+        "Value",
+        "v4"
+      ],
+      "notes": "価値・実装・リスクを同じ会議体で判断するを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "2e520a1779772373f2ec40255286ecbb9fe178c3f5082bf0312717ea0651a2a3",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 14,
+        "connector_count": 3,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 11,
+          "roundRect": 3
+        },
+        "rectangle_area_ratio": 0.5119,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    },
+    {
+      "slide_number": 8,
+      "title": "",
+      "text": "TECHNICAL / DATA ｜統合検証用デモ 本日は、対象業務・責任者・価値 KPI を決める ACTION DECISION PACKAGE 対象業務を一つに絞り、業務責任者と価値 KPI を置いて 90 日 PoC を開始する 本日の判断： 90 日 PoC を開始するか A01 対象業務と顧客価値を確定 A02 責任者と横断チームを任命 A03 90 日後の拡大条件を合意 出典： Native Components v4 統合検証用デモ（外部事実ではありません） 8 / 8",
+      "text_sha256": "3c1fbef6a07b57c25845f2ee53d1aa8716ebaf9db6c572d5653f4c53095f4bbe",
+      "content_inventory_sha256": "d90a7e979fd265705e3aead04b63485fef6465025a040e23d2a978509b42bef8",
+      "text_blocks": [
+        {
+          "text": "TECHNICAL / DATA ｜統合検証用デモ",
+          "explicit_lines": [
+            "TECHNICAL / DATA ｜統合検証用デモ"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "本日は、対象業務・責任者・価値 KPI を決める",
+          "explicit_lines": [
+            "本日は、対象業務・責任者・価値 KPI を決める"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 31.0
+        },
+        {
+          "text": "ACTION",
+          "explicit_lines": [
+            "ACTION"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "DECISION PACKAGE",
+          "explicit_lines": [
+            "DECISION PACKAGE"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "対象業務を一つに絞り、業務責任者と価値 KPI を置いて 90 日 PoC を開始する",
+          "explicit_lines": [
+            "対象業務を一つに絞り、業務責任者と価値 KPI を置いて 90 日 PoC を開始する"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 24.0
+        },
+        {
+          "text": "本日の判断： 90 日 PoC を開始するか",
+          "explicit_lines": [
+            "本日の判断： 90 日 PoC を開始するか"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "A01",
+          "explicit_lines": [
+            "A01"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "対象業務と顧客価値を確定",
+          "explicit_lines": [
+            "対象業務と顧客価値を確定"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 13.0
+        },
+        {
+          "text": "A02",
+          "explicit_lines": [
+            "A02"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "責任者と横断チームを任命",
+          "explicit_lines": [
+            "責任者と横断チームを任命"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 13.0
+        },
+        {
+          "text": "A03",
+          "explicit_lines": [
+            "A03"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "90 日後の拡大条件を合意",
+          "explicit_lines": [
+            "90 日後の拡大条件を合意"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 13.0
+        },
+        {
+          "text": "出典： Native Components v4 統合検証用デモ（外部事実ではありません）",
+          "explicit_lines": [
+            "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        },
+        {
+          "text": "8 / 8",
+          "explicit_lines": [
+            "8 / 8"
+          ],
+          "is_title": false,
+          "min_font_size_pt": 12.0
+        }
+      ],
+      "numbers": [
+        "1",
+        "2",
+        "3",
+        "8",
+        "8",
+        "90",
+        "90",
+        "90"
+      ],
+      "source_lines": [
+        "出典： Native Components v4 統合検証用デモ（外部事実ではありません）"
+      ],
+      "proper_terms": [
+        "A01",
+        "A02",
+        "A03",
+        "ACTION",
+        "Components",
+        "DATA",
+        "DECISION",
+        "KPI",
+        "Native",
+        "PACKAGE",
+        "PoC",
+        "TECHNICAL",
+        "v4"
+      ],
+      "notes": "本日は、対象業務・責任者・価値 KPI を決めるを説明する。数値は統合検証用デモ。",
+      "notes_sha256": "6479bd226a25eb4988240e2af87562e14884dd2e3a0bc31fb2402a12e6e5e905",
+      "chart_values": [],
+      "chart_data_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "structure": {
+        "shape_count": 18,
+        "connector_count": 1,
+        "picture_count": 0,
+        "graphic_frame_count": 0,
+        "shape_type_counts": {
+          "rect": 14,
+          "roundRect": 4
+        },
+        "rectangle_area_ratio": 0.8872,
+        "ellipse_area_ratio": 0.0,
+        "raster_image_area_ratio": 0.0,
+        "native_element_ratio": 1.0,
+        "min_font_size_pt": 12.0
+      }
+    }
+  ]
+}

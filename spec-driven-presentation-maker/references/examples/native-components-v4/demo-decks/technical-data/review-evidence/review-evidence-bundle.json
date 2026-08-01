@@ -1,0 +1,55 @@
+{
+  "version": 3,
+  "render_evidence": {
+    "manifest": "render-manifest.json",
+    "renderer": "artifact-tool-swiftshader",
+    "full_size_reviewed_slides": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "edge_reviewed_slides": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "machine_evidence": {
+    "audit_report": {
+      "path": "pptx-audit.json",
+      "sha256": "a7d58693c6fe6435d7ba3de4bbcc33a9c7c1c38b19e9ca2e3d5360e3317b9afa"
+    },
+    "visual_metrics_report": {
+      "path": "visual-metrics.json",
+      "sha256": "7f8bcdfd7a81fdc2f9fe7620e5d43816b5b2c3cdaea9eb2f3068b191e53a1560"
+    },
+    "japanese_lint_report": {
+      "path": "japanese-lint.json",
+      "sha256": "1af448c4ced49dae93dc9f8c860b382f176eca66a84e5728d3873af39fe7fc7f"
+    },
+    "content_diff_report": {
+      "required": false
+    },
+    "design_system_report": {
+      "path": "design-system-audit.json",
+      "sha256": "92eb9e8ebde4981cb6d5c8552cb57519b9e70879b750c54861b99132aea992c3"
+    },
+    "thresholds": {
+      "min_average_native_element_ratio": 0.8,
+      "max_high_similarity_cluster_ratio": 0.4,
+      "min_design_token_match_ratio": 0.7,
+      "max_gradient_fill_count": 0,
+      "max_glow_effect_count": 0
+    }
+  }
+}

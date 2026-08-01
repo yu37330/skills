@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SDPM Deck Plan",
+  "type": "object",
+  "required": ["version", "source", "deck", "slides"],
+  "properties": {
+    "version": {"enum": [1, 2, 3]},
+    "source": {"type": "object"},
+    "deck": {"type": "object"},
+    "slides": {"type": "array", "minItems": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"version": {"const": 3}}},
+      "then": {
+        "properties": {
+          "source": {"required": ["evidence_index"]},
+          "deck": {
+            "required": ["audience", "decision_to_make", "governing_thought", "slide_count", "approval_mode", "deck_type", "repetition_policy", "max_consecutive_same_role", "key_slides"]
+          },
+          "slides": {
+            "items": {
+              "type": "object",
+              "required": ["slide_number", "slide_id", "slide_purpose", "headline_type", "executive_headline", "claim_type", "evidence_ids", "primary_evidence", "so_what", "decision_relevance", "evidence_linkage", "relationship", "must_show", "must_avoid", "notes_outline"],
+              "not": {
+                "anyOf": [
+                  {"required": ["pattern_family"]},
+                  {"required": ["spatial_model"]},
+                  {"required": ["renderer"]},
+                  {"required": ["visual_texture"]},
+                  {"required": ["safe_area"]}
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

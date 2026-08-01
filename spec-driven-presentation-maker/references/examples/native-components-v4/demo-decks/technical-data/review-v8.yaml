@@ -1,0 +1,444 @@
+version: 8
+assessment_scope:
+  score_kind: machine_assisted_reference
+  human_comparison_performed: false
+  interpretation: 総合点は機械証跡を満たす参照評価であり、人間の独立比較評価を代替しない。
+deck:
+  source: demo-deck.pptx
+  slide_count: 8
+  inspected_slides: &id001
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  critical_issues: 0
+  major_issues: 0
+  minor_issues: 0
+  deck_type: executive_decision
+  repetition_policy: strict
+  scores:
+    message_clarity: 8
+    decision_clarity: 8
+    executive_headline: 8
+    evidence_to_insight: 8
+    visual_hierarchy: 8
+    information_structure: 8
+    semantic_visual_fit: 9
+    layout_craft: 8
+    readability: 8
+    consistency: 8
+    archetype_variety: 8
+    visual_grammar_variety: 8
+    deck_rhythm: 8
+    page_economy: 8
+    editability: 10
+    component_craft: 9
+  score_evidence:
+    message_clarity:
+      evidence: 全ページが一つの結論見出しと主役図形を持つ。
+      caveat: 人間による比較評価は未実施。
+    decision_clarity:
+      evidence: 冒頭で判断事項を提示し、最終ページで実行項目へ接続している。
+      caveat: 人間による比較評価は未実施。
+    executive_headline:
+      evidence: 全8ページの見出しを結論文として確認した。
+      caveat: 人間による比較評価は未実施。
+    evidence_to_insight:
+      evidence: 根拠・示唆・行動の役割をDeck Planと画面上で分離した。
+      caveat: 人間による比較評価は未実施。
+    visual_hierarchy:
+      evidence: 見出し、主役、補足の三段階が全ページで識別できる。
+      caveat: 人間による比較評価は未実施。
+    information_structure:
+      evidence: 8ページを結論、根拠、選択、実行の順に構成した。
+      caveat: 人間による比較評価は未実施。
+    semantic_visual_fit:
+      evidence: 比較、ポートフォリオ、能力、ロードマップ、ガバナンスを意味適合する部品で表した。
+      caveat: 人間による比較評価は未実施。
+      benchmark_evidence: 完成PNG、PPTX構造、Component Contractの三点で相互確認した。
+    layout_craft:
+      evidence: 整列、余白、視覚重心を完成PNGで全ページ確認した。
+      caveat: 人間による比較評価は未実施。
+    readability:
+      evidence: 日本語Lint合格、最小文字サイズ12pt、4辺QAクロップ合格。
+      caveat: 人間による比較評価は未実施。
+    consistency:
+      evidence: 選択テーマの色・書体・罫線・余白トークンを全ページで維持した。
+      caveat: 人間による比較評価は未実施。
+    archetype_variety:
+      evidence: 8ページで複数のRole LayoutとComponentを使い分けた。
+      caveat: 人間による比較評価は未実施。
+    visual_grammar_variety:
+      evidence: 7空間構成、6主役図形、8視覚テクスチャを使用した。
+      caveat: 人間による比較評価は未実施。
+    deck_rhythm:
+      evidence: 低密度の結論ページと高密度の能力ページを交互に配置した。
+      caveat: 人間による比較評価は未実施。
+    page_economy:
+      evidence: 重複ページや一主張を分割しただけのページはない。
+      caveat: 人間による比較評価は未実施。
+    editability:
+      evidence: ラスター画像0、Native要素率1.0、主要要素へComponent IDを保持した。
+      caveat: 人間による比較評価は未実施。
+      benchmark_evidence: 完成PNG、PPTX構造、Component Contractの三点で相互確認した。
+    component_craft:
+      evidence: Component Contract準拠、Design Token一致、Premium構図差を機械監査した。
+      caveat: 人間による比較評価は未実施。
+      benchmark_evidence: 完成PNG、PPTX構造、Component Contractの三点で相互確認した。
+  overall_score: 82
+  delivery_status: pass_with_rendering_caveat
+  pass: true
+render_evidence:
+  manifest: review-evidence/render-manifest.json
+  renderer: artifact-tool-swiftshader
+  render_fidelity: unknown
+  host_application_verified: false
+  rendering_caveat: PowerPoint実機レンダリング未確認。採用Renderer上の表示品質として合格。
+  full_size_reviewed_slides: *id001
+  edge_reviewed_slides: *id001
+machine_evidence:
+  audit_report:
+    path: review-evidence/pptx-audit.json
+    sha256: a7d58693c6fe6435d7ba3de4bbcc33a9c7c1c38b19e9ca2e3d5360e3317b9afa
+  visual_metrics_report:
+    path: review-evidence/visual-metrics.json
+    sha256: 7f8bcdfd7a81fdc2f9fe7620e5d43816b5b2c3cdaea9eb2f3068b191e53a1560
+  japanese_lint_report:
+    path: review-evidence/japanese-lint.json
+    sha256: 1af448c4ced49dae93dc9f8c860b382f176eca66a84e5728d3873af39fe7fc7f
+  content_diff_report:
+    required: false
+  design_system_report:
+    path: review-evidence/design-system-audit.json
+    sha256: 2510091da8ae129d0b4364a4055d5250ee291d6417af6cca1d0fd0d75b04c1bb
+  thresholds:
+    min_average_native_element_ratio: 0.8
+    max_high_similarity_cluster_ratio: 0.4
+    min_design_token_match_ratio: 0.7
+    max_gradient_fill_count: 0
+    max_glow_effect_count: 0
+delivery_gates:
+  render_integrity:
+    verdict: pass
+    evidence: Render Manifestと4辺QAクロップのハッシュが一致。
+    checked_slides: *id001
+    failed_slides: []
+  mandatory_elements:
+    verdict: pass
+    evidence: 全8ページの結論見出し、主役図形、出典欄を確認。
+    checked_slides: *id001
+    failed_slides: []
+  content_integrity:
+    verdict: pass
+    evidence: Deck Planの主張・根拠ID・ページ順を生成物と照合。
+    checked_slides: *id001
+    failed_slides: []
+  editability:
+    verdict: pass
+    evidence: PPTX監査でNative要素率1.0、ラスター画像0。
+    checked_slides: *id001
+    failed_slides: []
+  design_system_integrity:
+    verdict: pass
+    evidence: Design System監査でComponent ContractとToken一致を確認。
+    checked_slides: *id001
+    failed_slides: []
+  anti_slop_integrity:
+    verdict: pass
+    evidence: グラデーション・グロー0、Anti-Slop監査合格。
+    checked_slides: *id001
+    failed_slides: []
+  design_direction_integrity:
+    verdict: pass
+    evidence: 選択Design Directionの特徴を代表PNGで確認。
+    checked_slides: *id001
+    failed_slides: []
+tests:
+  three_second:
+    method: 各ページを3秒表示し、結論見出しと主役図形から主張を復元。
+    passed_slides: *id001
+    partial_slides: []
+    failed_slides: []
+  pattern_repetition:
+    verdict: pass
+    repeated_runs: []
+  content_preservation:
+    verified: true
+    evidence: 新規生成デッキのためDeck Plan v3とEvidence Indexを正本として照合。
+  visual_grammar:
+    method: Visual Plan v8と完成PNGから空間構成・主役図形・読み順・モチーフを記録。
+    thresholds:
+      max_box_dominant_ratio: 0.6
+      max_takeaway_band_ratio: 0.6
+      min_distinct_spatial_models: 4
+      min_distinct_primary_primitives: 4
+      max_consecutive_same_reading_path: 2
+      max_shared_motif_ratio: 0.4
+      max_node_line_dominant_ratio: 0.4
+      min_distinct_visual_textures: 4
+    slide_fingerprints:
+    - slide_number: 1
+      spatial_model: hero
+      primary_primitive: typography
+      reading_path: focal
+      container_dependency: low
+      takeaway_band: false
+      visual_texture: typographic
+      dominant_node_shape: none
+      node_usage: none
+      connector_usage: none
+      connector_character: none
+      signature_tokens:
+      - typographic_focal
+      evidence: Visual Plan v8と完成PNGのslide 1を照合。
+    - slide_number: 2
+      spatial_model: matrix
+      primary_primitive: axes
+      reading_path: scan_columns
+      container_dependency: low
+      takeaway_band: false
+      visual_texture: axis_plot
+      dominant_node_shape: none
+      node_usage: none
+      connector_usage: none
+      connector_character: none
+      signature_tokens:
+      - axis_frame
+      evidence: Visual Plan v8と完成PNGのslide 2を照合。
+    - slide_number: 3
+      spatial_model: linear_vertical
+      primary_primitive: trace_line
+      reading_path: top_to_bottom
+      container_dependency: low
+      takeaway_band: false
+      visual_texture: trace
+      dominant_node_shape: none
+      node_usage: none
+      connector_usage: supporting
+      connector_character: thin_straight
+      signature_tokens:
+      - thin_straight_connectors
+      evidence: Visual Plan v8と完成PNGのslide 3を照合。
+    - slide_number: 4
+      spatial_model: matrix
+      primary_primitive: decision_gates
+      reading_path: spatial
+      container_dependency: low
+      takeaway_band: false
+      visual_texture: area_composition
+      dominant_node_shape: circle
+      node_usage: supporting
+      connector_usage: supporting
+      connector_character: thin_straight
+      signature_tokens:
+      - circular_nodes
+      evidence: Visual Plan v8と完成PNGのslide 4を照合。
+    - slide_number: 5
+      spatial_model: stack
+      primary_primitive: layers
+      reading_path: scan_columns
+      container_dependency: high
+      takeaway_band: false
+      visual_texture: table
+      dominant_node_shape: none
+      node_usage: none
+      connector_usage: none
+      connector_character: none
+      signature_tokens:
+      - rounded_cards
+      evidence: Visual Plan v8と完成PNGのslide 5を照合。
+    - slide_number: 6
+      spatial_model: timeline
+      primary_primitive: trace_line
+      reading_path: left_to_right
+      container_dependency: low
+      takeaway_band: false
+      visual_texture: form
+      dominant_node_shape: circle
+      node_usage: supporting
+      connector_usage: supporting
+      connector_character: thin_straight
+      signature_tokens:
+      - numbered_nodes
+      evidence: Visual Plan v8と完成PNGのslide 6を照合。
+    - slide_number: 7
+      spatial_model: network
+      primary_primitive: network_nodes
+      reading_path: top_to_bottom
+      container_dependency: low
+      takeaway_band: false
+      visual_texture: node_link
+      dominant_node_shape: rounded_rectangle
+      node_usage: dominant
+      connector_usage: dominant
+      connector_character: thin_curved
+      signature_tokens:
+      - thin_curved_connectors
+      evidence: Visual Plan v8と完成PNGのslide 7を照合。
+    - slide_number: 8
+      spatial_model: editorial_split
+      primary_primitive: typography
+      reading_path: z_pattern
+      container_dependency: low
+      takeaway_band: false
+      visual_texture: kpi_editorial
+      dominant_node_shape: none
+      node_usage: none
+      connector_usage: none
+      connector_character: none
+      signature_tokens:
+      - large_color_fields
+      evidence: Visual Plan v8と完成PNGのslide 8を照合。
+    metrics:
+      box_dominant_slides:
+      - 5
+      box_dominant_ratio: 0.12
+      takeaway_band_slides: []
+      takeaway_band_ratio: 0.0
+      distinct_spatial_models: 7
+      distinct_primary_primitives: 6
+      repeated_grammar_runs: []
+      repeated_reading_path_runs: []
+      node_line_dominant_slides:
+      - 7
+      node_line_dominant_ratio: 0.12
+      distinct_visual_textures: 8
+      shared_motifs:
+        typographic_focal:
+        - 1
+        axis_frame:
+        - 2
+        thin_straight_connectors:
+        - 3
+        circular_nodes:
+        - 4
+        rounded_cards:
+        - 5
+        numbered_nodes:
+        - 6
+        thin_curved_connectors:
+        - 7
+        large_color_fields:
+        - 8
+      max_shared_motif_ratio: 0.12
+    verdict: pass
+  thumbnail_similarity:
+    method: 完成PNGのlayout_dhashと余白・重心を併用して類似群を抽出。
+    threshold:
+      max_high_similarity_cluster_ratio: 0.4
+    clusters:
+    - slides: &id002
+      - 2
+      - 8
+      shared_traits:
+      - 構造マスク上の重心と余白パターンが近い
+      strength: high
+      evidence: visual-metrics.jsonのlayout_dhashを使用した非推移的クラスタ。
+    metrics:
+      largest_high_similarity_cluster: *id002
+      largest_high_similarity_cluster_ratio: 0.25
+    verdict: pass
+  consulting_quality:
+    decision_visible_by_slide: 1
+    evidence_to_implication_slides:
+    - 1
+    - 2
+    - 3
+    - 5
+    evidence_to_action_slides:
+    - 4
+    - 6
+    - 7
+    - 8
+    showpiece_slides:
+    - 1
+    - 8
+    page_economy_failed_slides: []
+    verdict: pass
+  design_direction_fidelity:
+    representative_slide: 1
+    observed_traits:
+    - モジュラーグリッド
+    - クールニュートラル配色
+    - 精密な線と技術的ラベル
+    conflicting_traits: []
+    verdict: pass
+slides:
+- slide_number: 1
+  title: 価値創出には、顧客・業務・実行基盤を一体で変える
+  three_second_test:
+    expected_message: 価値創出には、顧客・業務・実行基盤を一体で変える
+    observed_message: 価値創出には、顧客・業務・実行基盤を一体で変える
+    verdict: pass
+    visual_anchor: slide 1の主役Native Component
+    obstacle: なし
+  issues: []
+- slide_number: 2
+  title: 導入量より、価値へ接続したユースケースが不足している
+  three_second_test:
+    expected_message: 導入量より、価値へ接続したユースケースが不足している
+    observed_message: 導入量より、価値へ接続したユースケースが不足している
+    verdict: pass
+    visual_anchor: slide 2の主役Native Component
+    obstacle: なし
+  issues: []
+- slide_number: 3
+  title: 部分最適・曖昧なKPI・分断運営が価値化を止める
+  three_second_test:
+    expected_message: 部分最適・曖昧なKPI・分断運営が価値化を止める
+    observed_message: 部分最適・曖昧なKPI・分断運営が価値化を止める
+    verdict: pass
+    visual_anchor: slide 3の主役Native Component
+    obstacle: なし
+  issues: []
+- slide_number: 4
+  title: 最初の90日は、価値が高く実装可能な領域へ集中する
+  three_second_test:
+    expected_message: 最初の90日は、価値が高く実装可能な領域へ集中する
+    observed_message: 最初の90日は、価値が高く実装可能な領域へ集中する
+    verdict: pass
+    visual_anchor: slide 4の主役Native Component
+    obstacle: なし
+  issues: []
+- slide_number: 5
+  title: 不足はモデルではなく、価値設計と運用能力に集中する
+  three_second_test:
+    expected_message: 不足はモデルではなく、価値設計と運用能力に集中する
+    observed_message: 不足はモデルではなく、価値設計と運用能力に集中する
+    verdict: pass
+    visual_anchor: slide 5の主役Native Component
+    obstacle: なし
+  issues: []
+- slide_number: 6
+  title: 90日で設計・実装・判定までを一巡させる
+  three_second_test:
+    expected_message: 90日で設計・実装・判定までを一巡させる
+    observed_message: 90日で設計・実装・判定までを一巡させる
+    verdict: pass
+    visual_anchor: slide 6の主役Native Component
+    obstacle: なし
+  issues: []
+- slide_number: 7
+  title: 価値・実装・リスクを同じ会議体で判断する
+  three_second_test:
+    expected_message: 価値・実装・リスクを同じ会議体で判断する
+    observed_message: 価値・実装・リスクを同じ会議体で判断する
+    verdict: pass
+    visual_anchor: slide 7の主役Native Component
+    obstacle: なし
+  issues: []
+- slide_number: 8
+  title: 本日は、対象業務・責任者・価値KPIを決める
+  three_second_test:
+    expected_message: 本日は、対象業務・責任者・価値KPIを決める
+    observed_message: 本日は、対象業務・責任者・価値KPIを決める
+    verdict: pass
+    visual_anchor: slide 8の主役Native Component
+    obstacle: なし
+  issues: []
+prioritized_actions: []
+poc_status: pending_human_validation
