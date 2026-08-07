@@ -1,24 +1,58 @@
-# LLM Wiki — 最終版
+# Project Knowledge Wiki — 最終版
 
 > 最終更新: 2026-08-08
 >
 > ベース実装: `aws-samples/sample-okf-llm-wiki`
 >
-> 方針: 元Repoを極力そのまま活かし、Data Wiki向けHarvestを議事録・業務文書向けLLM Wikiへ変更する。既存のFargate Front / 認証 / AgentCore Gateway / Managed Knowledge Baseを利用する。
+> 方針: 元RepoのOKF / Link / S3 Vectors / MCP / Chat / Observabilityを極力そのまま活かし、Data Wiki固有のHarvestを**Project Knowledge Harvest**へ変更する。議事録はWikiそのものではなく、最初に対応するSource Typeの1つとして扱う。既存のFargate Front / 認証 / AgentCore Gateway / Managed Knowledge Baseを利用する。
 
 ## 1. 結論
 
-今回のLLM Wikiは、RAGを置き換えるものではない。
+今回作るものは「議事録Wiki」ではなく、**Project Knowledge Wiki**。
 
-- **Raw Source / Managed KB** = 正式な原文・証拠を探す
-- **LLM Wiki / OKF** = Agentが整理したCompiled Knowledge
-- **Link / Backlink** = Knowledge間の明示的な関係をたどる
-- **S3 Vectors** = 意味から読むべきWikiページを探す
-- **AgentCore Gateway** = WikiとRaw Evidenceを統一MCPとして公開する
+議事録、仕様書、設計資料、報告資料、課題票など複数Sourceから、Projectで継続利用したいKnowledgeを意味単位へ整理・更新する。
+
+```text
+Project Sources
+  ├─ Meeting minutes
+  ├─ PDF / DOCX / PPTX
+  ├─ Specification / Design Doc
+  ├─ Report
+  ├─ Issue / Ticket             Future
+  ├─ SharePoint / Teams         Future
+  └─ GitHub / DB / SaaS         Future
+            │
+            ▼
+Project Knowledge Harvest Agent
+            │
+            ▼
+Knowledge Reconciliation
+create / update / reinforce / conflict / ignore
+            │
+            ▼
+Project Knowledge Wiki
+  ├─ Project
+  ├─ Topic
+  ├─ Decision
+  ├─ Requirement
+  ├─ Action
+  ├─ Risk
+  ├─ Issue
+  ├─ Artifact
+  └─ Meeting
+```
+
+Knowledge基盤の役割は次の通り。
+
+- **Raw Source / Managed KB** = 正式な原文・証拠
+- **LLM Wiki / OKF** = Agentが編集したCompiled Project Knowledge
+- **Link / Backlink** = Knowledge間の明示的な関係
+- **S3 Vectors** = 意味から読むべきWikiページを探すSemantic Index
+- **AgentCore Gateway** = WikiとRaw Evidenceを統一MCPとして公開するKnowledge Access Layer
 - **Chat Agent** = WikiとEvidenceを使い分けてReasoningする
-- **DynamoDBSaver** = Chat AgentのConversation Stateを保持する
+- **DynamoDBSaver** = Chat AgentのConversation State
 
-最終構成では、既存Gatewayにすでに接続されているManaged KBをそのまま利用し、**Wiki MCPをGateway Targetとして追加する**。
+## 2. 最終アーキテクチャ
 
 ```text
                          User
@@ -46,22 +80,41 @@ Link / Backlink    S3 Vectors
       │           Semantic Search
       └───────┬────────┘
               ▼
-          S3 OKF Wiki
+        S3 Project Wiki
       Compiled Knowledge
               ▲
               │
-       Harvest Agent
-   deepagents / LangGraph
+Project Knowledge Harvest Agent
+      deepagents / LangGraph
               ▲
               │
-      Meeting / Docs / PDF
+     Project Source Adapters
 ```
 
-## 2. LLM WikiとRAGの違い
+Gatewayには既存Managed KB Targetがすでにあるため、今回追加する中心は**Wiki MCP Target**。
 
-Traditional RAGは、原文をChunk化して質問時に検索し、LLMがその場で意味を再構成する。
+## 3. 議事録の位置づけ
 
-LLM Wikiは、Harvest時に原文を読み、Decision / Topic / Actionなどの**意味単位のKnowledge Page**へ整理し、既存ページとの統合・Link生成・更新まで行う。
+議事録は重要だが、Knowledge Modelそのものではない。
+
+```text
+Meeting Minutes = Source / Evidence
+Meeting Page    = Sourceを整理したKnowledge Page
+Decision        = 会議をまたいで維持するProject Knowledge
+Topic           = 継続テーマ
+Action          = 実行事項
+Risk / Issue    = 継続管理対象
+Requirement     = 仕様・要求
+Artifact        = 設計書・仕様書・成果物
+```
+
+MVPでは議事録・PDF・DOCX・PPTXから始めるが、Harvest本体はSource非依存にする。
+
+## 4. LLM WikiとRAGの違い
+
+Traditional RAGはRaw DocumentをChunk化し、Query時に意味を再構成する。
+
+Project Knowledge WikiはHarvest時に原文を読み、既存Wikiと照合してKnowledgeを編集する。
 
 ```text
 Traditional RAG
@@ -73,12 +126,16 @@ Retrieve
    ↓
 Query時に意味を再構成
 
-LLM Wiki
-Raw Documents
+Project Knowledge Wiki
+Project Sources
    ↓
-Harvest Agent
+Harvest
    ↓
-Semantic Knowledge Compilation
+Knowledge Extraction
+   ↓
+Existing Wiki Search
+   ↓
+Knowledge Reconciliation
    ↓
 OKF Markdown + Links
    ↓
@@ -88,18 +145,16 @@ Search / Traverse / Read
 今回の設計では両者を組み合わせる。
 
 ```text
-LLM Wiki   → 整理された理解
-Managed KB → 原文Evidence
+Project Wiki → 整理された現在の理解
+Managed KB   → 正式な原文Evidence
 ```
 
-## 3. 元Repoから残すもの
-
-`sample-okf-llm-wiki` の以下は基本的に継承する。
+## 5. 元Repoから残すもの
 
 - OKF Core
 - Harvest Agent framework
 - Link / Backlink
-- S3 Bundle
+- S3 Bundle / Versioning
 - S3 Vectors
 - `semantic_search`
 - Consumption MCP / FastMCP
@@ -111,9 +166,9 @@ Managed KB → 原文Evidence
 - CloudWatch / OpenTelemetry
 - Terraform
 
-特にS3 Vectorsは、Raw Document RAGではなく**Wiki Page Discovery用のSemantic Index**としてそのまま残す。
+特にS3 VectorsはRaw Document RAGではなく、**Wiki Page Discovery用Semantic Index**として残す。
 
-## 4. 今回大きく変えるもの
+## 6. 今回大きく変えるもの
 
 ### Harvest
 
@@ -124,16 +179,19 @@ Glue / Athena / Redshift
 Dataset / Table / Metric Wiki
 
 After
-Meeting / PDF / DOCX / PPTX
+Project Source Adapters
         ↓
-Meeting / Topic / Decision / Action / Risk Wiki
+Normalized Evidence
+        ↓
+Project Knowledge Harvest
+        ↓
+Project / Topic / Decision / Requirement /
+Action / Risk / Issue / Artifact / Meeting
 ```
 
+最大のポイントはSourceをMarkdown化することではなく、**既存Knowledgeと照合して状態を更新するKnowledge Reconciler**。
+
 ### Chat AgentのKnowledge Access
-
-元RepoではChat Agentが`ConsumptionTools`をin-processで直接利用する。
-
-最終To-Beでは、既存社内Gatewayを正式なKnowledge Access Layerとして利用する。
 
 ```text
 Chat Agent
@@ -143,37 +201,87 @@ Existing AgentCore Gateway
     └─ Managed KB Target    ← 既存
 ```
 
-## 5. AgentCore構成
+## 7. AgentCore構成
 
 | Runtime | Framework | 役割 |
 |---|---|---|
-| Harvest Agent | deepagents / LangGraph | Knowledge Writer |
+| Project Knowledge Harvest Agent | deepagents / LangGraph | Knowledge Writer / Compiler |
 | Consumption MCP | FastMCP | Wiki Tool Server |
 | Chat Agent | LangGraph / LangChain | Knowledge Consumer |
 
-AgentはHarvest AgentとChat Agentの2つ。Consumption MCPはAgentではなくTool Server。
+AgentはHarvest AgentとChat Agentの2つ。Consumption MCPはTool Server。
 
-## 6. Knowledge Retrievalの役割分担
+## 8. Knowledge Retrieval
 
 | 機構 | 役割 |
 |---|---|
 | Link / Backlink | 明示的な関係をたどる |
-| S3 Vectors | 意味からWiki Conceptを発見する |
+| S3 Vectors | 意味からWiki Conceptを発見 |
 | `read_page` | S3上の正式なOKF本文を読む |
-| Managed KB | Raw Source / Evidenceを検索する |
-| AgentCore Gateway | Wiki + Managed KBを統一MCP化する |
+| Managed KB | Raw Source / Evidence検索 |
+| AgentCore Gateway | Wiki + Managed KBを統一MCP化 |
 
 例:
 
-- 「今何が決まっている？」→ Wiki優先
-- 「その根拠の原文は？」→ Managed KB優先
-- 「停止原因と根拠を教えて」→ Wikiで理解 → Managed KBで検証
+- 「現在何が決まっている？」→ Wiki優先
+- 「なぜそう決まった？」→ Wiki + Managed KB
+- 「仕様書の原文は？」→ Managed KB優先
+- 「このIssueに関係するDecisionと会議は？」→ Wiki Link / Backlink
 
-## 7. 今回追加しないもの
+## 9. Project Knowledge Model
 
-MVPでは以下を追加しない。
+MVPのコアType:
 
-- DynamoDB Vector Search
+```text
+Project
+Topic
+Decision
+Requirement
+Action
+Risk
+Issue
+Artifact
+Meeting
+```
+
+将来必要なら追加:
+
+```text
+System
+Component
+Team
+Person
+Milestone
+Change
+```
+
+最初からHeavy Ontologyにはしない。
+
+## 10. Knowledge Reconciliation
+
+Harvestは新Sourceごとに次を判断する。
+
+```text
+CREATE     新しいKnowledge
+UPDATE     既存Knowledgeの状態・内容が変化
+REINFORCE  別Sourceが既存Knowledgeを裏付け
+CONFLICT   Source間で矛盾
+IGNORE     Knowledgeとして追加価値がない
+```
+
+例:
+
+```text
+8/1  Gatewayを使う方向で検討
+8/8  Gatewayを正式採用
+8/15 Gateway案を撤回
+```
+
+3つのDecision Pageを乱造するのではなく、同じKnowledgeのLifecycleとしてSourceと履歴を保持する。
+
+## 11. 今回追加しないもの
+
+- DynamoDB Vector Search migration
 - AgentCore Long-term Memory
 - Neptune
 - GraphRAG
@@ -182,9 +290,7 @@ MVPでは以下を追加しない。
 - 新規Custom Vector DB
 - 新規Custom RAG Platform
 
-DynamoDB Vector Searchは有望だが、既存S3 Vectors実装がFreshness / Retry / Metadata Filter / Terraformまで完成しているため、MVPでは変更しない。
-
-## 8. LLM Wiki Level
+## 12. LLM Wiki Level
 
 ### Level 1 — Structured Wiki
 OKF Markdown + YAML + Source provenance。
@@ -201,19 +307,20 @@ Evaluation / Feedback / Annotation / Conflict Detection / Re-Harvest。
 ### Level 5 — Graph / Semantic Model
 Thin Ontology / Typed Relations / GraphRAG。必要なユースケースが出た場合のみ追加。
 
-## 9. 最終方針
+## 13. 最終方針
 
-このプロジェクトの中心はAWSインフラを新規構築することではなく、**Harvest AgentのKnowledge Compilation品質**を高めることにある。
+このプロジェクトの中心はAWSインフラを増やすことではなく、**Project Knowledge Harvest AgentのKnowledge Compilation / Reconciliation品質**を高めること。
 
-> LLM Wikiで「整理された理解」を持ち、Managed KBで「正式な原文」を持ち、AgentCore Gatewayで両者を1つのKnowledge InterfaceとしてAgentへ提供する。
+> Project Wikiで「整理された現在の理解」を持ち、Managed KBで「正式な原文」を持ち、AgentCore Gatewayで両者を1つのKnowledge InterfaceとしてAgentへ提供する。
 
 詳細:
 
-- [FINAL_REPORT.md](./FINAL_REPORT.md) — 最終アーキテクチャレポート
+- [FINAL_REPORT.md](./FINAL_REPORT.md) — 最終アーキテクチャ
 - [REQUIREMENTS.md](./REQUIREMENTS.md) — 改修要件定義
-- [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — 実装計画・対象ファイル・MVP順序
+- [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — 実装計画
+- [HARVEST_MIGRATION.md](./HARVEST_MIGRATION.md) — **最重要: Data Wiki Harvest → Project Knowledge Harvest改修仕様**
 
-## 10. 参考
+## 14. 参考
 
 - Base Repo: https://github.com/aws-samples/sample-okf-llm-wiki
 - AgentCore Gateway: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway.html
