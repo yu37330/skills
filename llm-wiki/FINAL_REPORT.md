@@ -1,4 +1,4 @@
-# LLM Wiki / 議事録Wiki 最終アーキテクチャレポート
+# Project Knowledge Wiki 最終アーキテクチャレポート
 
 > Final: 2026-08-08
 >
@@ -8,35 +8,41 @@
 
 ## 1. Executive Summary
 
-最終構成は、`sample-okf-llm-wiki` のWiki生成・検索機構をできるだけ維持し、Data Wiki固有のHarvest処理のみを議事録・業務文書向けへ変更する。
+本プロジェクトは「議事録Wiki」ではなく、**Project Knowledge Wiki**を構築する。
 
-Knowledgeを次の4層に分ける。
+議事録は最初に対応するSource Typeの1つであり、将来的には仕様書、設計資料、課題票、レポート、SharePoint、Teams、GitHub等へSourceを拡張できる設計とする。
+
+元Repoの以下は極力維持する。
+
+```text
+OKF Core
+S3 Bundle / Versioning
+Link / Backlink
+S3 Vectors
+Consumption MCP
+Chat Agent
+DynamoDBSaver
+EventBridge / SQS / Reindex
+UI / Graph View
+Observability / Terraform
+```
+
+最大改修対象はHarvest Agentであり、Data Wiki固有の知識生成を、**Project Knowledge Compilation / Reconciliation**へ置き換える。
+
+Knowledgeを4層に分ける。
 
 ```text
 Raw Evidence Layer
-  Managed KB / Raw Documents
+  Existing Managed KB / Project Sources
 
 Compiled Knowledge Layer
-  OKF Markdown on S3
+  Project Knowledge Wiki / OKF Markdown on S3
 
 Knowledge Navigation Layer
   Link / Backlink + S3 Vectors + Wiki MCP
 
 Knowledge Access / Reasoning Layer
-  AgentCore Gateway + Chat Agent
-```
-
-役割は明確に分離する。
-
-```text
-Raw Source        = Source of Truth / Evidence
-OKF Wiki          = Compiled Knowledge
-Link / Backlink   = Structural Navigation
-S3 Vectors        = Semantic Wiki Navigation
-Managed KB        = Raw Evidence Retrieval
-AgentCore Gateway = Unified Knowledge Access
-Chat Agent        = Reasoning / User Interaction
-DynamoDBSaver     = Conversation State
+  Existing AgentCore Gateway + Chat Agent
 ```
 
 ## 2. Final Architecture
@@ -82,39 +88,78 @@ DynamoDBSaver     = Conversation State
           │                 │
           └────────┬────────┘
                    ▼
-               S3 OKF Wiki
-            Compiled Knowledge
+           S3 Project Wiki
+            OKF Markdown
+         Compiled Knowledge
                    ▲
                    │
-       ┌───────────┴────────────┐
-       │ Harvest Agent          │
-       │ deepagents / LangGraph │
-       │ AgentCore Runtime      │
-       └───────────┬────────────┘
+       ┌───────────┴─────────────────┐
+       │ Project Knowledge Harvest   │
+       │ deepagents / LangGraph      │
+       │ AgentCore Runtime           │
+       └───────────┬─────────────────┘
                    ▲
                    │
-        Meeting / PDF / DOCX / PPTX
+           Project Source Adapters
+      ┌────────────┼───────────────┐
+      ▼            ▼               ▼
+   Meeting      Documents      Future Sources
+ PDF/DOCX/PPTX  Specs/Reports  Tickets/SharePoint/...
 ```
 
-## 3. Agent / Runtime構成
+## 3. SourceとKnowledgeを分離する
 
-### 3.1 Harvest Agent
+Project Wikiの設計で最重要なのは、**SourceとKnowledgeを同一視しないこと**。
 
-- 実行基盤: Amazon Bedrock AgentCore Runtime
-- Framework: deepagents / LangGraph
-- 役割: Knowledge Writer / Compiler
-- 主な再利用対象:
-  - FilesystemBackend
-  - OKFGuardMiddleware
-  - Subagents
-  - Reviewer
-  - LinkGraph
-  - CloudWatch / OTEL trace
-
-元RepoではGlue / Athena / RedshiftからData Wikiを生成する。
+### Source / Evidence
 
 ```text
-Before
+Meeting minutes
+Specification
+Design document
+Report
+Presentation
+Issue / Ticket
+Email / Chat
+```
+
+### Compiled Knowledge
+
+```text
+Project
+Topic
+Decision
+Requirement
+Action
+Risk
+Issue
+Artifact
+Meeting
+```
+
+MeetingはSource provenanceを保持するKnowledge Typeでもあるが、DecisionやRequirementなどは複数Sourceを横断して継続更新される。
+
+例:
+
+```text
+Meeting A ─┐
+Spec v3  ──┼─→ Decision: AgentCore Gateway採用
+Report   ──┘
+```
+
+別Sourceが同じDecisionを裏付けても新しいDecision Pageを作らず、既存Pageを`reinforce`する。
+
+## 4. Agent / Runtime構成
+
+### 4.1 Project Knowledge Harvest Agent
+
+- Runtime: Amazon Bedrock AgentCore Runtime
+- Framework: deepagents / LangGraph
+- Role: Knowledge Writer / Compiler
+
+元Repo:
+
+```text
 Glue / Athena / Redshift
         ↓
 Harvest Agent
@@ -122,29 +167,48 @@ Harvest Agent
 Dataset / Table / Metric Wiki
 ```
 
-今回変更する。
+To-Be:
 
 ```text
-After
-Meeting / Documents
+Project Sources
         ↓
-Harvest Agent
+Source Adapter
         ↓
-Meeting / Topic / Decision / Action / Risk
+Normalized Evidence
         ↓
-OKF Wiki
+Knowledge Extraction
+        ↓
+Existing Wiki Search
+        ↓
+Knowledge Reconciliation
+        ↓
+Project Wiki
 ```
 
-最大の開発対象はこのHarvest Agentである。
+再利用:
 
-### 3.2 Consumption MCP
+- deepagents supervisor
+- subagents
+- reviewer
+- FilesystemBackend
+- OKFGuardMiddleware
+- LinkGraph
+- CloudWatch / OTEL tracing
 
-- 実行基盤: AgentCore Runtime
+置換対象:
+
+- Glue/Table前提
+- table-author等のData固有subagent
+- run_sql/sample_rows中心のgrounding
+- Data Wiki authoring prompt / skill
+
+### 4.2 Consumption MCP
+
+- Runtime: AgentCore Runtime
 - Framework: FastMCP
-- Protocol: MCP
-- 役割: Wiki Tool Server
+- Role: Wiki Tool Server
 
-主なTool:
+基本Toolは維持。
 
 ```text
 list_domains
@@ -156,77 +220,190 @@ get_backlinks
 semantic_search
 ```
 
-今回、Consumption MCPを既存AgentCore Gatewayの新しいTargetとして登録する。
+Data Wiki固有のTool description / terminologyをProject Wikiへ変更し、既存AgentCore GatewayのWiki MCP Targetとして登録する。
 
-### 3.3 Chat Agent
+### 4.3 Chat Agent
 
-- 実行基盤: AgentCore Runtime
+- Runtime: AgentCore Runtime
 - Framework: LangGraph / LangChain
-- Pattern: ReAct / tool calling
-- Conversation state: DynamoDBSaver
+- Pattern: ReAct / Tool Calling
+- Conversation State: DynamoDBSaver
 
-元RepoではWikiの`ConsumptionTools`をin-processで直接importする。
-
-```text
-Current sample
-Chat Agent
-   ↓
-ConsumptionTools
-```
-
-今回のTo-Beでは社内共通GatewayをKnowledge Access Layerとして使う。
+元Repoでは`ConsumptionTools`をin-process利用するが、To-Beでは既存Gatewayを正式なKnowledge Access Layerにする。
 
 ```text
-To-Be
 Chat Agent
    ↓ MCP
 Existing AgentCore Gateway
    ├─ Wiki MCP
-   └─ Managed KB
+   └─ Existing Managed KB
 ```
 
-Network Hopは1段増えるが、Knowledge interface、Tool discovery、policy、observabilityを共通化できるメリットを優先する。
+## 5. Project Knowledge Model
 
-## 4. Knowledge Storage / Retrieval
+MVPで扱うコアType:
 
-### 4.1 S3 OKF Wiki
+### Project
+Project全体の目的、状態、重要Knowledgeへの入口。
 
-S3上のMarkdownがCompiled Knowledgeの正本。
+### Topic
+会議や文書をまたぐ継続テーマ。
+
+### Decision
+決定事項とそのLifecycle。Project Wikiの中心Knowledgeの1つ。
+
+推奨Lifecycle:
 
 ```text
-S3 Bundle
-  └─ OKF Markdown
-      ├─ Meeting
-      ├─ Topic
-      ├─ Decision
-      ├─ Action
-      └─ Risk
+proposed → active → superseded / cancelled
 ```
 
-S3はversioningを維持し、Harvest失敗・誤更新からrollback可能な設計を継承する。
+### Requirement
+要求、仕様、制約、受入条件。
 
-### 4.2 Link / Backlink
+### Action
+Owner、Due、Statusを持つ実行事項。
 
-明示的なWiki Linkから関係をたどる。
+### Risk
+将来起こり得るリスク、Impact、Mitigation。
+
+### Issue
+既に発生している問題、Blocker、調査事項。
+
+### Artifact
+仕様書、設計書、成果物などProject資産へのKnowledge Entry。
+
+### Meeting
+会議自体の概要と、その会議から生じたDecision / Action / Topicへの入口。
+
+将来必要になればSystem / Component / Team / Person / Milestone / Changeを追加する。
+
+## 6. Knowledge Reconciliation — Harvestの本丸
+
+HarvestはSourceを要約するだけでは不十分。
+
+新Sourceを既存Wikiと照合し、Knowledgeごとに次を判定する。
+
+```text
+CREATE
+  既存Wikiに存在しない新しいKnowledge
+
+UPDATE
+  同一Knowledgeの状態・内容が変わった
+
+REINFORCE
+  別Sourceが既存Knowledgeを裏付けた
+
+CONFLICT
+  既存KnowledgeとSourceが矛盾する
+
+IGNORE
+  Knowledgeとして追加・更新価値がない
+```
 
 例:
 
 ```text
-Meeting → Decision
-Meeting → Action
-Decision → Topic
-Decision → Source Meeting
-Action → Decision
-Topic → Related Decisions
+8/1  Gatewayを使う方向で検討
+8/8  Gatewayを正式採用
+8/15 Gateway案を撤回
 ```
 
-MVPでは重いOntologyを導入せず、Markdown Link / BacklinkをLightweight Graphとして使う。
+望ましい結果:
 
-### 4.3 S3 Vectors
+```text
+decisions/adopt-agentcore-gateway.md
 
-S3 Vectorsは残す。
+status: cancelled
+sources:
+  - 2026-08-01 meeting
+  - 2026-08-08 meeting
+  - 2026-08-15 meeting
 
-目的はRaw Document RAGではなく、**読むべきWiki Conceptを意味から発見すること**。
+history:
+  proposed → active → cancelled
+```
+
+3ページのDecisionを乱造しない。
+
+詳細は`HARVEST_MIGRATION.md`を正本とする。
+
+## 7. Grounding / Provenance
+
+元RepoではGlue metadataと`run_sql` / `sample_rows`が事実確認手段になる。
+
+Project Wikiでは次へ置き換える。
+
+```text
+Normalized Source Text
+Original Source location
+Existing Managed KB retrieval
+Existing Wiki
+Source metadata
+```
+
+Knowledge Pageは必ずSource provenanceを保持する。
+
+最低限:
+
+```text
+sources
+generated
+verified
+status
+updated_at
+```
+
+重要なDecision / Requirement / RiskをSourceなしでpublishしない。
+
+## 8. S3 OKF Wiki
+
+S3上のOKF MarkdownがCompiled Knowledgeの正本。
+
+推奨構成:
+
+```text
+wiki/
+  index.md
+  projects/
+  topics/
+  decisions/
+  requirements/
+  actions/
+  risks/
+  issues/
+  artifacts/
+  meetings/
+  entities/
+```
+
+Versioning、safe publish、rollbackの既存設計を維持する。
+
+## 9. Link / Backlink
+
+Markdown Link / BacklinkをLightweight Graphとして利用する。
+
+例:
+
+```text
+Project → Topic
+Topic → Decision
+Decision → Requirement
+Decision → Artifact
+Decision → Meeting
+Action → Decision
+Issue → Decision
+Risk → Requirement
+Meeting → Decision / Action / Topic
+```
+
+MVPでHeavy Ontologyは導入しない。
+
+## 10. S3 Vectors
+
+S3 Vectorsはそのまま維持する。
+
+目的はRaw Document RAGではなく、読むべきWiki Conceptを意味から発見すること。
 
 ```text
 Question
@@ -242,417 +419,186 @@ read_page
 S3 OKF Markdown
 ```
 
-Embeddingは1 Concept = 1 Vectorを基本とし、Title / Type / Description / Tags / Overviewを中心にVector化する既存設計を継承する。
+既存の1 Concept = 1 Vector、EventBridge → SQS → Reindex Lambda、sequencer dedup、retry / DLQを維持する。
 
-更新フローも維持する。
+## 11. Existing Managed KB
 
-```text
-S3 OKF change
-   ↓
-EventBridge
-   ↓
-SQS
-   ↓
-Reindex Lambda
-   ↓
-Titan V2
-   ↓
-S3 Vectors
-```
-
-DynamoDB FreshnessによるS3 sequencer管理・retry設計も維持する。
-
-### 4.4 Managed Knowledge Base
-
-既存Managed KBはRaw Evidence検索に利用する。
+Managed KBはRaw Evidence検索に利用する。
 
 ```text
-Raw Meeting / PDF / PPTX / DOCX / Formal Docs
-                    ↓
-             Existing Managed KB
-                    ↓
-              Retrieve / Agentic Retrieval
+Raw Project Sources
+        ↓
+Existing Managed KB
+        ↓
+Retrieve / Agentic Retrieval
 ```
 
-LLM WikiとManaged KBは競合しない。
+役割分担:
 
 ```text
-LLM Wiki   = 整理された現在の理解
-Managed KB = 正式な原文とEvidence
+Project Wiki = 整理された現在の理解
+Managed KB   = 正式な原文・Evidence
 ```
 
-## 5. Gatewayを中心にしたKnowledge Access
+## 12. Existing AgentCore Gateway
 
-既存AgentCore Gatewayは今回の正式なKnowledge Access Layerとする。
+既存Gatewayを正式なKnowledge Access Layerとする。
 
 ```text
 Existing AgentCore Gateway
-        │
-        ├─ Existing Managed KB Target
-        │
-        └─ New Wiki MCP Target
+   ├─ Existing Managed KB Target
+   └─ New Wiki MCP Target
 ```
 
-これによりChat Agentだけでなく、将来的にClaude Code、Copilot、工程分析Agent、その他業務Agentも同じMCP interfaceを利用できる。
+将来的にChat Agent以外の業務Agentも同じInterfaceを利用できる。
 
-```text
-Chat Agent
-Coding Agent
-Business Agent
-Process Analysis Agent
-          │
-          ▼
-AgentCore Gateway
-          │
-     ┌────┴────┐
-     ▼         ▼
- Wiki MCP   Managed KB
-```
-
-## 6. Query Routing Policy
-
-Chat AgentにはKnowledge Sourceの使い分けを明示する。
+## 13. Query Routing Policy
 
 ### Wiki優先
 
-- 現在何が決まっているか
 - ProjectのCurrent State
-- Decision一覧
-- Action一覧
-- Topicの整理
-- 会議間の関係
-- 過去Decisionとの関係
+- 現在有効なDecision
+- Topic summary
+- Action / Issue / Risk
+- Knowledge間の関係
 
 ### Managed KB優先
 
-- 原文を確認したい
-- 正確な数値・表現
-- 発言のEvidence
+- 正確な原文
+- 数値
+- Source Evidence
 - Citation
-- Wikiに要約されなかった詳細
+- Wikiへ落としていない詳細
 
 ### Hybrid
 
 ```text
-Question
+Wikiで理解
   ↓
-Wikiで現在の理解を取得
-  ↓
-Managed KBで原文検証
+Managed KBで検証
   ↓
 Answer + Citation
 ```
 
-例: 「設備Aの停止原因と、その根拠を教えて」
+## 14. Conversation Memory
 
-```text
-Wiki      → 現在整理された原因
-Managed KB→ 議事録原文 / 資料
-Chat Agent→ 両方を統合して回答
-```
+既存DynamoDBSaverを維持する。
 
-## 7. Conversation Memory
+これはConversation Checkpointであり、Long-term Semantic Memoryではない。
 
-Chat Agentの会話状態は既存DynamoDBSaverを維持する。
+MVPではAgentCore Memoryを追加しない。
 
-```text
-LangGraph
-   ↓
-DynamoDBSaver
-   ↓
-DynamoDB Chat Checkpoints
-```
+## 15. Authentication / Authorization
 
-役割:
+User Authenticationは既存Fargate / Dashboard境界を利用する。
 
-- Messages
-- Tool Calls
-- Checkpoints
-- Pending state
-- Thread continuation
+AWS内部では以下を維持する。
 
-大きなCheckpointは既存実装どおりS3へoffload可能。
-
-これはLong-term semantic memoryではない。AgentCore MemoryはMVPでは追加しない。
-
-## 8. DynamoDBの役割
-
-当面Vector Storeには変更しない。
-
-```text
-DynamoDB
-├─ Registry
-├─ Freshness
-├─ Chat Checkpoints
-├─ Chat Threads
-└─ Annotations
-```
-
-DynamoDB Vector Searchは将来候補だが、S3 Vectorsの既存実装が完成度高く、移行メリットがMVPリスクを上回らないため今回は見送る。
-
-## 9. Authentication / Authorization
-
-Application user authenticationは既存Fargate / Dashboard側を利用し、新しいCognito login systemは構築しない。
-
-一方でAWS内部では以下を維持する。
-
-- IAM execution roles
-- AgentCore / Gateway authorization
+- IAM execution role
+- Gateway / target authorization
 - S3 / DynamoDB least privilege
 - Service-to-service credentials
-- CloudWatch trace access control
+- CloudWatch access control
 
-つまり、`新規Cognitoを作らない` と `AWS内部認可をなくす` は別である。
+## 16. Scope分類
 
-## 10. LLM Wiki Knowledge Model
-
-初期Knowledge Type:
-
-### Meeting
-
-- `meeting_id`
-- `meeting_date`
-- `project`
-- `participants`
-- `sources`
-- `status`
-- `generated`
-- `verified`
-
-### Topic
-
-- `topic_id`
-- `title`
-- `project`
-- `related_meetings`
-- `related_decisions`
-- `related_actions`
-- `sources`
-- `status`
-
-### Decision
-
-- `decision_id`
-- `decision`
-- `reason`
-- `decided_at`
-- `project`
-- `related_topics`
-- `sources`
-- `status`
-
-### Action
-
-- `action_id`
-- `description`
-- `owner`
-- `due_date`
-- `status`
-- `project`
-- `source`
-
-### Risk
-
-- `risk_id`
-- `description`
-- `impact`
-- `mitigation`
-- `status`
-- `project`
-- `sources`
-
-## 11. Incremental Knowledge Compilation
-
-Harvestは単純な「議事録→要約」ではなく、既存Wikiを参照してKnowledgeの状態を判断する。
-
-```text
-New Source
-   ↓
-Parse / Extract
-   ↓
-Search Existing Wiki
-   ↓
-Classify
-   ├─ create
-   ├─ update
-   ├─ reinforce
-   ├─ conflict
-   └─ ignore
-   ↓
-Generate / Edit OKF
-   ↓
-Link / Backlink validation
-   ↓
-Publish
-```
-
-重要ルール:
-
-1. 同じKnowledge Pageを乱造しない
-2. Decision変更時に履歴を消さない
-3. Source provenanceを必須にする
-4. Conflictを無言で上書きしない
-5. Link切れを検査する
-6. Harvest失敗で現在のpublished Wikiを壊さない
-
-## 12. Level Model
-
-### Level 1 — Structured Wiki
-
-OKF Markdown + YAML + Source provenance。
-
-### Level 2 — Navigable Wiki
-
-Link / Backlink + Wiki Tools + Graph View。
-
-### Level 3 — Semantic + Evidence
-
-S3 Vectors + Managed KB + Citation。
-
-**今回のMVP目標。**
-
-### Level 4 — Self Improving Knowledge
-
-Evaluation / Feedback / Annotation / Freshness / Conflict Detection / Re-Harvest。
-
-### Level 5 — Graph / Semantic Model
-
-Thin Ontology / Typed Relation / Knowledge Graph / GraphRAG。
-
-明確なユースケースが出た場合だけ追加する。
-
-## 13. Existing / Change / Add / Out of Scope
-
-### 現行から継承
+### 継承
 
 - OKF Core
 - Harvest framework
 - S3 Bundle / versioning
 - Link / Backlink
 - S3 Vectors
-- semantic_search
 - Consumption MCP
-- Chat Agent framework
+- Chat framework
 - DynamoDBSaver
 - UI / Graph View
-- EventBridge / SQS / Lambda
-- CloudWatch / OTEL
-- Terraform
+- Reindex pipeline
+- Observability / Terraform
 
-### 現行から変更
+### 変更
 
-- Data Harvest → Meeting / Document Harvest
-- Dataset / Table model → Meeting / Topic / Decision / Action / Risk
-- Chat Agent direct ConsumptionTools → AgentCore Gateway MCP
+- Data Harvest → Project Knowledge Harvest
+- Glue/Table model → Project Knowledge Model
+- Data source access → Source Adapter abstraction
+- Chat direct tools → Existing AgentCore Gateway
 - Cognito UI依存 → Existing application auth boundary
 
-### 既存社内環境と統合
+### 既存環境と統合
 
 - Existing Fargate Front
 - Existing Authentication
 - Existing AgentCore Gateway
 - Existing Managed KB Target
 
-### 新規追加
+### 追加
 
-- Wiki MCPを既存Gateway Targetへ登録
-- Meeting Wiki schema / prompt / skills
-- Wiki + Managed KB routing policy
+- Wiki MCP Gateway Target
+- Project Knowledge schema
+- Source Adapter layer
+- Knowledge Reconciler
+- Project Knowledge authoring skill / prompt
+- Wiki + KB routing policy
 
-### 今回スコープ外
+### MVPスコープ外
 
 - DynamoDB Vector migration
 - AgentCore Long-term Memory
 - Neptune
 - GraphRAG
-- Full Knowledge Graph
 - Heavy Ontology
-- New custom vector DB
-- New custom RAG platform
+- New custom vector DB / RAG
 
-## 14. MVP Acceptance Criteria
+## 17. MVP Scope
 
-1. 議事録・業務文書を入力できる
-2. Harvest AgentがMeeting / Topic / Decision / Action / Riskを抽出できる
-3. 既存Wikiを検索してcreate/update/reinforceを判断できる
-4. OKF MarkdownをS3にpublishできる
-5. Link / Backlinkが生成・検索できる
-6. S3 Vectors semantic_searchが動く
-7. Consumption MCPからread/searchできる
-8. Wiki MCPを既存Gateway Targetとして利用できる
-9. 既存Managed KB Targetを同じGatewayから利用できる
-10. Chat AgentがGateway経由で両Tool群を使える
-11. Wiki → Evidence verificationができる
-12. Raw source Citationを返せる
-13. DynamoDBSaverで会話を継続できる
-14. Failed harvestがpublished Wikiを破壊しない
-15. CloudWatch / OTELでAgent・Tool traceを確認できる
-
-## 15. Development Priority
+対応Source:
 
 ```text
-Priority 1
-Harvest Agent品質
-
-Priority 2
-OKF Meeting Wiki schema
-
-Priority 3
-Wiki MCP → Existing Gateway
-
-Priority 4
-Chat Agent → Gateway routing
-
-Priority 5
-UI adjustment
-
-Priority 6
-Evaluation / operational hardening
+Meeting minutes
+Markdown / text
+PDF
+DOCX
+PPTX
 ```
 
-AWS infrastructureをゼロから作るプロジェクトではない。最重要なのはHarvestがKnowledgeを正しくcompile/updateできるかである。
+必須Knowledge:
 
-## 16. Schedule Estimate
+```text
+Project
+Topic
+Decision
+Requirement
+Action
+Risk
+Issue
+Artifact
+Meeting
+```
 
-既存Repo、既存Fargate、既存Auth、既存Gateway、既存Managed KBを使う場合:
+MVP完成条件は、単に議事録からMarkdownを生成することではない。
 
-- PoC: 3〜5営業日
-- 社内MVP: 5〜10営業日
-- Production hardening: 3〜6週間
+> **複数のProject Sourceを既存Wikiと照合し、Knowledgeをcreate / update / reinforce / conflictとして継続管理し、Chat AgentがGateway経由でWikiとRaw Evidenceを使い分けてCitation付き回答を返せること。**
 
-## 17. Final Decision
+## 18. Final Principle
 
-最終方針は以下。
+このシステムの本質はKnowledge Storageではなく、**Knowledge Compilation + Reconciliation**。
 
 ```text
 Raw Evidence
       ↓
-Existing Managed KB
-
-Raw Documents
+Knowledge Extraction
       ↓
-Harvest Agent
+Existing Knowledge Comparison
       ↓
-OKF Wiki
+Knowledge Reconciliation
       ↓
-Link / Backlink + S3 Vectors
+Structured Project Wiki
       ↓
-Wiki MCP
-
-Wiki MCP + Managed KB
+Semantic / Structural Navigation
       ↓
-Existing AgentCore Gateway
+Evidence Verification
       ↓
-Chat / Business / Coding Agents
+Agent Reasoning
 ```
 
-> **LLM Wikiで整理された理解を持ち、Managed KBで原文Evidenceを持ち、AgentCore Gatewayで両者を統一Knowledge InterfaceとしてAgentへ提供する。**
-
-この構成を議事録Wiki MVPの最終アーキテクチャとする。
-
-## References
-
-- Base Repo: https://github.com/aws-samples/sample-okf-llm-wiki
-- AgentCore Gateway: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway.html
-- Managed KB Gateway Connector: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway-target-connector-managed-kb.html
-- Bedrock Knowledge Bases: https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html
+Project Wikiで「整理された理解」を持ち、Managed KBで「正式な原文」を持ち、AgentCore Gatewayで両者を1つのKnowledge Interfaceとして提供する。
