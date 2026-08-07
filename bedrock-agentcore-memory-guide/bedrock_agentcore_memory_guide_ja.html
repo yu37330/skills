@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Amazon Bedrock AgentCore Memory 完全ガイド</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --paper:#ffffff; --ink:#172033; --muted:#5b667a;
+    --line:#dbe3ef; --navy:#112a46; --blue:#2563eb; --cyan:#0891b2;
+    --teal:#0f766e; --green:#15803d; --amber:#b45309; --red:#b42318;
+    --purple:#7c3aed; --soft:#eef4ff; --soft2:#ecfeff; --shadow:0 12px 32px rgba(25,42,70,.10);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.72}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+  .page{max-width:1280px;margin:0 auto;padding:24px 28px 80px}
+  .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#0b2038 0%,#163e65 58%,#0e7490 100%);color:#fff;border-radius:26px;padding:54px 58px;box-shadow:var(--shadow)}
+  .hero:after{content:"";position:absolute;width:390px;height:390px;border:1px solid rgba(255,255,255,.16);border-radius:50%;right:-105px;top:-135px;box-shadow:0 0 0 54px rgba(255,255,255,.045),0 0 0 108px rgba(255,255,255,.025)}
+  .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.09);font-weight:700;font-size:13px;letter-spacing:.04em}
+  .hero h1{font-size:clamp(34px,5vw,62px);line-height:1.12;margin:18px 0 14px;max-width:900px;letter-spacing:-.02em}
+  .hero p{font-size:18px;max-width:900px;margin:0;color:#dcecff}
+  .hero-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:34px;max-width:920px}
+  .hero-kpi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.17);padding:15px 16px;border-radius:14px}
+  .hero-kpi b{font-size:24px;display:block}.hero-kpi span{font-size:12px;color:#dbeafe}
+  .layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:26px;margin-top:28px}
+  .toc{position:sticky;top:18px;align-self:start;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 20px rgba(25,42,70,.06)}
+  .toc-title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin-bottom:10px}
+  .toc a{display:block;color:var(--ink);padding:8px 10px;border-radius:10px;font-size:13px;font-weight:650}
+  .toc a:hover,.toc a.active{background:var(--soft);color:var(--blue);text-decoration:none}
+  main{min-width:0}
+  section{scroll-margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin-bottom:22px;box-shadow:0 8px 22px rgba(25,42,70,.05)}
+  h2{font-size:29px;line-height:1.25;margin:0 0 8px;letter-spacing:-.02em}
+  h3{font-size:20px;margin:26px 0 10px} h4{font-size:16px;margin:18px 0 7px}
+  .lead{color:var(--muted);margin:0 0 22px;font-size:16px}
+  .section-no{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--navy);color:white;font-size:14px;margin-right:9px;vertical-align:3px}
+  .grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card{border:1px solid var(--line);border-radius:15px;padding:19px;background:#fff}.card h3,.card h4{margin-top:0}.card p:last-child{margin-bottom:0}
+  .card.soft{background:linear-gradient(180deg,#f8fbff,#eef5ff)}
+  .card.cyan{background:linear-gradient(180deg,#f7feff,#ecfeff)}
+  .card.warn{background:#fffaf0;border-color:#f2d7aa}.card.danger{background:#fff5f4;border-color:#f1c2bd}.card.good{background:#f3fbf5;border-color:#bfe2c9}
+  .icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:12px;background:var(--soft)}
+  .pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800;background:var(--soft);color:var(--blue);margin:2px 3px 2px 0}
+  .pill.green{background:#eaf8ee;color:var(--green)}.pill.amber{background:#fff4dd;color:var(--amber)}.pill.red{background:#ffedeb;color:var(--red)}.pill.purple{background:#f3edff;color:var(--purple)}
+  .callout{border-left:5px solid var(--blue);background:#f4f8ff;padding:17px 19px;border-radius:0 13px 13px 0;margin:18px 0}.callout strong{display:block;margin-bottom:4px}
+  .callout.amber{border-left-color:var(--amber);background:#fff9ec}.callout.green{border-left-color:var(--green);background:#f2fbf5}.callout.red{border-left-color:var(--red);background:#fff4f3}
+  .mental{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
+  .big-quote{font-size:26px;line-height:1.5;font-weight:800;letter-spacing:-.02em;color:var(--navy);margin:0}
+  .muted{color:var(--muted)}
+  .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+  table{width:100%;border-collapse:collapse;min-width:760px;background:#fff}
+  th,td{text-align:left;vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--line)}
+  th{background:#f4f7fb;font-size:13px;color:#344054;position:sticky;top:0}tr:last-child td{border-bottom:none}
+  .flow{display:flex;align-items:stretch;gap:10px;overflow:auto;padding:10px 2px}.step{min-width:145px;flex:1;padding:15px;border:1px solid var(--line);border-radius:14px;background:#fff}.arrow{align-self:center;color:#8da0ba;font-size:24px;font-weight:900}
+  .step b{display:block;margin-bottom:5px}.step small{display:block;color:var(--muted);line-height:1.5}
+  .level-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.tab-btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 13px;border-radius:999px;font-weight:750;cursor:pointer}.tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .level-panel{display:none}.level-panel.active{display:block}
+  pre{background:#0e1b2b;color:#e6edf7;padding:19px;border-radius:14px;overflow:auto;line-height:1.55;font-size:13px;border:1px solid #23364f}
+  .code-note{font-size:12px;color:var(--muted);margin-top:8px}
+  .diagram{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#fbfdff,#f5f9ff);padding:20px;overflow:auto}
+  .diagram svg{display:block;width:100%;min-width:780px;height:auto}
+  .source-list{display:grid;gap:12px}.source{display:grid;grid-template-columns:42px 1fr auto;gap:13px;align-items:center;border:1px solid var(--line);padding:14px;border-radius:13px}.source-num{width:38px;height:38px;border-radius:11px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:850}.source small{color:var(--muted)}
+  .checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px}.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line)}.check input{margin-top:6px;accent-color:var(--blue)}
+  .note{font-size:12px;color:var(--muted)}
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+  .only-print{display:none}
+  @media(max-width:980px){.layout{grid-template-columns:1fr}.toc{position:relative;top:auto}.toc nav{columns:2}.g4,.g3{grid-template-columns:repeat(2,minmax(0,1fr))}.mental{grid-template-columns:1fr}.hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:640px){.page{padding:12px 12px 50px}.hero{padding:34px 24px}.hero-kpis,.g2,.g3,.g4,.checklist{grid-template-columns:1fr}.toc nav{columns:1}section{padding:22px}.big-quote{font-size:21px}.hero h1{font-size:38px}}
+  @media print{body{background:#fff}.page{max-width:none;padding:0}.hero{border-radius:0;box-shadow:none}.layout{display:block}.toc,.no-print{display:none!important}section{box-shadow:none;break-inside:avoid;border-color:#cfd7e4}.only-print{display:block}a{color:inherit;text-decoration:none}.hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <span class="eyebrow">AWS公式情報を横断整理 · 2026年8月6日時点</span>
+    <h1>Amazon Bedrock AgentCore Memory<br>初学者から実務設計までの完全ガイド</h1>
+    <p>「会話履歴の保存」と「エージェントが学ぶ記憶」を混同しないための、概念・設計・実装・運用を一つにつないだ説明資料です。工程分析エージェントへの適用例も収録しています。</p>
+    <div class="hero-kpis">
+      <div class="hero-kpi"><b>2</b><span>短期・長期のメモリ層</span></div>
+      <div class="hero-kpi"><b>4</b><span>現在の組み込み戦略</span></div>
+      <div class="hero-kpi"><b>3</b><span>実装自由度のレベル</span></div>
+      <div class="hero-kpi"><b>1</b><span>重要原則：正本と記憶を分ける</span></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="toc no-print">
+      <div class="toc-title">Contents</div>
+      <nav id="tocNav">
+        <a href="#summary">00｜30秒で理解</a>
+        <a href="#levels">01｜レベル別の読み方</a>
+        <a href="#position">02｜何を解決するか</a>
+        <a href="#architecture">03｜全体の仕組み</a>
+        <a href="#terms">04｜基本用語</a>
+        <a href="#strategies">05｜4つの戦略</a>
+        <a href="#compare">06｜KB・DBとの使い分け</a>
+        <a href="#design">07｜検索・名前空間設計</a>
+        <a href="#implementation">08｜最小実装</a>
+        <a href="#manufacturing">09｜工程分析への適用</a>
+        <a href="#production">10｜本番運用</a>
+        <a href="#evaluation">11｜評価方法</a>
+        <a href="#sources">12｜おすすめ資料</a>
+      </nav>
+      <button class="tab-btn" style="width:100%;margin-top:14px" onclick="window.print()">印刷 / PDF保存</button>
+    </aside>
+
+    <main>
+      <section id="summary">
+        <h2><span class="section-no">00</span>30秒で理解する</h2>
+        <p class="lead">AgentCore Memoryは、エージェントの「今の会話」と「過去から学んだこと」を、別々の仕組みで管理するマネージドサービスです。</p>
+        <div class="mental">
+          <div>
+            <p class="big-quote">短期メモリは「何が起きたか」を残し、長期メモリは「何を覚えるべきか」を抽出・統合する。</p>
+            <div class="callout green"><strong>最重要ポイント</strong>Memoryは正式文書やマスターデータの代わりではありません。ユーザーの文脈、過去の判断、作業の継続性を担当し、正しい根拠はKnowledge Baseや業務DBから取得します。</div>
+          </div>
+          <div class="grid g2">
+            <div class="card soft"><div class="icon">🗒️</div><h4>短期メモリ</h4><p>会話、ツール呼び出し、状態などの生イベント。<b>actorId × sessionId</b>で整理します。</p></div>
+            <div class="card cyan"><div class="icon">🧠</div><h4>長期メモリ</h4><p>事実、好み、要約、エピソードなどを抽出・統合し、セッションをまたいで検索します。</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="levels">
+        <h2><span class="section-no">01</span>経験レベル別の読み方</h2>
+        <p class="lead">同じ機能でも、利用者・アプリ開発者・基盤設計者では見るべきポイントが違います。</p>
+        <div class="level-tabs no-print">
+          <button class="tab-btn active" data-level="beginner">初めての人</button>
+          <button class="tab-btn" data-level="builder">実装する人</button>
+          <button class="tab-btn" data-level="advanced">応用・基盤設計</button>
+        </div>
+        <div class="level-panel active" data-panel="beginner">
+          <div class="grid g3">
+            <div class="card"><span class="pill">まず理解</span><h3>記憶 ≠ ナレッジ</h3><p>Memoryは「その人・その作業で何があったか」。Knowledge Baseは「正式資料に何と書かれているか」です。</p></div>
+            <div class="card"><span class="pill">次に理解</span><h3>短期と長期</h3><p>短期は会話ログに近く、長期は会話から重要情報だけを抽出したものです。</p></div>
+            <div class="card"><span class="pill">最後に理解</span><h3>自動では使われない</h3><p>保存・検索したメモリを、どのタイミングでプロンプトへ渡すかはアプリ側の設計です。</p></div>
+          </div>
+        </div>
+        <div class="level-panel" data-panel="builder">
+          <div class="grid g3">
+            <div class="card"><span class="pill green">実装</span><h3>書き込み</h3><p><code>CreateEvent</code>またはSDKのSession Managerで、会話ターンをイベントとして保存します。</p></div>
+            <div class="card"><span class="pill green">検索</span><h3>Context Hydration</h3><p>直近イベント、セッション要約、意味検索された長期メモリを組み合わせてモデル入力を作ります。</p></div>
+            <div class="card"><span class="pill green">確認</span><h3>非同期性</h3><p>長期メモリ生成には遅延があります。直後の情報は短期メモリから取得する設計が必要です。</p></div>
+          </div>
+        </div>
+        <div class="level-panel" data-panel="advanced">
+          <div class="grid g3">
+            <div class="card"><span class="pill purple">設計</span><h3>Namespace</h3><p>アクセスパターンとテナント境界から階層を設計し、actor・project・strategyなどを分離します。</p></div>
+            <div class="card"><span class="pill purple">精度</span><h3>Metadata</h3><p>優先度、工程、設備、期間、状態などを構造化し、意味検索の前に候補を絞ります。</p></div>
+            <div class="card"><span class="pill purple">最適化</span><h3>Custom Strategy</h3><p>業務固有の抽出・統合ルールが必要な場合はBuilt-in OverrideまたはSelf-managedへ進みます。</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="position">
+        <h2><span class="section-no">02</span>AgentCore Memoryは何を解決するのか</h2>
+        <p class="lead">LLM自体は、API呼び出しが終わると以前の会話を覚えていません。アプリケーションが文脈を保存・選択・再投入する必要があります。</p>
+        <div class="grid g3">
+          <div class="card danger"><div class="icon">🔁</div><h3>繰り返し説明</h3><p>ユーザーが毎回、目的・好み・過去の判断・作業状況を説明し直す。</p></div>
+          <div class="card danger"><div class="icon">📚</div><h3>コンテキスト肥大</h3><p>会話履歴を全件プロンプトへ詰め込み、コスト・遅延・ノイズが増える。</p></div>
+          <div class="card danger"><div class="icon">🧩</div><h3>学習の分断</h3><p>別セッションや別エージェントへ、過去の経験や判断が引き継がれない。</p></div>
+        </div>
+        <div class="callout"><strong>AgentCore Memoryの価値</strong>生の履歴を保存するだけでなく、重要情報の抽出・既存情報との統合・意味検索までを、短期メモリと長期メモリとして分離して提供します。</div>
+      </section>
+
+      <section id="architecture">
+        <h2><span class="section-no">03</span>全体の仕組み</h2>
+        <p class="lead">「保存」と「思い出す」は別処理です。さらに長期メモリの生成は非同期で動きます。</p>
+        <div class="diagram" aria-label="AgentCore Memory architecture diagram">
+          <svg viewBox="0 0 1060 480" role="img">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#58708f"/></marker>
+              <linearGradient id="b1" x1="0" x2="1"><stop offset="0" stop-color="#eaf2ff"/><stop offset="1" stop-color="#dbeafe"/></linearGradient>
+              <linearGradient id="b2" x1="0" x2="1"><stop offset="0" stop-color="#ecfeff"/><stop offset="1" stop-color="#cffafe"/></linearGradient>
+            </defs>
+            <rect x="35" y="85" width="170" height="95" rx="16" fill="#112a46"/><text x="120" y="120" text-anchor="middle" fill="white" font-size="19" font-weight="700">User / Agent</text><text x="120" y="148" text-anchor="middle" fill="#dbeafe" font-size="13">会話・ツール・状態</text>
+            <rect x="270" y="55" width="220" height="145" rx="18" fill="url(#b1)" stroke="#7aa7e8"/><text x="380" y="90" text-anchor="middle" fill="#173b6b" font-size="19" font-weight="700">Short-term Memory</text><text x="380" y="120" text-anchor="middle" fill="#30445f" font-size="14">Immutable Event</text><text x="380" y="145" text-anchor="middle" fill="#30445f" font-size="14">actorId × sessionId</text><text x="380" y="170" text-anchor="middle" fill="#30445f" font-size="14">ListEvents / GetEvent</text>
+            <rect x="565" y="45" width="190" height="165" rx="18" fill="#fff7e8" stroke="#e9b967"/><text x="660" y="80" text-anchor="middle" fill="#7a4700" font-size="19" font-weight="700">Memory Strategy</text><text x="660" y="111" text-anchor="middle" fill="#5e4b2f" font-size="13">Extraction</text><text x="660" y="137" text-anchor="middle" fill="#5e4b2f" font-size="13">Consolidation</text><text x="660" y="163" text-anchor="middle" fill="#5e4b2f" font-size="13">Reflection（Episodic）</text><text x="660" y="190" text-anchor="middle" fill="#b45309" font-size="12" font-weight="700">非同期処理</text>
+            <rect x="825" y="55" width="200" height="145" rx="18" fill="url(#b2)" stroke="#52b7c6"/><text x="925" y="90" text-anchor="middle" fill="#0e5f6b" font-size="19" font-weight="700">Long-term Memory</text><text x="925" y="120" text-anchor="middle" fill="#30445f" font-size="14">Memory Record</text><text x="925" y="145" text-anchor="middle" fill="#30445f" font-size="14">Namespace + Metadata</text><text x="925" y="170" text-anchor="middle" fill="#30445f" font-size="14">Semantic Retrieval</text>
+            <line x1="205" y1="130" x2="265" y2="130" stroke="#58708f" stroke-width="3" marker-end="url(#arrow)"/><text x="235" y="112" text-anchor="middle" fill="#58708f" font-size="12">CreateEvent</text>
+            <line x1="490" y1="130" x2="560" y2="130" stroke="#58708f" stroke-width="3" marker-end="url(#arrow)"/>
+            <line x1="755" y1="130" x2="820" y2="130" stroke="#58708f" stroke-width="3" marker-end="url(#arrow)"/>
+            <rect x="270" y="300" width="755" height="120" rx="18" fill="#f8fafc" stroke="#cbd5e1"/><text x="647" y="333" text-anchor="middle" fill="#1f2937" font-size="19" font-weight="700">Context Hydration（モデルへ渡す文脈の組み立て）</text><text x="647" y="365" text-anchor="middle" fill="#4b5563" font-size="14">①直近イベント　＋　②セッション要約　＋　③関連する長期メモリ　＋　④Knowledge Base / 業務DB</text><text x="647" y="394" text-anchor="middle" fill="#4b5563" font-size="13">必要な情報だけを選択し、プロンプトへ注入する</text>
+            <line x1="380" y1="205" x2="380" y2="295" stroke="#58708f" stroke-width="3" marker-end="url(#arrow)"/><line x1="925" y1="205" x2="925" y2="295" stroke="#58708f" stroke-width="3" marker-end="url(#arrow)"/>
+            <path d="M270 360 H120 V185" fill="none" stroke="#58708f" stroke-width="3" marker-end="url(#arrow)"/><text x="165" y="345" fill="#58708f" font-size="12">LLMへ入力</text>
+          </svg>
+        </div>
+        <div class="callout amber"><strong>設計上の注意</strong>イベントを書いた直後に、同じ内容が長期メモリで検索できるとは限りません。最新のターンは短期メモリ、過去の知見は長期メモリから取る「二段構え」が基本です。</div>
+      </section>
+
+      <section id="terms">
+        <h2><span class="section-no">04</span>基本用語を一気に整理</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>用語</th><th>意味</th><th>設計時の問い</th><th>工程分析の例</th></tr></thead>
+            <tbody>
+              <tr><td><b>Memory Resource</b></td><td>イベントと抽出済みメモリを保持する最上位コンテナ。</td><td>アプリ、業務、環境のどの単位で分けるか。</td><td>工程分析エージェント用Memory。</td></tr>
+              <tr><td><b>Actor</b></td><td>エージェントとやり取りする人・他エージェント・システム。</td><td>誰の記憶として保存するか。</td><td>分析者ID、設備ID、チームID。</td></tr>
+              <tr><td><b>Session</b></td><td>一連の連続した対話・作業。sessionIdでイベントを束ねる。</td><td>どこで作業を区切るか。</td><td>不良ロットAの原因分析セッション。</td></tr>
+              <tr><td><b>Event</b></td><td>短期メモリの最小単位。会話、ツール実行、状態など。</td><td>何を証跡として保存するか。</td><td>SQL、グラフ生成、仮説の採否。</td></tr>
+              <tr><td><b>Memory Strategy</b></td><td>生イベントから何を抽出・統合するかを決める規則。</td><td>何を長期間覚える価値があるか。</td><td>有効だった分析手順や判断条件。</td></tr>
+              <tr><td><b>Memory Record</b></td><td>長期メモリの構造化された記録単位。</td><td>検索結果をどう評価・利用するか。</td><td>「設備温度上昇後に欠陥率増加」。</td></tr>
+              <tr><td><b>Namespace</b></td><td>長期メモリを論理的に分離する階層パス。</td><td>誰・何・どの範囲で隔離するか。</td><td><code>/plant/A/process/P10/actor/123/</code></td></tr>
+              <tr><td><b>Metadata</b></td><td>検索を絞り込む構造化属性。</td><td>意味の近さ以外に何で選別するか。</td><td>工程、設備、品番、重要度、期間。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="strategies">
+        <h2><span class="section-no">05</span>現在の4つの組み込み戦略</h2>
+        <p class="lead">2026年8月時点の公式ドキュメントでは4種類です。2025年の初期ブログにある「3種類」という記述は、Episodic追加前の情報として読む必要があります。</p>
+        <div class="grid g4">
+          <div class="card soft"><span class="pill">Semantic</span><h3>事実・文脈</h3><p>会話から重要な事実やエンティティ、期限、識別子などを抽出します。</p><p class="note"><b>向く例：</b>案件番号、分析対象、決定事項、バージョン。</p></div>
+          <div class="card soft"><span class="pill green">User Preference</span><h3>好み・スタイル</h3><p>ユーザーが好む形式、選択、作業スタイルを蓄積します。</p><p class="note"><b>向く例：</b>グラフ形式、粒度、報告書の書き方。</p></div>
+          <div class="card soft"><span class="pill amber">Session Summary</span><h3>会話要約</h3><p>長い一つのセッションを、主要トピック・判断・進捗に圧縮します。</p><p class="note"><b>向く例：</b>原因分析の途中経過、未解決事項。</p></div>
+          <div class="card soft"><span class="pill purple">Episodic</span><h3>経験・振り返り</h3><p>一連の出来事をエピソードとして構造化し、複数経験からReflectionを生成します。</p><p class="note"><b>向く例：</b>トラブル対応手順、成功・失敗パターン。</p></div>
+        </div>
+        <h3>どの戦略を選ぶか</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>覚えたいもの</th><th>第一候補</th><th>補助候補</th><th>注意点</th></tr></thead>
+            <tbody>
+              <tr><td>ユーザーや案件に関する明示的な事実</td><td>Semantic</td><td>Summary</td><td>正式なマスタ値は業務DBを正本にする。</td></tr>
+              <tr><td>表示形式や分析スタイル</td><td>User Preference</td><td>Semantic</td><td>推定した好みは確信度と更新条件を意識する。</td></tr>
+              <tr><td>長い作業の途中経過</td><td>Session Summary</td><td>Semantic</td><td>最新ターンは短期メモリから補う。</td></tr>
+              <tr><td>過去の一連の対応とそこからの教訓</td><td>Episodic</td><td>Semantic</td><td>成功条件・失敗条件を評価データで検証する。</td></tr>
+              <tr><td>業務固有の厳密な項目</td><td>Built-in Override</td><td>Self-managed</td><td>抽出スキーマ、監査、再現性を設計する。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout"><strong>実装自由度は3段階</strong>①Built-in：最短で開始、②Built-in with overrides：プロンプトや利用モデルを調整、③Self-managed：抽出・統合・スキーマ・外部DB連携まで自分で制御。</div>
+      </section>
+
+      <section id="compare">
+        <h2><span class="section-no">06</span>Knowledge Base・DB・ログとの使い分け</h2>
+        <p class="lead">「何でもMemoryへ入れる」は失敗しやすい設計です。情報の役割ごとに正本を分けます。</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>保存先</th><th>答える問い</th><th>適した情報</th><th>工程分析での例</th></tr></thead>
+            <tbody>
+              <tr><td><b>AgentCore Memory</b></td><td>誰が、過去に何をし、何を学んだか。</td><td>会話文脈、好み、過去判断、作業経過、経験。</td><td>前回の仮説、よく使う分析軸、未完了タスク。</td></tr>
+              <tr><td><b>Bedrock Knowledge Base</b></td><td>正式な資料には現在何と書かれているか。</td><td>規程、設計書、FMEA、手順書、報告書。</td><td>管理基準、設備仕様、標準作業、過去トラブル。</td></tr>
+              <tr><td><b>業務DB / Lakehouse</b></td><td>現在の正確な値・状態は何か。</td><td>構造化データ、トランザクション、時系列、マスタ。</td><td>測定値、不良率、設備条件、ロット・品番。</td></tr>
+              <tr><td><b>Object Storage</b></td><td>原文・成果物・大型データはどこか。</td><td>生ファイル、画像、CSV、モデル成果物。</td><td>波形、画像、分析Notebook、レポート。</td></tr>
+              <tr><td><b>Observability / Audit Log</b></td><td>システムがいつ何を実行したか。</td><td>トレース、エラー、コスト、レイテンシ、監査。</td><td>どのツール・SQL・モデルが回答を作ったか。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout red"><strong>Memoryを正本にしてはいけない代表例</strong>設備の現在状態、最新の工程条件、承認済み仕様、法規・品質規程、権限判断、金額や在庫などのトランザクション情報。</div>
+      </section>
+
+      <section id="design">
+        <h2><span class="section-no">07</span>検索・Namespace・Metadata設計</h2>
+        <p class="lead">精度を決めるのは「保存量」よりも「検索範囲と選別方法」です。</p>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Namespace = 誰・何を分けるか</h3>
+            <p>ファイルパスのような階層で、長期メモリの論理境界を作ります。先に検索パターンを考え、後から階層を決めます。</p>
+            <pre>/org/{orgId}/plant/{plantId}/
+  process/{processId}/actor/{actorId}/
+    semantic/
+    preferences/
+    episodes/</pre>
+            <p class="note">代表的な変数：<code>{actorId}</code>、<code>{sessionId}</code>、<code>{memoryStrategyId}</code></p>
+          </div>
+          <div class="card">
+            <h3>Metadata = 同じ範囲の中で絞る</h3>
+            <p>Namespace内で意味検索する前に、業務属性で候補を絞ります。特に履歴が増えた後のノイズ抑制に有効です。</p>
+            <pre>{
+  "process_id": "P10",
+  "equipment_id": "EQ-204",
+  "product_family": "A12",
+  "priority": "high",
+  "status": "validated",
+  "analysis_type": "root_cause"
+}</pre>
+            <p class="note">現在の公式仕様では、長期メモリ検索で複数のフィルターをAND条件で利用できます。</p>
+          </div>
+        </div>
+        <h3>検索時のおすすめ順序</h3>
+        <div class="flow">
+          <div class="step"><b>1. Identity</b><small>actor・tenant・権限を確定</small></div><div class="arrow">→</div>
+          <div class="step"><b>2. Namespace</b><small>検索可能な論理範囲を限定</small></div><div class="arrow">→</div>
+          <div class="step"><b>3. Metadata</b><small>工程・設備・期間・状態で絞る</small></div><div class="arrow">→</div>
+          <div class="step"><b>4. Semantic</b><small>質問との意味的な関連度で順位付け</small></div><div class="arrow">→</div>
+          <div class="step"><b>5. Rerank / Policy</b><small>鮮度・信頼度・利用可否を最終判定</small></div>
+        </div>
+        <div class="callout amber"><strong>設計のコツ</strong>Namespaceは「主たる隔離境界」、Metadataは「隔離された範囲内の業務フィルター」と考えると整理しやすくなります。</div>
+      </section>
+
+      <section id="implementation">
+        <h2><span class="section-no">08</span>最小実装の流れ</h2>
+        <p class="lead">最初はSemantic戦略一つで、保存 → 抽出待ち → 検索 → プロンプト注入のループを動かします。</p>
+        <div class="flow">
+          <div class="step"><b>① Memory作成</b><small>戦略、保持期間、暗号化、Namespaceを設定</small></div><div class="arrow">→</div>
+          <div class="step"><b>② Session作成</b><small>actorIdとsessionIdを決定</small></div><div class="arrow">→</div>
+          <div class="step"><b>③ Event保存</b><small>USER / ASSISTANT / TOOL等の会話ターン</small></div><div class="arrow">→</div>
+          <div class="step"><b>④ 長期化</b><small>Strategyが非同期で抽出・統合</small></div><div class="arrow">→</div>
+          <div class="step"><b>⑤ Retrieve</b><small>Namespace・Metadata・意味検索</small></div><div class="arrow">→</div>
+          <div class="step"><b>⑥ Context注入</b><small>回答生成後、新イベントを保存</small></div>
+        </div>
+        <h3>概念を掴むための最小コード例</h3>
+        <pre><span style="color:#7dd3fc">from</span> bedrock_agentcore.memory <span style="color:#7dd3fc">import</span> MemorySessionManager
+<span style="color:#7dd3fc">from</span> bedrock_agentcore.memory.constants <span style="color:#7dd3fc">import</span> ConversationalMessage, MessageRole
+
+<span style="color:#86efac"># 1. 作成済みMemoryへ接続</span>
+manager = MemorySessionManager(
+    memory_id=<span style="color:#fde68a">"YOUR_MEMORY_ID"</span>,
+    region_name=<span style="color:#fde68a">"us-west-2"</span>,
+)
+
+<span style="color:#86efac"># 2. 誰の、どの作業かを明示</span>
+session = manager.create_memory_session(
+    actor_id=<span style="color:#fde68a">"analyst-123"</span>,
+    session_id=<span style="color:#fde68a">"lot-A-root-cause-20260806"</span>,
+)
+
+<span style="color:#86efac"># 3. 会話を短期メモリへ保存</span>
+session.add_turns(messages=[
+    ConversationalMessage(
+        <span style="color:#fde68a">"設備EQ-204の温度上昇と欠陥率の関係を確認したい"</span>,
+        MessageRole.USER,
+    )
+])
+
+<span style="color:#86efac"># 4. 直近文脈は短期メモリから取得</span>
+recent_turns = session.get_last_k_turns(k=<span style="color:#c4b5fd">10</span>)
+
+<span style="color:#86efac"># 5. 長期メモリは別途、関連する記録を意味検索して
+#    Knowledge Baseや業務DBの結果と一緒にLLMへ渡す</span></pre>
+        <p class="code-note">SDK・CLIは更新されるため、実装時は公式Getting Startedと公式Samplesの現行コードを確認してください。</p>
+        <div class="grid g3">
+          <div class="card good"><h4>Phase 1：PoC</h4><p>Semanticのみ。1ユーザー・1ユースケース。手動で検索結果を確認。</p></div>
+          <div class="card good"><h4>Phase 2：業務試行</h4><p>SummaryやMetadataを追加。KB・DBと統合し、回答根拠を表示。</p></div>
+          <div class="card good"><h4>Phase 3：本番</h4><p>Namespace分離、IAM、KMS、監査、評価、削除・訂正フローを実装。</p></div>
+        </div>
+      </section>
+
+      <section id="manufacturing">
+        <h2><span class="section-no">09</span>工程分析エージェントへの適用</h2>
+        <p class="lead">薄いオントロジーと組み合わせる場合、Memoryは「分析の継続性」、KBは「正式知識」、データ基盤は「事実」、オントロジーは「最低限の関係」を担当します。</p>
+        <div class="diagram">
+          <svg viewBox="0 0 1060 560" role="img" aria-label="Manufacturing analysis agent architecture">
+            <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#58708f"/></marker></defs>
+            <rect x="380" y="20" width="300" height="78" rx="16" fill="#112a46"/><text x="530" y="53" text-anchor="middle" fill="white" font-size="20" font-weight="700">工程分析エージェント</text><text x="530" y="78" text-anchor="middle" fill="#dbeafe" font-size="13">Router / Plan / Tool Use / Answer</text>
+            <rect x="40" y="160" width="220" height="135" rx="18" fill="#eef4ff" stroke="#82aee9"/><text x="150" y="194" text-anchor="middle" fill="#173b6b" font-size="18" font-weight="700">AgentCore Memory</text><text x="150" y="225" text-anchor="middle" fill="#344054" font-size="13">分析途中の状態</text><text x="150" y="249" text-anchor="middle" fill="#344054" font-size="13">過去の仮説・判断・経験</text><text x="150" y="273" text-anchor="middle" fill="#344054" font-size="13">利用者の分析スタイル</text>
+            <rect x="300" y="160" width="220" height="135" rx="18" fill="#ecfeff" stroke="#61bdc7"/><text x="410" y="194" text-anchor="middle" fill="#0e5f6b" font-size="18" font-weight="700">Managed KB</text><text x="410" y="225" text-anchor="middle" fill="#344054" font-size="13">FMEA・仕様書</text><text x="410" y="249" text-anchor="middle" fill="#344054" font-size="13">標準作業・報告書</text><text x="410" y="273" text-anchor="middle" fill="#344054" font-size="13">正式な根拠・原文</text>
+            <rect x="560" y="160" width="220" height="135" rx="18" fill="#f3fbf5" stroke="#7cc38c"/><text x="670" y="194" text-anchor="middle" fill="#166534" font-size="18" font-weight="700">Data Platform</text><text x="670" y="225" text-anchor="middle" fill="#344054" font-size="13">時系列・品質・設備条件</text><text x="670" y="249" text-anchor="middle" fill="#344054" font-size="13">Lot / Product / Equipment</text><text x="670" y="273" text-anchor="middle" fill="#344054" font-size="13">現在の正確な値</text>
+            <rect x="820" y="160" width="200" height="135" rx="18" fill="#fff8ea" stroke="#e5b25a"/><text x="920" y="194" text-anchor="middle" fill="#8a5200" font-size="18" font-weight="700">Thin Ontology</text><text x="920" y="225" text-anchor="middle" fill="#344054" font-size="13">工程→設備→条件</text><text x="920" y="249" text-anchor="middle" fill="#344054" font-size="13">異常→現象→原因候補</text><text x="920" y="273" text-anchor="middle" fill="#344054" font-size="13">最低限の語彙・関係</text>
+            <line x1="460" y1="98" x2="170" y2="155" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/><line x1="505" y1="98" x2="415" y2="155" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/><line x1="555" y1="98" x2="665" y2="155" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/><line x1="600" y1="98" x2="900" y2="155" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/>
+            <rect x="150" y="370" width="760" height="125" rx="20" fill="#f8fafc" stroke="#cbd5e1"/><text x="530" y="405" text-anchor="middle" fill="#1f2937" font-size="20" font-weight="700">統合された回答</text><text x="530" y="438" text-anchor="middle" fill="#4b5563" font-size="14">「過去の分析では何を試したか」＋「正式資料の根拠」＋「現在データ」＋「工程関係」</text><text x="530" y="467" text-anchor="middle" fill="#4b5563" font-size="13">仮説・根拠・反証・次アクション・証跡をセットで提示</text>
+            <line x1="150" y1="295" x2="280" y2="365" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/><line x1="410" y1="295" x2="430" y2="365" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/><line x1="670" y1="295" x2="630" y2="365" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/><line x1="920" y1="295" x2="780" y2="365" stroke="#58708f" stroke-width="3" marker-end="url(#a2)"/>
+          </svg>
+        </div>
+        <h3>工程分析で「覚えるもの」と「覚えないもの」</h3>
+        <div class="grid g2">
+          <div class="card good"><h3>Memoryへ覚えさせる</h3><p><span class="pill green">分析テーマ</span><span class="pill green">採用・棄却した仮説</span><span class="pill green">有効だった分析手順</span><span class="pill green">次に確認する項目</span><span class="pill green">利用者の表示嗜好</span><span class="pill green">過去の対応結果</span></p></div>
+          <div class="card danger"><h3>正本へ問い合わせる</h3><p><span class="pill red">最新の測定値</span><span class="pill red">承認済み工程条件</span><span class="pill red">設備マスタ</span><span class="pill red">品質判定</span><span class="pill red">正式な原因分類</span><span class="pill red">権限・機密区分</span></p></div>
+        </div>
+        <div class="callout green"><strong>薄いオントロジーとの相性</strong>最初から完全な原因体系を作らず、工程・設備・条件・現象・原因候補・対策の6概念程度を共通語彙として持ち、具体的な分析経験はEpisodic Memoryへ蓄積する構成が現実的です。</div>
+      </section>
+
+      <section id="production">
+        <h2><span class="section-no">10</span>本番運用で外せない設計</h2>
+        <div class="grid g3">
+          <div class="card"><div class="icon">🔐</div><h3>隔離と権限</h3><p>tenant・actor・projectの境界をNamespaceとIAMで一致させます。別ユーザーのメモリ混入は重大事故です。</p></div>
+          <div class="card"><div class="icon">🧽</div><h3>訂正・削除</h3><p>間違った記憶を修正・削除できる管理画面と運用フローを用意します。会話の訂正だけでは不十分です。</p></div>
+          <div class="card"><div class="icon">⏱️</div><h3>鮮度</h3><p>非同期生成の遅延、古い記憶の優先度、情報が変わった時の統合ルールを評価します。</p></div>
+          <div class="card"><div class="icon">🧪</div><h3>評価</h3><p>抽出精度だけでなく、検索結果が最終回答を改善したか、誤誘導しなかったかを測ります。</p></div>
+          <div class="card"><div class="icon">💰</div><h3>コスト</h3><p>全ターン保存・全戦略適用・毎回大量検索を避け、価値のあるイベントと検索タイミングを選びます。</p></div>
+          <div class="card"><div class="icon">🔭</div><h3>Observability</h3><p>何を保存し、何を検索し、どの記憶が回答に使われたかをトレース可能にします。</p></div>
+        </div>
+        <h3>よくある失敗</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>失敗</th><th>なぜ起きるか</th><th>改善策</th></tr></thead>
+            <tbody>
+              <tr><td>会話を保存しただけで「記憶できた」と考える</td><td>長期戦略を設定していない、または検索・注入していない。</td><td>Write・Extract・Retrieve・Useの4段階を監視する。</td></tr>
+              <tr><td>全履歴を毎回モデルへ渡す</td><td>検索設計がなく、履歴が増えるほどノイズ化。</td><td>直近ターン＋要約＋関連長期メモリへ分割。</td></tr>
+              <tr><td>Namespaceを後付けする</td><td>テナント混入や取得範囲の肥大化が起きる。</td><td>アクセスパターンと権限境界から先に決める。</td></tr>
+              <tr><td>Memoryだけで回答する</td><td>記憶は最新・正式・完全とは限らない。</td><td>KB・業務DBを正本にし、Memoryは補助文脈に限定。</td></tr>
+              <tr><td>保存量だけをKPIにする</td><td>低品質な記憶が増え、誤検索やコストを増やす。</td><td>利用率、正確性、回答改善率、誤誘導率で評価。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="evaluation">
+        <h2><span class="section-no">11</span>評価方法：Memoryが本当に役立ったか</h2>
+        <p class="lead">「保存できた」ではなく、「必要な記憶を正しく取り出し、回答や作業を改善したか」を測ります。</p>
+        <div class="grid g4">
+          <div class="card soft"><h3>Extraction</h3><p><b>Precision / Recall</b><br>覚えるべき情報を正しく抽出し、不要情報を残さないか。</p></div>
+          <div class="card soft"><h3>Consolidation</h3><p><b>重複・矛盾率</b><br>同じ内容を増殖させず、新旧情報を正しく更新できるか。</p></div>
+          <div class="card soft"><h3>Retrieval</h3><p><b>Recall@K / MRR</b><br>質問に必要なメモリが上位に返るか。別ユーザー情報が混ざらないか。</p></div>
+          <div class="card soft"><h3>Task Impact</h3><p><b>成功率・時間・再質問数</b><br>Memoryありで最終タスクの品質が実際に上がるか。</p></div>
+        </div>
+        <h3>PoC評価チェックリスト</h3>
+        <div class="checklist">
+          <label class="check"><input type="checkbox">同一ユーザー・別セッションで必要な記憶を取得できる</label>
+          <label class="check"><input type="checkbox">別ユーザー・別テナントの記憶が混入しない</label>
+          <label class="check"><input type="checkbox">訂正された情報が古い情報より優先される</label>
+          <label class="check"><input type="checkbox">最新ターンを長期メモリに依存せず扱える</label>
+          <label class="check"><input type="checkbox">KB・DBの根拠とMemoryの文脈を区別して表示できる</label>
+          <label class="check"><input type="checkbox">不要な記憶が回答を悪化させるケースを測定した</label>
+          <label class="check"><input type="checkbox">使用されたMemory Recordを追跡できる</label>
+          <label class="check"><input type="checkbox">削除・訂正・保持期間の運用が定義されている</label>
+        </div>
+      </section>
+
+      <section id="sources">
+        <h2><span class="section-no">12</span>おすすめ資料と読む順番</h2>
+        <p class="lead">公式情報のうち、学習効率が高い順に並べています。現在仕様の確認は必ずDeveloper Guideを優先してください。</p>
+        <div class="source-list">
+          <a class="source" href="https://aws.amazon.com/blogs/machine-learning/amazon-bedrock-agentcore-memory-building-context-aware-agents/" target="_blank" rel="noopener"><span class="source-num">1</span><span><b>入門ブログ：Building context-aware agents</b><br><small>全体像、短期・長期、Namespace、基本コード。最初の1本に最適。</small></span><span class="pill">入門</span></a>
+          <a class="source" href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory.html" target="_blank" rel="noopener"><span class="source-num">2</span><span><b>AgentCore Memory Developer Guide</b><br><small>現在仕様の正本。Memory types、strategies、security、API、integrationを確認。</small></span><span class="pill green">正本</span></a>
+          <a class="source" href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory-get-started.html" target="_blank" rel="noopener"><span class="source-num">3</span><span><b>Getting Started</b><br><small>Memory作成、イベント保存、長期メモリ検索を最短で動かす。</small></span><span class="pill green">実装</span></a>
+          <a class="source" href="https://github.com/awslabs/agentcore-samples" target="_blank" rel="noopener"><span class="source-num">4</span><span><b>awslabs/agentcore-samples</b><br><small>CLI移行後の公式サンプル。Memory単体とEnd-to-Endの実装例を確認。</small></span><span class="pill green">コード</span></a>
+          <a class="source" href="https://aws.amazon.com/blogs/machine-learning/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/" target="_blank" rel="noopener"><span class="source-num">5</span><span><b>Long-term Memory Deep Dive</b><br><small>抽出、統合、時間変化、重複・矛盾処理を理解する設計者向け資料。</small></span><span class="pill purple">応用</span></a>
+          <a class="source" href="https://aws.amazon.com/blogs/machine-learning/organizing-agents-memory-at-scale-namespace-design-patterns-in-agentcore-memory/" target="_blank" rel="noopener"><span class="source-num">6</span><span><b>Namespace Design Patterns</b><br><small>検索粒度、マルチテナント分離、IAMとの対応を設計する。</small></span><span class="pill purple">基盤</span></a>
+          <a class="source" href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/long-term-memory-metadata.html" target="_blank" rel="noopener"><span class="source-num">7</span><span><b>Structured Metadata</b><br><small>業務属性で候補を絞り、Semantic Searchのノイズを減らす。</small></span><span class="pill purple">高度</span></a>
+          <a class="source" href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory-ltm-rag.html" target="_blank" rel="noopener"><span class="source-num">8</span><span><b>Long-term MemoryとRAGの比較</b><br><small>MemoryとKnowledge Baseを分ける設計原則を短く確認できる。</small></span><span class="pill amber">必読</span></a>
+        </div>
+        <div class="callout amber"><strong>古い資料を読む際の注意</strong>AgentCoreは更新が速く、CLI・SDK・組み込み戦略・Metadata機能などが変化しています。ブログは概念理解、Developer Guideと公式Samplesは現在の実装確認に使い分けてください。</div>
+      </section>
+
+      <section>
+        <h2>結論：最初は小さく、境界は最初から正しく</h2>
+        <div class="grid g3">
+          <div class="card good"><h3>最初の構成</h3><p>短期メモリ + Semantic + 単純なNamespace + KB/DBとの役割分担。</p></div>
+          <div class="card good"><h3>次の拡張</h3><p>Session Summary、Metadata、Episodic、評価データセットを追加。</p></div>
+          <div class="card good"><h3>守る原則</h3><p>Memoryは継続性と経験、正本はKB・DB、監査はObservabilityへ。</p></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="footer">Amazon Bedrock AgentCore Memory 横断ガイド｜2026-08-06｜AWS公式Developer Guide・AWS Blog・awslabs Samplesを基に再構成</div>
+</div>
+<script>
+  document.querySelectorAll('.tab-btn[data-level]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn[data-level]').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`.level-panel[data-panel="${btn.dataset.level}"]`).classList.add('active');
+    });
+  });
+  const links=[...document.querySelectorAll('#tocNav a')];
+  const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.remove('active')); const a=links.find(x=>x.getAttribute('href')==='#'+e.target.id); if(a)a.classList.add('active')}})
+  },{rootMargin:'-20% 0px -70% 0px'});
+  sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
