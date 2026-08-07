@@ -1,14 +1,16 @@
-# Project Knowledge Wiki 改修要件定義
+# Project Knowledge Wiki 改修要件定義 — OKF v0.2準拠
 
 > Final: 2026-08-08
 >
 > Base Repo: `aws-samples/sample-okf-llm-wiki`
+>
+> Knowledge Format: **Open Knowledge Format (OKF) v0.2**
 
 ## 1. 目的
 
 既存`sample-okf-llm-wiki`をベースとして、Data Wiki向け実装を**Project Knowledge Wiki**へ改修する。
 
-議事録は最初に対応するSource Typeの1つとし、アーキテクチャを議事録専用にはしない。
+議事録は最初のSource Typeの1つとし、アーキテクチャを議事録専用にはしない。
 
 既存社内基盤を優先利用する。
 
@@ -17,7 +19,9 @@
 - Existing AgentCore Gateway
 - Existing Managed Knowledge Base Target
 
-新しい独自RAGやGraph基盤を作るのではなく、既存RepoのOKF / Link / S3 Vectors / MCP / Chatを活用する。
+Knowledgeの保存形式はOKF v0.2を正式採用する。S3 / S3 Vectors / Managed KB / AgentCore GatewayはOKFが規定しないRuntime / Serving Layerとして組み合わせる。
+
+OKF準拠ルールの正本は`OKF_V02_PROFILE.md`とする。
 
 ## 2. Scope分類
 
@@ -41,10 +45,12 @@
 
 - Glue / Athena / Redshift中心のData Harvest
   - → Project Knowledge Harvest
-- Dataset / Table中心のKnowledge Model
+- Dataset / Table中心Knowledge Model
   - → Project Knowledge Model
 - Data source access
   - → Source Adapter abstraction
+- Frontmatter convention
+  - → OKF v0.2 Compliance Profile
 - Chat Agentの`ConsumptionTools` direct import
   - → Existing AgentCore Gateway経由MCP
 - Cognito UI Login依存
@@ -56,6 +62,8 @@
 - Source Adapter layer
 - Normalized Evidence contract
 - Knowledge Reconciler
+- OKF v0.2 authoring / validation rules
+- `index.md` / `log.md` maintenance
 - Project Knowledge authoring skill / prompts
 - Existing GatewayへのWiki MCP Target登録
 - Wiki / Managed KB routing policy
@@ -73,7 +81,176 @@
 - New custom vector DB
 - New custom RAG platform
 
-## 3. Source Requirements
+## 3. OKF v0.2 Conformance Requirements
+
+### OKF-01 Concept Frontmatter
+
+`index.md` / `log.md`を除く全Concept `.md`はparse可能なYAML frontmatterを持つこと。
+
+### OKF-02 Required Type
+
+全Conceptに非空`type`を必須とする。
+
+OKFは固定taxonomyを持たないため、Project固有Typeを利用可能。
+
+### OKF-03 Reserved Files
+
+`index.md`と`log.md`をConcept文書として使用しない。
+
+### OKF-04 Bundle Version
+
+bundle-root `index.md`に以下を宣言する。
+
+```yaml
+---
+okf_version: "0.2"
+---
+```
+
+subdirectoryの`index.md`にはfrontmatterを付けない。
+
+### OKF-05 Progressive Disclosure
+
+`index.md`をAgent / Humanが個別Conceptを開く前のDirectory Indexとして利用する。
+
+Entryには可能な限りConceptの`description`を含める。
+
+### OKF-06 Update Log
+
+`log.md`をscope単位の更新履歴として利用する。
+
+- newest first
+- date headingは`YYYY-MM-DD`
+- Creation / Update / Deprecation等の変更概要を記録
+
+### OKF-07 Provenance
+
+Project KnowledgeのProvenanceはOKF v0.2の`sources`をCanonicalとする。
+
+各`sources` entryの`resource`を必須とする。
+
+推奨:
+
+```yaml
+sources:
+  - id: meeting-20260808
+    resource: /meetings/2026-08-08-architecture.md
+    title: Architecture Meeting
+    author: team:project-a
+    last_modified: 2026-08-08
+```
+
+### OKF-08 Per-Claim Attribution
+
+重要claimをSourceへ結びつける場合、Markdown footnote labelと`sources[].id`を一致させる。
+
+### OKF-09 Generated
+
+publish対象Knowledgeには次を必須とする。
+
+```yaml
+generated:
+  by: project-knowledge-harvest/1.0
+  at: 2026-08-08T07:30:00Z
+```
+
+新規出力でlegacy`timestamp`を使用しない。
+
+### OKF-10 Verified
+
+Review / Verification実施時は`verified`を記録する。
+
+```yaml
+verified:
+  - by: process:project-knowledge-reviewer
+    at: 2026-08-08T07:31:00Z
+```
+
+Human確認は`human:<id>` conventionを使用する。
+
+### OKF-11 Trust Tier
+
+Trust scoreをfrontmatterへ固定保存しない。
+
+Consumerは`verified`から以下を導出する。
+
+```text
+unverified
+machine-confirmed
+human-reviewed
+```
+
+### OKF-12 Lifecycle Status
+
+OKF標準`status`は次の3値だけを利用する。
+
+```text
+draft
+stable
+deprecated
+```
+
+省略時は`stable`として扱う。
+
+### OKF-13 Business Lifecycle Separation
+
+Decision / Requirement / Action / Issue / Risk等の業務状態をOKF`status`に保存しない。
+
+producer-defined extension keyを使う。
+
+```yaml
+status: stable
+decision_state: active
+```
+
+### OKF-14 Freshness
+
+Knowledgeの鮮度には`stale_after: YYYY-MM-DD`を使用する。
+
+Conceptの意味的な最終変更時刻は`generated.at`をCanonicalとする。
+
+### OKF-15 Links
+
+Concept間関係はstandard Markdown linksをCanonicalとする。
+
+bundle-relative absolute linkを推奨する。
+
+```markdown
+[Gateway Requirement](/requirements/gateway-access.md)
+```
+
+Linkはuntyped edgeであり、relation semanticsは周辺proseで表現する。
+
+### OKF-16 Extensions
+
+Project固有fieldを許容する。
+
+例:
+
+```text
+project_id
+decision_id
+decision_state
+requirement_state
+action_state
+issue_state
+risk_state
+review_required
+```
+
+Consumer / Writerはunknown keysをround-trip時に破壊しない。
+
+### OKF-17 Consumer Tolerance
+
+Consumerは次を理由にConceptを拒否しない。
+
+- Unknown `type`
+- Unknown extension key
+- Missing optional trust fields
+- Broken cross-link
+- Missing optional subdirectory `index.md`
+
+## 4. Source Requirements
 
 ### FR-01 Source Input
 
@@ -110,7 +287,7 @@ SourceAdapter
   └─ Future adapters
 ```
 
-各Adapterは共通のNormalized Evidenceへ変換する。
+各Adapterは共通Normalized Evidenceへ変換する。
 
 最低限:
 
@@ -130,13 +307,13 @@ metadata
 
 Sourceの原文・URI・IDを失わないこと。
 
-Knowledge Pageは必ず元Sourceへたどれること。
+Knowledge Pageは`sources[].resource`から元Evidenceへたどれること。
 
-## 4. Project Knowledge Model Requirements
+## 5. Project Knowledge Model Requirements
 
 ### FR-04 Knowledge Types
 
-MVPで最低限以下を扱うこと。
+MVPで以下を扱う。
 
 - Project
 - Topic
@@ -164,22 +341,18 @@ artifact_id
 meeting_id
 ```
 
-IDはSource filenameだけに依存させず、Sourceが増えても同じKnowledgeを継続更新できること。
+これらはOKF extension keysとして保持する。
 
 ### FR-06 Project
 
-ProjectはWikiのトップレベルコンテキストとして扱う。
-
-最低限:
+Projectはトップレベルコンテキスト。
 
 ```yaml
 project_id:
-title:
-status:
-summary:
-sources:
-updated_at:
+project_state:
 ```
+
+OKF共通fieldは`type/title/description/status/sources/generated/verified/stale_after`を使用する。
 
 ### FR-07 Topic
 
@@ -187,9 +360,7 @@ updated_at:
 
 ### FR-08 Decision
 
-DecisionはLifecycleを管理できること。
-
-推奨status:
+Decision business lifecycle:
 
 ```text
 proposed
@@ -198,47 +369,47 @@ superseded
 cancelled
 ```
 
-変更時に旧履歴・旧Sourceを消さないこと。
+保存先は`decision_state`。
+
+旧履歴・旧Sourceを消さない。
 
 ### FR-09 Requirement
 
-仕様、要求、制約、受入条件をKnowledgeとして維持できること。
+仕様、要求、制約、受入条件を維持する。
+
+業務状態は`requirement_state`。
 
 ### FR-10 Action
 
-Owner / Due / Statusを保持できること。
+Owner / Due / business stateを保持する。
+
+業務状態は`action_state`。
 
 ### FR-11 Risk / Issue
 
-Riskは将来発生可能性、Issueは既に発生している問題として区別できること。
+RiskとIssueを区別する。
+
+業務状態は`risk_state` / `issue_state`。
 
 ### FR-12 Artifact
 
-仕様書、設計書、成果物等のProject資産をKnowledge Entryとして表現できること。
+仕様書、設計書、成果物等のProject資産をKnowledge Entryとして表現する。
 
 ### FR-13 Meeting
 
-Meeting Pageは会議の要約だけでなく、その会議から生じたTopic / Decision / Action等への入口になること。
+Meeting Pageは会議要約だけでなく、その会議から生じたTopic / Decision / Action等への入口とする。
 
-## 5. Knowledge Compilation Requirements
+## 6. Knowledge Compilation Requirements
 
 ### FR-14 Knowledge Extraction
 
-SourceからKnowledge Candidateを抽出すること。
-
-```text
-Source
-  ↓
-Normalized Evidence
-  ↓
-Knowledge Candidates
-```
+SourceからKnowledge Candidateを抽出する。
 
 ### FR-15 Existing Wiki Search
 
-新規Sourceを処理する前に既存Wikiを検索すること。
+新規Source処理前に既存OKF Bundleを検索する。
 
-候補検索には以下を組み合わせる。
+候補検索:
 
 - stable ID
 - exact title / normalized key
@@ -250,7 +421,7 @@ Knowledge Candidates
 
 ### FR-16 Knowledge Reconciliation
 
-Knowledge Candidateごとに次を判定すること。
+Candidateごとに次を判定する。
 
 ```text
 CREATE
@@ -260,62 +431,62 @@ CONFLICT
 IGNORE
 ```
 
-#### CREATE
-既存Wikiに同一Knowledgeがない。
+### FR-17 CREATE
 
-#### UPDATE
-同一Knowledgeだが状態・内容が変化した。
+新Conceptを生成する。
 
-#### REINFORCE
-別Sourceが既存Knowledgeを裏付ける。Sourceを追加し、必要に応じてconfidence / verified情報を更新する。
+Review前は`status: draft`、publish可能になったら`status: stable`。
 
-#### CONFLICT
-既存Knowledgeと新Sourceが矛盾する。無言で上書きしない。
+### FR-18 UPDATE
 
-#### IGNORE
-Project Knowledgeとして新規価値がない。
+同一Conceptを更新する。
 
-### FR-17 Duplicate Control
+- stable ID維持
+- `generated.at`更新
+- `sources`更新
+- content変更後は過去`verified`をそのまま「現内容の検証済み」と誤解しない設計にする
 
-Sourceごとに同一Decision / Requirement / Topic等のページを乱造しないこと。
+### FR-19 REINFORCE
 
-### FR-18 Conflict Handling
+別Sourceが既存Knowledgeを裏付ける場合、新Conceptを作らず`sources`を追加する。
 
-Conflict時には最低限以下を保持する。
+必要に応じて`verified`を追加する。
+
+### FR-20 CONFLICT
+
+既存KnowledgeとSourceが矛盾する場合、無言で上書きしない。
+
+最低限:
 
 - conflicting source
 - current knowledge
 - proposed change
 - conflict reason
-- review required flag
+- `review_required` extension
 
-自動解消はMVP必須としない。
+必要に応じ`status: draft`としてHuman Reviewへ回す。
 
-### FR-19 Provenance
+### FR-21 IGNORE
 
-全Knowledge Pageに最低限以下を持つ。
+Project Knowledgeとして新規価値がない場合publish変更しない。
 
-```text
-sources
-generated
-verified
-status
-updated_at
-```
+### FR-22 Duplicate Control
 
-重要なDecision / Requirement / RiskをSourceなしでpublishしない。
+Sourceごとに同一Decision / Requirement / Topic等のConceptを乱造しない。
 
-### FR-20 History Preservation
+### FR-23 History Preservation
 
 Knowledgeの状態変更時、過去の判断・Sourceを消さない。
 
-特にDecision / Requirement / IssueのLifecycleを追跡できること。
+同一ConceptのBusiness state変化は原則stable IDを維持する。
 
-## 6. Link / Navigation Requirements
+旧Conceptを別Conceptへ完全置換する場合、旧Conceptを`status: deprecated`としてLink / Historyを維持する。
 
-### FR-21 Link / Backlink
+## 7. Link / Navigation Requirements
 
-関連KnowledgeをMarkdown Linkとして表現し、Backlink検索できること。
+### FR-24 Link / Backlink
+
+関連KnowledgeをMarkdown Linkとして表現しBacklink検索できること。
 
 例:
 
@@ -331,69 +502,75 @@ Risk → Requirement
 Meeting → Decision / Action / Topic
 ```
 
-### FR-22 Semantic Wiki Search
+Relation TypeをOKF標準fieldとして捏造しない。
 
-既存S3 Vectorsを利用し、意味からWiki Conceptを検索できること。
+### FR-25 Semantic Wiki Search
 
-Vector searchは回答本文ではなくCandidate Concept discoveryに利用する。
+既存S3 Vectorsを利用し、意味からOKF Conceptを検索できること。
 
-### FR-23 Wiki Read
+Vector SearchはCandidate Concept Discoveryに利用する。
 
-検索結果は`read_page`等でS3上の正式なOKF Markdownを読み直して回答へ利用すること。
+### FR-26 Wiki Read
 
-## 7. Managed KB / Gateway Requirements
+検索後は`read_page`等でS3上の正式なOKF Markdownを読み直す。
 
-### FR-24 Managed KB Raw Retrieval
+### FR-27 Index / Log Update
+
+Concept publishに合わせて影響scopeの`index.md` / `log.md`を更新できること。
+
+## 8. Managed KB / Gateway Requirements
+
+### FR-28 Managed KB Raw Retrieval
 
 既存Managed KBからRaw Source Evidenceを取得できること。
 
-### FR-25 Gateway Integration
+### FR-29 Gateway Integration
 
-既存AgentCore Gatewayに以下のTargetが存在する状態にする。
+Existing Gatewayに次のTargetがある状態にする。
 
 ```text
 Target 1: Existing Managed KB
 Target 2: Wiki MCP
 ```
 
-新規Gateway / Managed KBを作成しない。
+新規Gateway / Managed KBを作らない。
 
-### FR-26 Chat Agent Gateway Access
+### FR-30 Chat Agent Gateway Access
 
-Chat Agentは既存Gateway MCP endpointを利用してKnowledge Toolを発見・利用できること。
+Chat AgentはExisting Gateway MCP endpointを利用する。
 
-### FR-27 Query Routing
-
-Chat Agentは質問内容に応じて以下を選択する。
+### FR-31 Query Routing
 
 ```text
 Current project knowledge / relationship
 → Wiki MCP
 
-Raw wording / number / evidence / citation
+Raw wording / exact number / evidence / citation
 → Managed KB
 
 Important factual question
 → Wiki understanding → Managed KB verification
 ```
 
-### FR-28 Citation
+### FR-32 Citation
 
-Evidence依存の回答ではRaw Source citationを返せること。
+Evidence依存回答ではRaw Source citationを返せること。
 
-## 8. Conversation Requirements
+OKF本文内のclaim attributionは`sources[].id`とfootnoteを利用できること。
 
-### FR-29 Conversation State
+## 9. Conversation Requirements
 
-既存DynamoDBSaverを利用し、同一threadでConversationを継続できること。
+### FR-33 Conversation State
+
+既存DynamoDBSaverを利用し同一threadでConversationを継続できること。
 
 AgentCore Long-term MemoryはMVPでは追加しない。
 
-## 9. UI Requirements
+## 10. UI Requirements
 
-### FR-30 UI Terminology
+### FR-34 UI Terminology
 
-Data Wiki / Meeting Wiki専用UIではなくProject Knowledge中心へ変更する。
+Project Knowledge中心へ変更する。
 
 MVP UI:
 
@@ -402,33 +579,35 @@ MVP UI:
 - Harvest status
 - Knowledge browser
 - Meetings
-- Decisions / Actions / Risks等へのNavigation
+- Decisions / Requirements / Actions / Risks / Issues
 - Graph View
 - Chat panel
 
-## 10. Harvest Agent Structure Requirements
+### FR-35 Trust / Freshness Display
 
-### FR-31 Agent Responsibilities
+可能ならUI / Chatで以下を可視化する。
 
-Harvestは最低限、次の論理責務を持つ。
+- unverified / machine-confirmed / human-reviewed
+- stale state
+- deprecated state
+- source list
+
+## 11. Harvest Agent Structure Requirements
+
+### FR-36 Logical Responsibilities
 
 ```text
 Source Adapter
 Knowledge Extractor
 Existing Wiki Retriever
 Knowledge Reconciler
-Link Builder
+OKF Author
+Link / Index / Log Builder
 Reviewer
-Publisher / Guard
+OKF Guard / Publisher
 ```
 
-実装上は必ずしも各責務を別Agentにする必要はないが、責務境界は維持する。
-
-### FR-32 Recommended Subagents
-
-元Repoのtable-author等のData固有SubagentをProject Knowledge向けに置き換える。
-
-推奨:
+### FR-37 Recommended Subagents
 
 ```text
 source-analyst
@@ -437,48 +616,64 @@ knowledge-reconciler
 reviewer
 ```
 
-Knowledge Type別authorへ細分化する場合は、共通Reconciliation規則を共有すること。
+### FR-38 Grounding Replacement
 
-### FR-33 Grounding Replacement
-
-元Repoの`run_sql` / `sample_rows`中心のgroundingを、Project Source Evidenceへ置き換える。
-
-最低限:
+元Repoの`run_sql` / `sample_rows`中心groundingをProject Evidenceへ置き換える。
 
 - source text
 - source metadata
-- existing Wiki
+- existing OKF Wiki
 - Managed KB retrieval when needed
 
-### FR-34 Review
+### FR-39 Review
 
-Publish前Reviewerは最低限以下を確認する。
+Publish前Reviewerは最低限確認する。
 
 - Sourceにない事実を作っていない
-- Duplicate Pageを作っていない
+- Duplicateを作っていない
 - Existing Knowledgeを誤上書きしていない
 - Conflictを隠していない
-- Source provenanceがある
+- `sources[].resource`がある
+- `generated`がある
+- `status`がOKF値のみ
+- Business stateがextensionへ分離されている
 - Linkが有効
-- required frontmatterを満たす
+- important claim attributionが妥当
+- `index.md` / `log.md`が整合
 
-詳細は`HARVEST_MIGRATION.md`を正本とする。
+詳細は`HARVEST_MIGRATION.md`。
 
-## 11. Non-Functional Requirements
+## 12. Consumer Requirements
+
+### FR-40 Unknown Type / Key Tolerance
+
+MCP / ChatはUnknown `type` / extension keyを理由にConceptを拒否しない。
+
+### FR-41 Verified Mapping Compatibility
+
+`verified`が単一mappingの場合も1-element listとして扱う。
+
+### FR-42 Deprecated / Stale Handling
+
+- `status: deprecated`を現行回答の第一候補にしない
+- `stale_after`超過Conceptを警告またはrankingへ反映
+- staleでも即削除・拒否はしない
+
+## 13. Non-Functional Requirements
 
 ### NFR-01 Reliability
 
-Harvest失敗時に現在publishedされているWikiを破壊しないこと。
+Harvest失敗時に現在published Wikiを破壊しない。
 
 ### NFR-02 Idempotency
 
-同一Source / S3 event / reindex eventの再処理で重複や不整合を起こさないこと。
+同一Source / S3 event / reindex event再処理で重複・不整合を起こさない。
 
 ### NFR-03 Security
 
-新しいユーザーLogin基盤を作らない。
+新しいUser Login基盤を作らない。
 
-ただし以下は維持する。
+維持:
 
 - IAM least privilege
 - Runtime execution role
@@ -488,11 +683,10 @@ Harvest失敗時に現在publishedされているWikiを破壊しないこと。
 
 ### NFR-04 Observability
 
-最低限確認可能なもの:
-
 - Harvest agent trace
 - Subagent calls
 - Reconciliation decision
+- OKF validation result
 - LLM calls
 - Tool calls
 - Gateway calls
@@ -508,31 +702,30 @@ MVPではNeptune / GraphRAG / New Vector DB / AgentCore Long-term Memoryを追�
 
 OKF Markdown自体はAWSサービスに閉じず、人間・Agentが直接読める形式を維持する。
 
-## 12. Component Modification Requirements
+## 14. Component Modification Requirements
 
 ### `services/harvest`
 
 最大改修対象。
 
-- Glue/Table前提を抽象化
-- Source Adapter追加
-- Project Knowledge prompt / skillへ変更
-- Knowledge Candidate extraction
-- Existing Wiki lookup
+- Source Adapter
+- Project Knowledge prompt / skill
+- Candidate extraction
+- Existing OKF lookup
 - Reconciliation
-- Provenance / History
-- Project Knowledge link generation
+- OKF v0.2 authoring
+- provenance / trust / lifecycle
+- index / log generation
+- Link generation
 
 ### `services/okf_core`
 
-基本再利用。
-
-追加:
-
-- Project Knowledge schema validation
+- OKF v0.2 validation
+- reserved filename rules
+- Project extension schemas
 - stable IDs
 - lifecycle/status conventions
-- frontmatter conventions
+- source / actor helpers
 
 ### `services/control_api`
 
@@ -550,69 +743,69 @@ OKF Markdown自体はAWSサービスに閉じず、人間・Agentが直接読め
 原則維持。
 
 - S3 Vectors維持
-- 必要ならProject / type metadataを追加
+- Project / type metadata必要時拡張
+- `index.md` / `log.md`をConcept vectorとして扱わない既存原則を維持
 
 ### `services/consumption_mcp`
 
-基本再利用。
-
 - Project Wiki terminology
-- Tool descriptions
-- Gateway Targetとして接続
+- OKF trust / lifecycle-aware read
+- Gateway Target
 
 ### `services/chat`
 
-Framework / DynamoDBSaver / SSEは再利用。
-
-変更:
-
-- in-process ConsumptionTools → Gateway MCP client
-- Wiki + Managed KB routing prompt
-- Citation handling
+- in-process tools → Gateway MCP client
+- Wiki + Managed KB routing
+- Citation
+- deprecated / stale / trust handling
 
 ### `infra/durable`
 
-基本維持。
-
-Cognitoは既存認証設計に合わせて削除または無効化する。
+基本維持。Cognitoは既存認証設計に合わせて整理。
 
 ### `infra/compute`
 
 - Existing GatewayへのWiki MCP target integration
-- Runtime authを既存社内方式へ適合
 - Existing Gateway / KB resourceを新規作成しない
 
 ### `ui`
 
-- Dataset中心UI → Project Knowledge中心UI
-- Existing authへ統合
-- Chat / Graph Viewを再利用
+- Project Knowledge中心UI
+- Existing auth統合
+- Trust / Freshness表示は段階導入
 
-## 13. Acceptance Criteria
+## 15. Acceptance Criteria
 
-- [ ] Projectを登録・選択できる
-- [ ] Meeting / document sourceを投入できる
-- [ ] Source AdapterでNormalized Evidenceへ変換できる
-- [ ] Project / Topic / Decision / Requirement / Action / Risk / Issue / Artifact / Meetingを生成できる
-- [ ] Existing Wikiを検索できる
-- [ ] CREATE / UPDATE / REINFORCE / CONFLICT / IGNOREを判定できる
-- [ ] Duplicate Knowledge Pageを抑止できる
-- [ ] Decision lifecycleを保持できる
-- [ ] Source provenanceを保持できる
-- [ ] Link / Backlinkを生成できる
-- [ ] S3 Vectors semantic searchが動く
-- [ ] `read_page`で正式OKFを取得できる
-- [ ] Wiki MCPをExisting Gateway Targetへ登録できる
-- [ ] Existing Managed KB Targetと共存できる
-- [ ] Chat AgentがGateway MCPを利用できる
-- [ ] Wiki / KB routingが動く
-- [ ] Raw Citationを返せる
-- [ ] DynamoDBSaverでconversation continuationできる
-- [ ] Failed harvestでpublished Wikiを壊さない
-- [ ] CloudWatchでReconciliationを含むtraceを確認できる
+- [ ] root `index.md`に`okf_version: "0.2"`
+- [ ] Conceptにvalid YAML + non-empty `type`
+- [ ] reserved file semantics準拠
+- [ ] `sources[].resource`準拠
+- [ ] `generated.by/at`準拠
+- [ ] `verified` actor convention準拠
+- [ ] `status`が`draft|stable|deprecated`のみ
+- [ ] Business lifecycleはextension keys
+- [ ] `stale_after`対応
+- [ ] important claim footnote attribution
+- [ ] `index.md` progressive disclosure
+- [ ] `log.md` history
+- [ ] Meeting / document source投入
+- [ ] Source Adapter → Normalized Evidence
+- [ ] Project Knowledge Type生成
+- [ ] Existing Wiki Search
+- [ ] CREATE / UPDATE / REINFORCE / CONFLICT / IGNORE
+- [ ] Duplicate抑止
+- [ ] History保持
+- [ ] Link / Backlink
+- [ ] S3 Vectors semantic discovery
+- [ ] Wiki MCP Gateway Target
+- [ ] Existing Managed KB共存
+- [ ] Chat Agent → Gateway
+- [ ] Raw Citation
+- [ ] DynamoDBSaver continuation
+- [ ] Consumer unknown-key tolerance
+- [ ] Failed harvest safe publish
+- [ ] CloudWatch trace
 
-## 14. Definition of Done
+## 16. Definition of Done
 
-MVP完了条件は、議事録からMarkdownを生成することではない。
-
-> **複数種類のProject Sourceを既存Wikiと照合し、Project Knowledgeを継続的にcreate / update / reinforce / conflict管理し、Chat AgentがExisting Gateway経由でWikiとRaw Evidenceを使い分けてCitation付き回答を返せること。**
+> **Project Sourcesを既存OKF v0.2 Bundleと照合し、Knowledgeを継続的にcreate/update/reinforceし、Provenance / Trust / Lifecycle / FreshnessをOKF v0.2形式で保持し、Chat AgentがGateway経由でWikiとRaw Evidenceを使い分けて回答できること。**
