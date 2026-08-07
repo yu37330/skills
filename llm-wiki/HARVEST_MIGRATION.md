@@ -1,16 +1,18 @@
-# HARVEST_MIGRATION — Data Wiki HarvestからProject Knowledge Harvestへの改修仕様
+# HARVEST_MIGRATION — Data Wiki HarvestからOKF v0.2 Project Knowledge Harvestへの改修仕様
 
 > Final: 2026-08-08
 >
 > Base Repo: `aws-samples/sample-okf-llm-wiki`
 >
-> このドキュメントは本プロジェクトで最重要の実装仕様。AWSインフラではなく、**Harvest Agentの知能をData Wiki向けからProject Knowledge向けへどう置き換えるか**を定義する。
+> Output Contract: **Open Knowledge Format (OKF) v0.2**
 
 ## 1. 目的
 
-元RepoのHarvestは、Glue / Athena / Redshiftを調査してDataset / Table / Metric / Join等のData Wikiを生成する。
+本ドキュメントは本プロジェクトで最重要の実装仕様。
 
-今回のTargetは、複数種類のProject Sourceを読み、既存Wikiと照合しながらProject Knowledgeを継続編集すること。
+元RepoのHarvestはGlue / Athena / Redshiftを調査し、Dataset / Table / Metric / Join等のData Wikiを生成する。
+
+今回のTargetは、複数種類のProject Sourceを読み、既存Wikiと照合しながら**OKF v0.2準拠Project Knowledgeを継続編集すること**。
 
 ```text
 Before
@@ -27,160 +29,118 @@ Evidence Understanding
   ↓
 Knowledge Candidate Extraction
   ↓
-Existing Knowledge Comparison
+Existing OKF Comparison
   ↓
 Knowledge Reconciliation
   ↓
-Project Knowledge Authoring
+OKF v0.2 Authoring
+  ↓
+Review / Validation / Publish
 ```
 
 最重要ポイントは、SourceごとのMarkdownを作ることではなく、**同一KnowledgeをSourceをまたいで継続管理すること**。
 
+OKF field ruleの正本は`OKF_V02_PROFILE.md`。
+
 ## 2. 再利用するHarvest基盤
 
-元Repoから可能な限り以下を継承する。
+元Repoから極力維持する。
+
+- deepagents supervisor
+- LangGraph execution
+- FilesystemBackend
+- OKFGuardMiddlewareの考え方
+- LinkGraph
+- reviewer pattern
+- subagent fan-out
+- S3 Files / bundle publish pattern
+- CloudWatch / OpenTelemetry tracing
+- safe publish / versioning
+
+変更の中心はAgent Frameworkではなく、**domain knowledge、tooling、authoring contract**。
+
+## 3. 削除・抽象化するData Wiki固有要素
+
+Data固有:
 
 ```text
-deepagents supervisor
-LangGraph
-FilesystemBackend
-OKFGuardMiddleware
-LinkGraph
-subagent fan-out
-reviewer pattern
-S3 Files / bundle publish
-CloudWatch / OpenTelemetry tracing
-safe publish / versioning
+Glue database
+Glue table
+columns.tsv
+Athena run_sql
+sample_rows
+Redshift metadata
+Table authoring skill
+Dataset / Table assumptions
+Join / Grain中心Reviewer
 ```
 
-つまりAgent Framework自体は原則変更しない。
+これらをProject KnowledgeのCore logicから外す。
 
-変更するのは主に以下。
+必要ならSource Adapterの一種として将来Data Sourceを再追加できる設計にする。
+
+## 4. 新しいSource Architecture
 
 ```text
-Source model
-Domain model
-Authoring skill
-System / subagent prompts
-Grounding tools
-Reconciliation logic
-Reviewer criteria
+Project Sources
+   │
+   ├─ Meeting minutes
+   ├─ Markdown / Text
+   ├─ PDF
+   ├─ DOCX
+   ├─ PPTX
+   ├─ Specification
+   ├─ Design Document
+   └─ Report
+          │
+          ▼
+     Source Adapter
+          │
+          ▼
+  Normalized Evidence
 ```
 
-## 3. 元Repo固有機能の置換マップ
-
-| Data Wiki側 | Project Knowledge側 |
-|---|---|
-| Glue database | Project |
-| Table | Knowledge Concept / Artifact / Source |
-| Column | Source detail / Requirement detail等 |
-| Metric | Requirement / Decision / Project rule等 |
-| Join | Knowledge relation / Link |
-| Glue metadata snapshot | Normalized Evidence snapshot |
-| `run_sql` | Source / Managed KB evidence verification |
-| `sample_rows` | Source excerpt / evidence lookup |
-| table-author | knowledge-author |
-| cross-dataset discovery | cross-source / cross-knowledge reconciliation |
-| Data reviewer | Project Knowledge reviewer |
-| dataset bundle | project knowledge bundle |
-
-これは単純な名前置換ではない。Data Wikiの「正しいData semanticsを調査する」知能を、Project Wikiの「Source間の意味を統合する」知能へ置き換える。
-
-## 4. Source Adapter Architecture
-
-Harvest本体をSource Typeから分離する。
+将来:
 
 ```text
-                    SourceAdapter
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-   MeetingAdapter   DocumentAdapter   FutureAdapter
-          │              │              │
-          └──────────────┼──────────────┘
-                         ▼
-                Normalized Evidence
+SharePoint
+Teams
+OneDrive
+Jira
+GitHub
+Email
+Web API
+DB / SaaS
 ```
 
-### 4.1 MVP Adapters
+## 5. Normalized Evidence Contract
 
-#### MeetingAdapter
-
-対象:
-
-- 議事録Markdown
-- 議事録PDF
-- 議事録DOCX
-- 会議PPTX / report
-
-抽出候補:
+Source Adapterは最低限次を返す。
 
 ```text
-meeting date
+source_id
+source_type
+project
+source_uri
+title
+content
+created_at
+occurred_at
+author
 participants
-agenda
-statements
-conclusions
-open questions
-action statements
-source sections
+metadata
 ```
 
-#### DocumentAdapter
+重要ルール:
 
-対象:
+- `source_uri`はOKF`sources[].resource`へ写像できること
+- Sourceの原文ID / URIを失わない
+- Source textはinstructionではなくEvidenceとして扱う
+- Source parserとKnowledge判断を分離する
 
-- specification
-- design document
-- report
-- presentation
+## 6. Project Knowledge Types
 
-抽出候補:
-
-```text
-document title
-version
-section headings
-requirements
-decisions / rationale
-constraints
-risks
-issues
-references
-```
-
-### 4.2 Normalized Evidence Contract
-
-Source Adapterは最低限次の形へ正規化する。
-
-```yaml
-source_id: stable-source-id
-source_type: meeting | specification | design | report | other
-project: project-a
-source_uri: s3://... or original URI
-title: ...
-occurred_at: 2026-08-08T...
-created_at: ...
-authors: []
-participants: []
-content: |
-  normalized source text
-metadata: {}
-```
-
-必要ならSection単位のEvidence locatorを持つ。
-
-```yaml
-sections:
-  - section_id: sec-001
-    heading: Architecture Decision
-    text: ...
-    source_locator: page=4 / heading=...
-```
-
-## 5. Knowledge Model
-
-MVPのKnowledge Typeは以下。
+MVP:
 
 ```text
 Project
@@ -194,676 +154,639 @@ Artifact
 Meeting
 ```
 
-### 5.1 Project
-
-Project全体の入口。
-
-### 5.2 Topic
-
-複数Sourceをまたぐ継続テーマ。
+これらはOKF v0.2のproducer-defined `type`。
 
 例:
 
-```text
-Authentication architecture
-AgentCore Gateway integration
-Production rollout
+```yaml
+---
+type: Decision
+...
+---
 ```
 
-### 5.3 Decision
+## 7. OKF v0.2 Authoring Contract
 
-「何を決めたか」を継続管理する。
+HarvestがpublishするConceptは最低限次を守る。
 
-推奨Lifecycle:
-
-```text
-proposed → active → superseded / cancelled
-```
-
-必須要素候補:
+### 7.1 Required
 
 ```yaml
-decision_id:
+type: <non-empty string>
+```
+
+### 7.2 Project Profile Required for Published Knowledge
+
+```yaml
 title:
+description:
 status:
-decision:
-rationale:
-decided_at:
-project:
-sources: []
-related_topics: []
-related_requirements: []
-updated_at:
+sources:
+generated:
 ```
 
-### 5.4 Requirement
+`verified` / `stale_after`はKnowledgeの種類・Review結果に応じて付与する。
 
-要求 / 制約 / acceptance criteria。
+### 7.3 `status`
 
-推奨Lifecycle:
+OKF標準値だけを利用する。
 
 ```text
-draft → active → changed / retired
+draft
+stable
+deprecated
 ```
 
-### 5.5 Action
+Decisionの`active`等を`status`へ入れない。
 
-```text
-open → in_progress → done / cancelled
-```
+### 7.4 Project Business State
 
-### 5.6 Risk
-
-将来起こり得る事象。
-
-```text
-open → mitigated / accepted / closed
-```
-
-### 5.7 Issue
-
-既に発生している問題。
-
-```text
-open → investigating → resolved / closed
-```
-
-### 5.8 Artifact
-
-仕様書、設計書、成果物等のProject資産。
-
-### 5.9 Meeting
-
-会議そのものを表現し、Decision / Action / Topicへの入口とする。
-
-## 6. Stable ID Strategy
-
-Source filenameをKnowledge IDにしない。
-
-悪い例:
-
-```text
-decision-2026-08-08-gateway.md
-```
-
-会議ごとにDecisionが増殖する。
-
-良い例:
-
-```text
-decisions/adopt-agentcore-gateway.md
-```
-
-同一Knowledgeを継続更新する。
-
-ID生成は次を組み合わせる。
-
-```text
-project
-knowledge type
-normalized subject / canonical key
-known aliases
-existing semantic match
-```
-
-LLMだけにID決定を完全委譲しない。
-
-## 7. Harvest Agent Logical Architecture
-
-推奨論理構成:
-
-```text
-Project Knowledge Harvest Supervisor
-        │
-        ├─ Source Analyst
-        │    └─ normalized evidence理解
-        │
-        ├─ Knowledge Extractor / Author
-        │    └─ candidate knowledge生成
-        │
-        ├─ Knowledge Reconciler
-        │    └─ existing Wikiとの比較・更新判定
-        │
-        ├─ Link Builder
-        │    └─ relationships生成
-        │
-        └─ Reviewer
-             └─ evidence / duplicate / conflict / schema検証
-```
-
-実装上は必ずしも5 Agentに分ける必要はない。
-
-元Repoのsubagent fan-outを活かしつつ、責務を分離する。
-
-## 8. Recommended Subagent Design
-
-### 8.1 `source-analyst`
-
-役割:
-
-- Sourceの種類を理解
-- Section構造を整理
-- Project contextを把握
-- Candidate extractionに必要なEvidenceを提示
-
-書き込み権限は不要でもよい。
-
-### 8.2 `knowledge-author`
-
-役割:
-
-- Project Knowledge Candidateを作る
-- Source locator / provenanceを付ける
-- Type / status / related conceptsを提案
-
-### 8.3 `knowledge-reconciler`
-
-最重要。
-
-役割:
-
-- Existing Wiki検索
-- candidate同一性判定
-- CREATE / UPDATE / REINFORCE / CONFLICT / IGNORE決定
-- lifecycle変更判定
-- history preservation
-
-### 8.4 `reviewer`
-
-役割:
-
-- Evidenceにない事実を作っていないか
-- Duplicateがないか
-- lifecycleが不正でないか
-- Conflictを隠していないか
-- Sourceがあるか
-- Link / frontmatterが正しいか
-
-## 9. Existing Wiki Search Strategy
-
-新SourceからCandidateを抽出した後、必ず既存Wikiを検索する。
-
-探索順序の推奨:
-
-```text
-1. stable ID / canonical key
-2. exact / normalized title
-3. same project + same knowledge type
-4. S3 Vectors semantic_search
-5. backlinks / related topic context
-6. read_pageで候補本文確認
-```
-
-Semantic similarityだけで同一Knowledgeと確定しない。
-
-同一性判定には、project / type / subject / lifecycle / source / linksを使う。
-
-## 10. Reconciliation Decision Contract
-
-Reconcilerは明示的な結果を返す。
+extension keyへ分離する。
 
 ```yaml
-action: CREATE | UPDATE | REINFORCE | CONFLICT | IGNORE
-knowledge_type: Decision
-target_concept_id: decisions/adopt-agentcore-gateway
-confidence: 0.93
-reason: same project and subject; new source changes status from proposed to active
-source_evidence:
-  - source_id: meeting-2026-08-08
-    locator: decision-section
-changes:
-  status:
-    from: proposed
-    to: active
-  add_sources:
-    - meeting-2026-08-08
-review_required: false
+status: stable
+decision_state: active
 ```
-
-Reconciliation結果自体をTraceへ残す。
-
-## 11. CREATE Rules
-
-CREATEは以下の場合。
-
-- 同一Project内に同一Knowledge候補がない
-- semantic candidateがあってもSubjectが異なる
-- lifecycle上別Conceptとして扱うべき
-
-CREATE時も既存Topic / Project / Artifact等へのLinkを生成する。
-
-## 12. UPDATE Rules
-
-UPDATE例:
-
-- Decision statusがproposed → active
-- Requirement内容がVersion更新で変更
-- Action due date / owner / statusが変更
-- Issue statusがinvestigating → resolved
-
-UPDATE時:
-
-- old Sourceを削除しない
-- previous state / historyを保持
-- updated_atを更新
-- new sourceを追加
-
-## 13. REINFORCE Rules
-
-同じKnowledgeを別Sourceが裏付ける場合。
 
 例:
 
 ```text
-Meeting: Gateway採用
-Spec: Gatewayを正式architectureとして記載
+decision_state
+requirement_state
+action_state
+issue_state
+risk_state
+project_state
 ```
 
-結果:
-
-```text
-Decisionを新規作成しない
-sourcesへSpec追加
-verified状態を必要に応じて更新
-ArtifactとのLink追加
-```
-
-## 14. CONFLICT Rules
-
-例:
-
-```text
-Meeting A: Cognitoを採用
-Spec v3: Cognitoは使用しない
-```
-
-自動で片方を消さない。
-
-最低限:
+### 7.5 Provenance
 
 ```yaml
-status: conflict
-conflicting_sources: []
-current_state: ...
-proposed_state: ...
-review_required: true
+sources:
+  - id: meeting-20260808
+    resource: /meetings/2026-08-08-architecture.md
+    title: Architecture Meeting
+    author: team:project-a
+    last_modified: 2026-08-08
 ```
 
-Decision lifecycleとして明確な後続決定が確認できる場合はUPDATE / supersedeとして扱えるが、曖昧ならCONFLICT。
+各entryの`resource`を必須とする。
 
-## 15. IGNORE Rules
+### 7.6 Generated
 
-以下はKnowledge Pageを作らない候補。
+```yaml
+generated:
+  by: project-knowledge-harvest/1.0
+  at: 2026-08-08T07:30:00Z
+```
 
-- 単なる挨拶
-- 重複した言い換え
-- Project状態へ影響しない一時的会話
-- Source内だけで完結し、再利用価値がない細部
+意味的なContent変更時に`generated.at`を更新する。
 
-ただし原文はManaged KBに残るため、Wikiに落とさなくてもEvidence retrieval可能。
+新規出力で`timestamp`を生成しない。
 
-## 16. Decision Lifecycle Example
+### 7.7 Verified
 
-### Source 1
+ReviewerがSourceに対して内容を確認した場合:
+
+```yaml
+verified:
+  - by: process:project-knowledge-reviewer
+    at: 2026-08-08T07:31:00Z
+```
+
+Human Review:
+
+```yaml
+verified:
+  - by: human:user123
+    at: 2026-08-08T09:00:00Z
+```
+
+### 7.8 Freshness
+
+```yaml
+stale_after: 2026-11-08
+```
+
+絶対日付を使う。
+
+### 7.9 Claim Attribution
+
+重要claimは`sources[].id`に対応するMarkdown footnoteを使う。
+
+```markdown
+Gatewayを正式採用した。[^meeting-20260808]
+
+[^meeting-20260808]: Architecture Meeting
+```
+
+Body `# Citations`リストをCanonical provenanceにしない。
+
+## 8. Stable IDs
+
+Project固有IDはOKF extension keyとして保持する。
 
 ```text
-2026-08-01 Meeting
-Gatewayを使う方向で検討する
+project_id
+topic_id
+decision_id
+requirement_id
+action_id
+risk_id
+issue_id
+artifact_id
+meeting_id
 ```
 
-結果:
+ID設計:
+
+- Source filenameだけに依存しない
+- 同じKnowledgeを別Sourceが補強してもIDは変えない
+- rename / moveで可能な限り維持
+- type + project + normalized semantic identityを基礎にする
+
+## 9. Pipeline
 
 ```text
-CREATE Decision
-status = proposed
+Source
+  ↓
+Source Adapter
+  ↓
+Normalized Evidence
+  ↓
+Source Analyst
+  ↓
+Knowledge Candidates
+  ↓
+Existing OKF Retriever
+  ↓
+Knowledge Reconciler
+  ↓
+OKF Author
+  ↓
+Link / Index / Log Builder
+  ↓
+Reviewer
+  ↓
+OKF Guard
+  ↓
+Publish
 ```
 
-### Source 2
+## 10. Source Analyst
+
+責務:
+
+- Source type / project context理解
+- Evidence span抽出
+- Candidate Knowledge抽出
+- CandidateごとのSource mapping
+
+出力例:
 
 ```text
-2026-08-08 Meeting
-AgentCore Gatewayを正式採用する
+Candidate:
+  type: Decision
+  proposed_identity: gateway-adoption
+  summary: Existing AgentCore Gatewayを採用
+  evidence_source_id: meeting-20260808
+  evidence_span: ...
 ```
 
-結果:
+この段階ではConcept Pageを確定しない。
+
+## 11. Existing OKF Retriever
+
+Candidateごとに既存Concept候補を探す。
+
+優先:
+
+1. stable ID exact match
+2. normalized title / key
+3. project + type filter
+4. S3 Vectors semantic search
+5. Link / Backlink context
+6. source provenance overlap
+
+S3 VectorsはAnswer本文ではなくCandidate Discoveryに使う。
+
+候補を見つけたら`read_page`相当で正式OKF本文を読む。
+
+## 12. Knowledge Reconciler
+
+Harvestの本丸。
+
+入力:
+
+```text
+Candidate Knowledge
+Existing OKF Candidates
+New Source Evidence
+```
+
+出力:
+
+```text
+CREATE
+UPDATE
+REINFORCE
+CONFLICT
+IGNORE
+```
+
+### 12.1 CREATE
+
+条件:
+
+- 同一Knowledgeが存在しない
+- semantic candidateも別Conceptと判断
+
+処理:
+
+```text
+new stable ID
+status: draft
+sources追加
+generated追加
+body作成
+links作成
+review
+status: stable
+```
+
+### 12.2 UPDATE
+
+条件:
+
+- 同一Knowledge
+- 内容 / Business stateが意味的に変化
+
+処理:
+
+- stable ID維持
+- Source履歴保持
+- `sources`追加/更新
+- extension business state更新
+- `generated.at`更新
+- meaningful content change後はverification状態を再評価
+- Historyを本文または関連Concept / logへ残す
+
+### 12.3 REINFORCE
+
+条件:
+
+- 新Sourceが既存Knowledgeと整合
+- 新しい独立Conceptは不要
+
+処理:
+
+- 同じConceptへ`sources`追加
+- claim attribution必要箇所更新
+- 必要なら`verified`追加
+- Duplicate Conceptを作らない
+
+### 12.4 CONFLICT
+
+条件:
+
+- Sourceと既存Knowledgeが矛盾
+- Current判定を自動で確定できない
+
+処理:
+
+- 無言上書き禁止
+- conflicting source保持
+- `review_required: true` extension
+- proposed changeをreview artifactへ保持
+- 必要ならworking copyを`status: draft`
+- Human Reviewへ
+
+### 12.5 IGNORE
+
+条件:
+
+- Project Knowledgeとして再利用価値が低い
+- 重複情報で追加Sourceとしても価値なし
+
+処理: publish変更なし。
+
+## 13. Decision Lifecycle例
+
+### Source A
+
+```text
+8/1 Gatewayを使う方向で検討
+```
+
+出力:
+
+```yaml
+status: stable
+decision_state: proposed
+```
+
+### Source B
+
+```text
+8/8 Gatewayを正式採用
+```
+
+Reconciler:
 
 ```text
 UPDATE same Decision
-proposed → active
-add source
 ```
 
-### Source 3
-
-```text
-Architecture Spec v3
-Gateway経由でManaged KBとWiki MCPを利用する
+```yaml
+status: stable
+decision_state: active
 ```
 
-結果:
+`sources`に8/8 meetingを追加。
+
+### Architecture Spec
+
+Gateway採用を記載。
+
+Reconciler:
 
 ```text
 REINFORCE same Decision
-add Artifact link
-add source
 ```
 
-### Source 4
+`sources`に仕様書を追加。
+
+### Source C
 
 ```text
-2026-08-15 Meeting
-Gateway案を撤回する
+8/15 Gateway案を撤回
 ```
 
-結果:
+同じDecisionのBusiness state変化として扱えるなら:
 
-```text
-UPDATE same Decision
-active → cancelled
-keep full source history
+```yaml
+status: stable
+decision_state: cancelled
 ```
 
-## 17. Requirement Lifecycle Example
+Concept自体を削除しない。
 
-```text
-Spec v1: response latency < 5 sec
-Spec v2: response latency < 3 sec
+別Decisionへ完全置換する場合は、旧Conceptを`status: deprecated`にし、新ConceptへMarkdown Linkを張る。
+
+## 14. Requirement Lifecycle例
+
+OKF lifecycleと業務stateを分離する。
+
+```yaml
+status: stable
+requirement_state: approved
 ```
 
-同一RequirementとしてUPDATEし、旧値とSource履歴を保持する。
+仕様変更:
 
-単純に`requirement-latency-v1.md` / `v2.md`を乱造しない。
+- 同一RequirementならUPDATE
+- Source追加
+- generated.at更新
+- requirement_state更新
+- 旧内容のEvidenceを失わない
 
-## 18. Meeting Processing Policy
+Requirement自体が完全廃止:
 
-MeetingはMVPで重要なSource Typeだが、Meeting中心にKnowledge Modelを設計しない。
-
-Meeting処理:
-
-```text
-Meeting Source
-  ↓
-Meeting Page
-  +
-Topic candidates
-Decision candidates
-Action candidates
-Risk / Issue candidates
-Requirement candidates when present
+```yaml
+status: deprecated
+requirement_state: retired
 ```
 
-Meeting PageはSource単位なので毎会議作成してよい。
+## 15. Link Builder
 
-一方Topic / Decision / Requirement / Risk等は会議をまたいでReconcileする。
+OKF Relationの正本はstandard Markdown links。
 
-## 19. Document Processing Policy
+例:
 
-仕様書・設計書もMeetingと同じPipelineへ入れる。
-
-```text
-Spec / Design Doc
-  ↓
-Artifact Page
-  +
-Requirement candidates
-Decision candidates
-Risk / Issue candidates
-Topic candidates
+```markdown
+このDecisionは[Gateway Requirement](/requirements/gateway-access.md)を満たすために採用された。
 ```
 
-Meeting SourceだけがKnowledge生成の中心ではない。
+Linkはuntyped edge。Relation semanticsはproseで表す。
 
-## 20. Grounding Strategy
+MVPで独自Typed Graphを必須にしない。
 
-元RepoのData Wikiでは、Catalog metadataだけでなく`run_sql` / `sample_rows`で事実確認する。
+## 16. `index.md` Builder
 
-Project WikiではGroundingを次へ置き換える。
+Publish後、影響Directoryの`index.md`を更新する。
 
-```text
-Primary
-- Source text / section
-- Source metadata / locator
+root:
 
-Secondary
-- Existing Project Wiki
-- Existing Managed KB raw retrieval
+```yaml
+---
+okf_version: "0.2"
+---
 ```
 
-重要なclaimをSource EvidenceなしでAuthoringしない。
+root以外はfrontmatterなし。
 
-## 21. Managed KBとの関係
+本文:
 
-Harvest時も必要に応じてManaged KBをEvidence lookupとして使えるが、Managed KBをKnowledge Authoringの正本にはしない。
+```markdown
+# Decisions
 
-```text
-Raw Source / Managed KB = Evidence
-Project Wiki            = Compiled Knowledge
+* [AgentCore Gateway採用](adopt-agentcore-gateway.md) - Wiki MCPとManaged KBをGateway経由で利用する。
 ```
 
-HarvestでSourceが直接利用可能な場合は直接Sourceを優先し、Managed KBはcross-source verificationや原文探索に使う。
+`description`をProgressive Disclosureに利用する。
 
-## 22. Link Generation Rules
+## 17. `log.md` Builder
 
-推奨Link:
+Concept変更に合わせてscopeの`log.md`を更新する。
 
-```text
-Project → Topics / Decisions / Requirements / Risks / Issues
-Topic → Decisions / Requirements / Meetings / Artifacts
-Decision → Topic / Requirement / Artifact / Meeting / Issue
-Requirement → Decision / Artifact / Risk / Issue
-Action → Decision / Meeting / Issue
-Risk → Requirement / Decision / Mitigation Artifact
-Issue → Decision / Requirement / Action / Meeting
-Artifact → Requirements / Decisions / Topics
-Meeting → Decisions / Actions / Topics / Issues
+```markdown
+# Directory Update Log
+
+## 2026-08-08
+* **Update**: [Gateway採用Decision](/decisions/adopt-agentcore-gateway.md)をactiveへ更新。
+* **Creation**: [Gateway認証Issue](/issues/gateway-auth.md)を追加。
 ```
 
-MVPではLink Typeを厳密なOntologyとしてDBへ登録しない。
+日付は`YYYY-MM-DD`、newest first。
 
-## 23. Reviewer Policy
+## 18. Reviewer
 
-Reviewerは最低限以下をFail条件として扱う。
+元RepoのReviewer思想は維持するが、Data consistencyからKnowledge consistencyへ変更する。
 
-```text
-Hallucinated claim
-Missing source provenance
-Duplicate concept creation
-Silent conflict overwrite
-Invalid lifecycle transition
-Broken link
-Missing required frontmatter
-Source locator mismatch
-Project scope mismatch
+Reviewer checklist:
+
+### Grounding
+- Sourceに存在しないclaimを作っていない
+- important claimがSourceへattributedされている
+
+### Reconciliation
+- Duplicate Conceptを作っていない
+- UPDATE / REINFORCE対象を誤CREATEしていない
+- Conflictを隠していない
+
+### OKF
+- valid YAML frontmatter
+- non-empty `type`
+- `status`が`draft|stable|deprecated`
+- `sources[].resource`あり
+- `generated.by/at`あり
+- Actor convention妥当
+- Business stateはextension key
+- stale_after format妥当
+- reserved filename rule妥当
+
+### Navigation
+- Markdown Links妥当
+- index.md整合
+- log.md整合
+
+Review成功時、machine verificationを記録可能。
+
+```yaml
+verified:
+  - by: process:project-knowledge-reviewer
+    at: ...
 ```
 
-重要なDecision / Requirement / Riskの低confidence変更はHuman Reviewへ回せる設計にする。
+ただしReviewerが本当にSourceへ照合した場合だけ付ける。
 
-## 24. Safe Publish
+## 19. OKF Guard
 
-元Repoの「published bundleを壊さない」設計を維持する。
+既存OKFGuardMiddlewareを拡張する。
+
+拒否条件候補:
+
+- Conceptにfrontmatterなし
+- `type`空
+- invalid OKF status
+- `sources` entryに`resource`なし
+- `generated`に`by`なし
+- business stateを`status`へ誤格納
+- non-root index.mdにfrontmatter
+- Conceptとして`index.md` / `log.md`を書こうとする
+
+警告候補:
+
+- missing description
+- missing stale_after
+- unverified important Decision
+- broken link
+- missing claim attribution
+
+OKF v0.2自体はoptional field欠落やbroken linksをConformance violationにしないため、**標準違反とProject Quality Gateを区別すること**。
+
+## 20. Publish Semantics
+
+原則:
 
 ```text
-Working bundle
-  ↓
-Author
-  ↓
+Working Copy
+   ↓
 Reconcile
-  ↓
+   ↓
 Review
-  ↓
-Guard / Lint
-  ↓
-Finalize
-  ↓
-Published bundle
+   ↓
+OKF Validate
+   ↓
+Index / Log Validate
+   ↓
+Atomic-ish Publish / existing safe bundle mechanism
+   ↓
+S3 Events
+   ↓
+S3 Vectors Reindex
 ```
 
-途中失敗では現行published Wikiを変更しない。
+Harvest失敗時にcurrent published bundleを壊さない。
 
-## 25. Incremental Processing
+## 21. Consumer Compatibility
 
-同一Source再投入はidempotentにする。
+Harvestが出すOKFは次のconsumer behaviorを想定する。
 
-Source fingerprint / source_idを使い、同じSourceによるSource重複追加を防ぐ。
+- Unknown extension keyを保持
+- Unknown typeをgeneric conceptとして読める
+- verified bare mappingをlistとして扱える
+- deprecatedをcurrent answerで優先しない
+- stale conceptを警告可能
+- sourcesからRaw Evidenceへたどれる
 
-Source更新時:
+## 22. Recommended Subagent Structure
+
+MVP推奨:
 
 ```text
-same source_id + new version
-  ↓
-re-extract
-  ↓
-reconcile affected knowledge only
+Supervisor
+  │
+  ├─ source-analyst
+  │    Evidence → Candidates
+  │
+  ├─ knowledge-author
+  │    Candidate + Reconcile result → OKF draft
+  │
+  └─ reviewer
+       Evidence + Existing Wiki + Draft → Findings / Verification
 ```
 
-可能であれば全Wiki再生成を避ける。
+`knowledge-reconciler`を独立subagentにするか、Supervisor / deterministic helper + LLM判定の組合せにするかは実装時に選べる。
 
-## 26. S3 Vectorsとの関係
+重要なのは責務境界を固定すること。
 
-S3 VectorsはKnowledge ReconcilerのExisting Wiki Candidate Searchにも利用する。
+## 23. Deterministic vs LLM
 
-```text
-Candidate Knowledge text
-  ↓
-semantic_search
-  ↓
-possible existing concepts
-  ↓
-read_page
-  ↓
-Reconciler decision
-```
+可能な限りdeterministicにするもの:
 
-つまりS3 VectorsはChat検索だけでなくHarvestのDuplicate Controlにも有効。
+- YAML parsing
+- OKF field validation
+- reserved filename rules
+- status enum
+- source resource presence
+- stable ID exact match
+- date format
+- Markdown link extraction
+- index/log format
 
-## 27. Prompt / Skill Design
+LLMが必要なもの:
 
-Authoring methodologyはPromptへ巨大に埋め込むのではなく、元Repoと同様Skillへ分離する。
+- Candidate extraction
+- semantic identity判断
+- UPDATE vs REINFORCE vs CONFLICT
+- narrative synthesis
+- relation prose
 
-推奨:
+これによりAgentにすべてを丸投げしない。
 
-```text
-skills/project-knowledge-authoring/
-  SKILL.md
-  references/
-    knowledge-model.md
-    reconciliation.md
-    provenance.md
-    lifecycle.md
-    review-rules.md
-    source-adapters.md
-```
+## 24. Managed KBのHarvest利用
 
-PromptにはRuntime factsと現在のTaskだけを渡す。
+Managed KBは主にConsumerのRaw Evidence Retrievalだが、Harvest Reviewerが追加Evidenceを必要とする場合にも利用可能。
 
-## 28. Observability
+ただし、HarvestのCanonical provenanceは最終的にOKF`sources`へ固定する。
 
-Traceで最低限以下を見えるようにする。
+## 25. E2E Test Scenario
 
-```text
-source_id
-project
-candidate count
-existing candidate ids
-reconciliation action
-reconciliation reason / confidence
-created concepts
-updated concepts
-conflicts
-review findings
-publish status
-```
-
-LLM trajectoryだけでなくReconciliation Decisionが監査可能であることが重要。
-
-## 29. Test Strategy
-
-### Unit
-
-- Source Adapter parse
-- stable ID / normalization
-- lifecycle transition
-- reconciliation deterministic rules
-- source dedup
-- frontmatter validation
-
-### Agent / Golden Tests
-
-代表Source Setを固定する。
+Input:
 
 ```text
 Meeting A: Gateway検討
 Meeting B: Gateway採用
-Spec v3: Gateway architecture記載
-Issue: Gateway認証問題
-Meeting C: Gateway撤回
+Architecture Spec: Gateway採用を正式記載
+Issue Report: Gateway認証エラー
+Meeting C: Gateway方針変更
 ```
 
-期待結果:
+Expected:
 
-```text
-Decision Page = 1
-Decision lifecycle preserved
-Sources = all relevant sources
-Artifact link present
-Issue linked
-No duplicate Decision
-Conflict / update correctly classified
-```
+- Meeting ConceptはSource/meeting単位で作成
+- Gateway Decisionは乱造せず同じstable IDを維持
+- Meeting Bでdecision_state active
+- SpecでREINFORCE + sources追加
+- Issueは新Issue Concept + Decision Link
+- Meeting Cで正しいUPDATE / CONFLICT判定
+- OKF statusとbusiness stateが分離
+- generated / verified / stale_afterが規約通り
+- index.md / log.md更新
 
-### E2E
+## 26. Definition of Done
 
-```text
-Source ingest
-→ Harvest
-→ S3 OKF
-→ Link/Backlink
-→ S3 Vectors
-→ Wiki MCP
-→ Gateway
-→ Chat Agent
-→ Managed KB verification
-→ Citation answer
-```
+Harvest移行完了とは、単にProject文書をMarkdown化できることではない。
 
-## 30. Migration Order
-
-```text
-1. Baseline固定
-2. Project Knowledge schema
-3. Source Adapter
-4. Meeting inputでKnowledge extraction
-5. Existing Wiki search
-6. Knowledge Reconciler
-7. Reviewer / safe publish
-8. Document inputを同Pipelineへ追加
-9. S3 Vectors duplicate search確認
-10. Gateway / Chat / Managed KB E2E
-```
-
-MeetingだけでPhase 4〜7を完成させ、その後DocumentAdapterを追加する。
-
-これによりPoCは早く作れる一方、設計はMeeting専用にならない。
-
-## 31. Definition of Done for Harvest Migration
-
-Harvest改修の完成条件:
-
-- [ ] Source Adapter abstractionがある
-- [ ] Meeting以外のDocumentも同じNormalized Evidenceへ変換できる
-- [ ] Project Knowledge Candidateを抽出できる
-- [ ] Existing Wikiを必ず検索する
-- [ ] CREATE / UPDATE / REINFORCE / CONFLICT / IGNOREを判定する
-- [ ] Decision / Requirement等のLifecycleを保持する
-- [ ] Duplicate Pageを抑制する
-- [ ] Source provenance / locatorを保持する
-- [ ] Linkを生成する
-- [ ] Reviewerがhallucination / duplicate / conflictを検査する
-- [ ] Harvest失敗でpublished Wikiを壊さない
-- [ ] Reconciliation DecisionをTraceできる
-
-## 32. Final Principle
-
-> **議事録をWiki化するのではなく、Project SourceをEvidenceとして読み、既存Knowledgeと照合しながらProjectの「現在の理解」を継続編集する。**
-
-このHarvest Reconciliation品質がProject Knowledge Wiki全体の価値を決める。
+> **複数Sourceから抽出したKnowledgeを既存OKF v0.2 Bundleと照合し、同一Knowledgeを継続的にCREATE / UPDATE / REINFORCE / CONFLICT判定し、OKF v0.2のProvenance / Trust / Lifecycle / Freshness / Links / Index / Logを正しく維持してpublishできること。**
