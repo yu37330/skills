@@ -1,8 +1,10 @@
-# Project Knowledge Wiki 実装計画
+# Project Knowledge Wiki 実装計画 — OKF v0.2準拠
 
 > Final: 2026-08-08
 >
 > Base Repo: `aws-samples/sample-okf-llm-wiki`
+>
+> Knowledge Format: **Open Knowledge Format (OKF) v0.2**
 
 ## 1. 実装方針
 
@@ -10,9 +12,8 @@
 
 ```text
 Keep
-  OKF Core
+  S3 Bundle / versioning
   Link / Backlink
-  S3 Bundle
   S3 Vectors
   Reindex pipeline
   Consumption MCP
@@ -25,6 +26,7 @@ Change
   Harvest domain model
   Source access model
   Knowledge reconciliation
+  OKF frontmatter / lifecycle conventions
   UI terminology
   Chat knowledge access
   Authentication integration
@@ -33,6 +35,8 @@ Integrate
   Existing AgentCore Gateway
   Existing Managed KB
 ```
+
+`OKF_V02_PROFILE.md`をKnowledge Format実装の正本とする。
 
 ## 2. Target Architecture
 
@@ -51,7 +55,7 @@ Wiki MCP   Managed KB
  NEW        EXISTING
    │           │
    ▼           ▼
-Project Wiki Raw Evidence
+OKF Wiki    Raw Evidence
    │
  ┌─┴────────────┐
  ▼              ▼
@@ -69,31 +73,33 @@ Normalized Evidence
       ↓
 Knowledge Extraction
       ↓
-Existing Wiki Search
+Existing OKF Search
       ↓
 Knowledge Reconciliation
 CREATE / UPDATE / REINFORCE / CONFLICT / IGNORE
       ↓
-OKF Markdown
+OKF v0.2 Authoring
       ↓
-S3
+Review / Guard
+      ↓
+index.md / log.md update
+      ↓
+S3 Publish
       ↓
 EventBridge → SQS → Reindex Lambda → Titan V2 → S3 Vectors
 ```
 
-## 3. 実装Phase
-
-### Phase 0 — Baseline固定
+## 3. Phase 0 — Baseline固定
 
 目的: 元Repoをそのまま動作させ、変更前の基準を作る。
 
-- upstream commitを固定
+- upstream commit固定
 - LICENSE確認
 - Harvest Runtime確認
 - Consumption MCP Runtime確認
 - Chat Runtime確認
 - S3 Bundle確認
-- S3 Vectors semantic_search確認
+- S3 Vectors `semantic_search`確認
 - Link / Backlink確認
 - DynamoDBSaver確認
 - CloudWatch trace確認
@@ -106,14 +112,44 @@ baseline deployment notes
 baseline smoke test
 ```
 
-### Phase 1 — Project Knowledge Schema
+## 4. Phase 1 — OKF v0.2 Compliance Layer
+
+最初にKnowledge Formatの契約を固定する。
 
 対象:
 
-- `services/okf_core`
-- Harvest skill / prompt
+```text
+services/okf_core
+services/harvest guard / skill
+```
 
-定義:
+実装:
+
+- Concept YAML frontmatter validation
+- non-empty `type`必須
+- `index.md` / `log.md` reserved filename handling
+- root `index.md`の`okf_version: "0.2"`
+- `sources[].resource` validation
+- `generated.by` / `generated.at`
+- `verified` list / bare mapping compatibility
+- actor convention
+- `status: draft|stable|deprecated`
+- `stale_after: YYYY-MM-DD`
+- unknown extension keys preservation
+- v0.1 `timestamp`を新規生成しない
+- body `# Citations`をCanonicalにしない
+
+成果物:
+
+```text
+OKF validator
+OKF fixture set
+canonical Project Knowledge examples
+```
+
+## 5. Phase 2 — Project Knowledge Schema
+
+Project固有Typeを定義する。
 
 ```text
 Project
@@ -127,20 +163,34 @@ Artifact
 Meeting
 ```
 
-作業:
+Project固有fieldはOKF extensionとして設計する。
+
+例:
+
+```yaml
+status: stable
+project_id: project-a
+decision_id: gateway-adoption
+decision_state: active
+```
+
+重要: OKF `status`をBusiness stateとして使わない。
+
+定義:
 
 - stable ID rule
-- lifecycle/status rule
+- business lifecycle rule
+- path / naming rule
+- Markdown Link rule
 - source provenance rule
-- naming/path rule
-- Link rule
-- frontmatter validation
+- stale policy
 
 推奨構成:
 
 ```text
 wiki/
   index.md
+  log.md
   projects/
   topics/
   decisions/
@@ -150,18 +200,14 @@ wiki/
   issues/
   artifacts/
   meetings/
-  entities/
+  references/
 ```
 
-### Phase 2 — Source Adapter Layer
+## 6. Phase 3 — Source Adapter Layer
 
-対象:
+対象: `services/harvest`
 
-```text
-services/harvest
-```
-
-Data Source固有処理をHarvestのKnowledge Logicから分離する。
+Data Source固有処理をKnowledge Logicから分離する。
 
 ```text
 SourceAdapter
@@ -170,16 +216,14 @@ SourceAdapter
   └─ FutureAdapter
 ```
 
-MVP input:
+MVP Input:
 
-```text
-Markdown/Text
-PDF
-DOCX
-PPTX
-```
+- Markdown / Text
+- PDF
+- DOCX
+- PPTX
 
-出力は共通Normalized Evidence。
+共通Normalized Evidence:
 
 ```text
 source_id
@@ -193,17 +237,13 @@ content
 metadata
 ```
 
-### Phase 3 — Project Knowledge Harvest Agent改修
+`source_uri`は最終的にOKF`sources[].resource`へ変換可能であること。
+
+## 7. Phase 4 — Project Knowledge Harvest Agent
 
 **最重要Phase。**
 
-対象:
-
-```text
-services/harvest
-```
-
-Pipeline:
+対象: `services/harvest`
 
 ```text
 Normalized Evidence
@@ -212,22 +252,22 @@ Source Analysis
   ↓
 Knowledge Candidate Extraction
   ↓
-Search Existing Wiki
+Search Existing OKF
   ↓
 Knowledge Reconciliation
   ↓
-Create / Edit Pages
+OKF Authoring
   ↓
-Generate Links
+Link / Index / Log update
   ↓
-Review
+Reviewer
   ↓
-OKF Guard / Lint
+OKF Guard
   ↓
 Publish
 ```
 
-既存の以下は極力残す。
+既存から極力残す:
 
 - deepagents supervisor
 - subagents
@@ -237,17 +277,15 @@ Publish
 - LinkGraph
 - tracing
 
-詳細仕様は`HARVEST_MIGRATION.md`。
+詳細は`HARVEST_MIGRATION.md`。
 
-### Phase 4 — Knowledge Reconciler
-
-Harvestの本丸を独立責務として実装する。
+## 8. Phase 5 — Knowledge Reconciler
 
 入力:
 
 ```text
 Knowledge Candidate
-Existing Wiki Candidates
+Existing OKF Candidates
 Source Evidence
 ```
 
@@ -264,19 +302,71 @@ IGNORE
 判定材料:
 
 - stable ID
-- normalized key/title
+- normalized key / title
 - project
 - type
 - semantic similarity
-- existing links
-- source provenance
-- status/lifecycle
+- links
+- `sources`
+- business lifecycle
+- OKF lifecycle
 
-特にDecision / Requirement / Issueは履歴を保持する。
+### CREATE
 
-### Phase 5 — Grounding / Reviewer変更
+新Concept。生成中は`status: draft`、review成功後`stable`。
 
-元RepoのData grounding:
+### UPDATE
+
+stable IDを維持し本文・extension fieldsを変更。`generated.at`更新。
+
+内容が意味的に変わった場合、古い`verified`を現内容の確認結果として誤利用しない。
+
+### REINFORCE
+
+同一Conceptへ`sources`追加。必要ならverification event追加。
+
+### CONFLICT
+
+自動上書きしない。`review_required: true`等のextensionを付与してReviewへ。
+
+### IGNORE
+
+変更なし。
+
+## 9. Phase 6 — OKF Provenance / Trust / Freshness
+
+Authoring pipelineへ以下を組み込む。
+
+### Provenance
+
+```yaml
+sources:
+  - id: source-key
+    resource: /path-or-uri
+```
+
+重要claimはfootnote labelで`sources[].id`へ結ぶ。
+
+### Trust
+
+```yaml
+generated:
+  by: project-knowledge-harvest/1.0
+  at: ...
+verified:
+  - by: process:project-knowledge-reviewer
+    at: ...
+```
+
+### Freshness
+
+```yaml
+stale_after: YYYY-MM-DD
+```
+
+## 10. Phase 7 — Reviewer / Grounding変更
+
+元Repo:
 
 ```text
 Glue metadata
@@ -284,26 +374,61 @@ run_sql
 sample_rows
 ```
 
-をProject Evidence groundingへ変更する。
+To-Be:
 
 ```text
 source text
 source metadata
-existing Wiki
+existing OKF Wiki
 Managed KB retrieval when needed
 ```
 
-Reviewer確認:
+Reviewer checks:
 
 - Sourceにない事実を作っていない
 - Duplicateを作っていない
-- 既存Knowledgeを誤上書きしていない
+- Existing Knowledgeを誤上書きしていない
 - Conflictを隠していない
-- Source provenanceがある
-- Linkが有効
-- required frontmatterがある
+- `type`がある
+- `sources[].resource`がある
+- `generated`がある
+- `status`がOKF値だけ
+- Business stateがextensionへ分離
+- Linkが妥当
+- claim attributionが妥当
+- `index.md` / `log.md`が整合
 
-### Phase 6 — Source / Control API変更
+## 11. Phase 8 — `index.md` / `log.md`
+
+Harvest publish時に関連scopeを更新する。
+
+### Root index
+
+```yaml
+---
+okf_version: "0.2"
+---
+```
+
+root以外の`index.md`はfrontmatterなし。
+
+### Index body
+
+Concept / subdirectoryのTitle + descriptionを一覧化し、progressive disclosureに利用する。
+
+### Log
+
+```markdown
+# Directory Update Log
+
+## 2026-08-08
+* **Update**: ...
+* **Creation**: ...
+```
+
+newest first。
+
+## 12. Phase 9 — Source / Control API変更
 
 対象:
 
@@ -322,9 +447,7 @@ Glue change event
 → Document / Source update event
 ```
 
-MVPではSource Connectorを増やしすぎない。
-
-### Phase 7 — S3 Vectors維持確認
+## 13. Phase 10 — S3 Vectors維持確認
 
 対象:
 
@@ -334,9 +457,7 @@ services/okf_core/src/okf_core/embedding.py
 services/okf_aws/src/okf_aws/embeddings.py
 ```
 
-原則変更しない。
-
-維持:
+原則維持:
 
 - Titan Text Embeddings V2
 - 512 dimensions
@@ -347,19 +468,15 @@ services/okf_aws/src/okf_aws/embeddings.py
 - sequencer dedup
 - retry / DLQ
 
-互換性を優先し、既存`dataset`をProject相当として利用する案を第一候補とする。
+`index.md` / `log.md`をVector Conceptとして扱わない。
 
-必要ならmetadataだけProject Knowledge向けに拡張する。
+互換性優先で既存`dataset`をProject相当として利用する案を第一候補とする。
 
-### Phase 8 — Consumption MCP Project Knowledge対応
+## 14. Phase 11 — Consumption MCP OKF対応
 
-対象:
+対象: `services/consumption_mcp`
 
-```text
-services/consumption_mcp
-```
-
-基本Toolを残す。
+基本Toolは残す。
 
 ```text
 list_domains
@@ -371,9 +488,17 @@ get_backlinks
 semantic_search
 ```
 
-変更は主にTool description / terminology / Project Knowledge path理解。
+追加対応:
 
-### Phase 9 — Existing AgentCore Gateway統合
+- Project terminology
+- unknown Type / extension tolerance
+- `verified` bare mapping compatibility
+- `status: deprecated` awareness
+- `stale_after` awareness
+- trust tier derivation
+- `sources`をEvidence Bridgeとして返却可能にする
+
+## 15. Phase 12 — Existing AgentCore Gateway統合
 
 新規Gatewayは作らない。
 
@@ -383,23 +508,16 @@ Existing AgentCore Gateway
    └─ Wiki MCP Target  ← ADD
 ```
 
-作業:
+確認:
 
-- Consumption MCP Runtime endpoint確認
-- Gateway Target登録
-- Tool discovery確認
-- IAM / auth確認
-- CloudWatch trace確認
+- Tool discovery
+- IAM / auth
+- namespace
+- trace
 
-成功条件: 同じGateway endpointからWiki ToolとManaged KB Toolを発見できること。
+## 16. Phase 13 — Chat AgentをGatewayへ変更
 
-### Phase 10 — Chat AgentをGatewayへ変更
-
-対象:
-
-```text
-services/chat
-```
+対象: `services/chat`
 
 Current:
 
@@ -413,9 +531,7 @@ To-Be:
 
 ```text
 Chat Agent
-  ↓
-MCP client
-  ↓
+  ↓ MCP client
 Existing AgentCore Gateway
   ├─ Wiki MCP
   └─ Managed KB
@@ -436,40 +552,34 @@ Existing AgentCore Gateway
 - namespace handling
 - routing prompt
 - citation handling
+- trust / stale / deprecated handling
 - Gateway error handling
 
-### Phase 11 — Query Routing Prompt
-
-Chat Agent System PromptへPolicyを追加する。
+## 17. Phase 14 — Query Routing
 
 ```text
 Use Wiki when:
 - current project state
-- current decision
+- decisions / requirements
+- actions / issues / risks
 - topic summary
-- action / issue / risk
 - relationships
 
 Use Managed KB when:
-- exact source wording
+- exact wording
 - evidence
 - citation
 - exact number
 - raw detail
 
-For important factual answers:
+Important factual answer:
 1. understand with Wiki
-2. verify with Managed KB
-3. answer with source citation
+2. inspect OKF provenance/trust/freshness
+3. verify with Managed KB
+4. answer with source citation
 ```
 
-### Phase 12 — UI変更
-
-対象:
-
-```text
-ui/
-```
+## 18. Phase 15 — UI
 
 変更:
 
@@ -491,11 +601,16 @@ Dataset Browser
 - Chat panel
 - Harvest status
 
-MeetingはProject Knowledge内の1 Viewとして扱う。
+段階導入:
 
-### Phase 13 — E2E / Evaluation
+- trust badge
+- stale warning
+- deprecated indication
+- source provenance
 
-代表Source Setを作る。
+## 19. Phase 16 — E2E Evaluation
+
+代表Source Set:
 
 ```text
 Meeting A: Gatewayを検討
@@ -505,133 +620,82 @@ Issue: Gateway認証エラー
 Meeting C: Gateway案を変更/撤回
 ```
 
-代表Questions:
+評価:
 
-```text
-Q1. Projectの現在のDecisionは？
-Q2. Gateway採用の経緯は？
-Q3. そのDecisionの根拠Sourceは？
-Q4. 仕様書ではどう定義されている？
-Q5. Gateway関連のIssueは？
-Q6. 未完了Actionは？
-Q7. 過去Decisionから何が変わった？
-```
-
-評価軸:
-
+- OKF conformance
 - extraction accuracy
 - duplicate rate
 - reconciliation accuracy
-- lifecycle correctness
-- conflict detection
+- business lifecycle correctness
+- OKF lifecycle correctness
+- provenance completeness
+- verification correctness
+- stale behavior
 - link correctness
 - semantic search recall
 - evidence retrieval
 - citation correctness
 - answer faithfulness
-- latency
-- cost
+- latency / cost
 
-## 4. Component Change Map
+## 20. Component Change Map
 
 | Component | 方針 | 改修量 |
 |---|---|---:|
-| `services/harvest` | Project Knowledge化 | **大** |
-| `services/okf_core` | schema / lifecycle追加 | 中 |
+| `services/harvest` | Project Knowledge / OKF v0.2 Producer化 | **大** |
+| `services/okf_core` | OKF v0.2 validation + extension schema | 中〜大 |
 | `services/control_api` | project/source化 | 中 |
 | `services/incremental` | source update化 | 中 |
 | `services/reindex` | 原則維持 | 小 |
-| `services/consumption_mcp` | terminology / Gateway | 小〜中 |
-| `services/chat` | direct tools → Gateway | 中 |
+| `services/consumption_mcp` | OKF consumer + Gateway | 中 |
+| `services/chat` | Gateway + trust/citation | 中 |
 | `infra/durable` | 基本維持 / Cognito整理 | 小〜中 |
 | `infra/compute` | Existing Gateway integration | 中 |
 | `ui` | Project Knowledge UI | 中 |
 
-## 5. AWS Environment
-
-### Existing
-
-```text
-Fargate Front
-Application Authentication
-AgentCore Gateway
-Managed Knowledge Base
-```
-
-### Base Repoから利用
-
-```text
-AgentCore Runtime: Harvest
-AgentCore Runtime: Consumption MCP
-AgentCore Runtime: Chat
-S3 Bundle
-S3 Vectors
-DynamoDB
-EventBridge
-SQS
-Lambda
-Bedrock Titan Embeddings
-Bedrock Foundation Models
-CloudWatch / OTEL
-```
-
-### New configuration
-
-```text
-Existing Gateway
-  + Wiki MCP Target
-```
-
-## 6. MVP Day Plan
+## 21. MVP Day Plan
 
 ### Day 1
-
-- Baseline起動
-- Project Knowledge schema
-- Source Adapter contract
+- Baseline
+- OKF v0.2 validator
+- canonical fixtures
 
 ### Day 2
-
+- Project Knowledge schema
+- Source Adapter contract
 - Meeting / Document Adapter
-- Knowledge Candidate extraction
 
 ### Day 3
-
+- Candidate extraction
 - Knowledge Reconciler
-- Decision / Requirement lifecycle
-- Source provenance
+- lifecycle split
 
 ### Day 4
-
-- Action / Risk / Issue / Artifact
-- Link / Backlink
+- provenance / trust / freshness
+- Link / index / log
 - Reviewer / Guard
 
 ### Day 5
-
 - S3 Vectors確認
-- Consumption MCP Project Knowledge対応
-- Existing GatewayへWiki MCP Target追加
+- Consumption MCP OKF対応
+- Existing GatewayへWiki MCP Target
 
 ### Day 6
-
 - Chat Agent Gateway接続
 - Wiki + Managed KB routing
 - Citation
 
 ### Day 7〜8
-
-- UI調整
+- UI
 - duplicate / conflict改善
 - trace / error handling
 
 ### Day 9〜10
-
+- OKF compliance test
 - E2E evaluation
-- hardening
-- internal demo / documentation
+- hardening / demo
 
-## 7. Estimate
+## 22. Estimate
 
 ```text
 PoC                    3〜5営業日
@@ -639,11 +703,9 @@ Internal MVP           5〜10営業日
 Production hardening   3〜6週間
 ```
 
-最大の不確実性はInfrastructureではなく、**Knowledge Reconciliation品質**。
+最大の不確実性はInfrastructureではなく、**Knowledge Reconciliation品質とOKF lifecycle / provenanceの正しい維持**。
 
-## 8. Do Not Optimize Early
-
-MVPで先にやらないもの:
+## 23. Do Not Optimize Early
 
 - DynamoDB Vector migration
 - AgentCore Memory
@@ -654,30 +716,22 @@ MVPで先にやらないもの:
 - automatic conflict resolution
 - complex approval workflow
 
-## 9. Recommended Development Order
+## 24. Recommended Order
 
 ```text
-1. 元Repoをそのまま動かす
-       ↓
-2. Source Adapter + Project Knowledge Schema
-       ↓
-3. HarvestをProject Knowledge化
-       ↓
-4. Knowledge Reconcilerを完成させる
-       ↓
-5. Wiki Retrievalが壊れていないことを確認
-       ↓
-6. Existing GatewayへWiki MCP追加
-       ↓
-7. Chat AgentをGatewayへ接続
-       ↓
-8. Existing Managed KBとのHybrid回答
-       ↓
-9. UI / Evaluation
+1. Baseline
+2. OKF v0.2 Compliance Layer
+3. Project Knowledge Schema
+4. Source Adapter
+5. Harvest + Reconciler
+6. Provenance / Trust / Freshness / Index / Log
+7. Wiki Retrieval回帰確認
+8. GatewayへWiki MCP追加
+9. Chat Agent Gateway接続
+10. Managed KB Hybrid Answer
+11. UI / Evaluation
 ```
 
-## 10. Final Implementation Principle
+## 25. Final Principle
 
-> **元Repoの「Knowledgeを保存・Link・Semanticに探す」部分は残し、Harvestの知能を「Data理解」から「Project Knowledge Compilation / Reconciliation」へ置き換える。既存Gateway / Managed KBはKnowledge Access / Evidence側へ接続する。**
-
-この順序なら議事録からPoCを始めても、議事録専用アーキテクチャにならない。
+> **Harvestの知能をData理解からProject Knowledge Compilation / Reconciliationへ置き換え、その出力契約をOKF v0.2へ固定する。既存S3 VectorsはOKF発見、Managed KBはRaw Evidence、Existing GatewayはUnified Knowledge Accessとして利用する。**
