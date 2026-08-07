@@ -1,4 +1,4 @@
-# LLM Wiki / 議事録Wiki 実装計画
+# Project Knowledge Wiki 実装計画
 
 > Final: 2026-08-08
 >
@@ -6,7 +6,7 @@
 
 ## 1. 実装方針
 
-今回の基本方針は、元Repoの完成度が高い部分を壊さず、Data Wiki固有部分だけを差し替えること。
+元Repoの完成度が高い部分を壊さず、Data Wiki固有部分だけをProject Knowledge向けへ差し替える。
 
 ```text
 Keep
@@ -23,6 +23,8 @@ Keep
 
 Change
   Harvest domain model
+  Source access model
+  Knowledge reconciliation
   UI terminology
   Chat knowledge access
   Authentication integration
@@ -49,7 +51,7 @@ Wiki MCP   Managed KB
  NEW        EXISTING
    │           │
    ▼           ▼
-OKF Wiki    Raw Evidence
+Project Wiki Raw Evidence
    │
  ┌─┴────────────┐
  ▼              ▼
@@ -59,13 +61,18 @@ Links        S3 Vectors
 生成側:
 
 ```text
-Meeting / Docs
+Project Sources
       ↓
-Harvest Agent
+Source Adapter
+      ↓
+Normalized Evidence
+      ↓
+Knowledge Extraction
       ↓
 Existing Wiki Search
       ↓
-create / update / reinforce / conflict
+Knowledge Reconciliation
+CREATE / UPDATE / REINFORCE / CONFLICT / IGNORE
       ↓
 OKF Markdown
       ↓
@@ -82,7 +89,6 @@ EventBridge → SQS → Reindex Lambda → Titan V2 → S3 Vectors
 
 - upstream commitを固定
 - LICENSE確認
-- Terraform構成確認
 - Harvest Runtime確認
 - Consumption MCP Runtime確認
 - Chat Runtime確認
@@ -100,38 +106,54 @@ baseline deployment notes
 baseline smoke test
 ```
 
-### Phase 1 — Meeting Wiki Schema
+### Phase 1 — Project Knowledge Schema
 
 対象:
 
 - `services/okf_core`
 - Harvest skill / prompt
 
+定義:
+
+```text
+Project
+Topic
+Decision
+Requirement
+Action
+Risk
+Issue
+Artifact
+Meeting
+```
+
 作業:
 
-- Meeting / Topic / Decision / Action / Risk schema定義
 - stable ID rule
+- lifecycle/status rule
 - source provenance rule
-- status rule
 - naming/path rule
 - Link rule
+- frontmatter validation
 
-推奨Wiki構成:
+推奨構成:
 
 ```text
 wiki/
   index.md
-  overview.md
-  meetings/
+  projects/
   topics/
   decisions/
+  requirements/
   actions/
   risks/
-  projects/
+  issues/
+  artifacts/
+  meetings/
   entities/
 ```
 
-### Phase 2 — Harvest Agent改修
+### Phase 2 — Source Adapter Layer
 
 対象:
 
@@ -139,48 +161,68 @@ wiki/
 services/harvest
 ```
 
-最重要Phase。
-
-現在:
+Data Source固有処理をHarvestのKnowledge Logicから分離する。
 
 ```text
-Glue / Athena / Redshift
+SourceAdapter
+  ├─ MeetingAdapter
+  ├─ DocumentAdapter
+  └─ FutureAdapter
 ```
 
-から、
+MVP input:
 
 ```text
-DocumentSource interface
-  ├─ Markdown/Text
-  ├─ PDF
-  ├─ DOCX
-  └─ PPTX
+Markdown/Text
+PDF
+DOCX
+PPTX
 ```
 
-へ変更する。
+出力は共通Normalized Evidence。
+
+```text
+source_id
+source_type
+project
+source_uri
+title
+occurred_at / created_at
+author / participants
+content
+metadata
+```
+
+### Phase 3 — Project Knowledge Harvest Agent改修
+
+**最重要Phase。**
+
+対象:
+
+```text
+services/harvest
+```
 
 Pipeline:
 
 ```text
-Source
+Normalized Evidence
   ↓
-Parse
+Source Analysis
   ↓
-Classify
+Knowledge Candidate Extraction
   ↓
-Extract candidate knowledge
+Search Existing Wiki
   ↓
-Search existing Wiki
+Knowledge Reconciliation
   ↓
-Duplicate / Conflict detection
+Create / Edit Pages
   ↓
-Create / Edit pages
-  ↓
-Generate links
-  ↓
-Guard / lint
+Generate Links
   ↓
 Review
+  ↓
+OKF Guard / Lint
   ↓
 Publish
 ```
@@ -195,7 +237,73 @@ Publish
 - LinkGraph
 - tracing
 
-### Phase 3 — Source / Control API変更
+詳細仕様は`HARVEST_MIGRATION.md`。
+
+### Phase 4 — Knowledge Reconciler
+
+Harvestの本丸を独立責務として実装する。
+
+入力:
+
+```text
+Knowledge Candidate
+Existing Wiki Candidates
+Source Evidence
+```
+
+出力:
+
+```text
+CREATE
+UPDATE
+REINFORCE
+CONFLICT
+IGNORE
+```
+
+判定材料:
+
+- stable ID
+- normalized key/title
+- project
+- type
+- semantic similarity
+- existing links
+- source provenance
+- status/lifecycle
+
+特にDecision / Requirement / Issueは履歴を保持する。
+
+### Phase 5 — Grounding / Reviewer変更
+
+元RepoのData grounding:
+
+```text
+Glue metadata
+run_sql
+sample_rows
+```
+
+をProject Evidence groundingへ変更する。
+
+```text
+source text
+source metadata
+existing Wiki
+Managed KB retrieval when needed
+```
+
+Reviewer確認:
+
+- Sourceにない事実を作っていない
+- Duplicateを作っていない
+- 既存Knowledgeを誤上書きしていない
+- Conflictを隠していない
+- Source provenanceがある
+- Linkが有効
+- required frontmatterがある
+
+### Phase 6 — Source / Control API変更
 
 対象:
 
@@ -211,14 +319,12 @@ Dataset registration
 → Project / Source registration
 
 Glue change event
-→ Document / S3 source update event
+→ Document / Source update event
 ```
 
-MVPではSource種類を増やしすぎない。
+MVPではSource Connectorを増やしすぎない。
 
-最初はS3上のMarkdown/PDF/DOCX/PPTXで十分。
-
-### Phase 4 — S3 Vectors維持確認
+### Phase 7 — S3 Vectors維持確認
 
 対象:
 
@@ -228,7 +334,7 @@ services/okf_core/src/okf_core/embedding.py
 services/okf_aws/src/okf_aws/embeddings.py
 ```
 
-基本的には変更しない。
+原則変更しない。
 
 維持:
 
@@ -241,30 +347,11 @@ services/okf_aws/src/okf_aws/embeddings.py
 - sequencer dedup
 - retry / DLQ
 
-必要ならMetadataのみ拡張する。
+互換性を優先し、既存`dataset`をProject相当として利用する案を第一候補とする。
 
-既存:
+必要ならmetadataだけProject Knowledge向けに拡張する。
 
-```text
-data_domain
-dataset
-table
-type
-tags
-```
-
-MVP案:
-
-```text
-data_domain
-dataset (= project)
-type
-tags
-```
-
-互換性を優先し、`dataset`をProjectとして使えばreindex変更を最小化できる。
-
-### Phase 5 — Consumption MCP Meeting対応
+### Phase 8 — Consumption MCP Project Knowledge対応
 
 対象:
 
@@ -272,7 +359,7 @@ tags
 services/consumption_mcp
 ```
 
-既存Toolを基本的に残す。
+基本Toolを残す。
 
 ```text
 list_domains
@@ -284,27 +371,16 @@ get_backlinks
 semantic_search
 ```
 
-変更は主にTool description / terminology。
+変更は主にTool description / terminology / Project Knowledge path理解。
 
-Data Wiki固有説明をMeeting Wikiへ置き換える。
-
-### Phase 6 — Existing AgentCore Gateway統合
+### Phase 9 — Existing AgentCore Gateway統合
 
 新規Gatewayは作らない。
-
-既存構成:
-
-```text
-Existing AgentCore Gateway
-   └─ Existing Managed KB Target
-```
-
-変更後:
 
 ```text
 Existing AgentCore Gateway
    ├─ Existing Managed KB Target
-   └─ Wiki MCP Target
+   └─ Wiki MCP Target  ← ADD
 ```
 
 作業:
@@ -315,11 +391,9 @@ Existing AgentCore Gateway
 - IAM / auth確認
 - CloudWatch trace確認
 
-成功条件:
+成功条件: 同じGateway endpointからWiki ToolとManaged KB Toolを発見できること。
 
-同じGateway endpointからWiki ToolとManaged KB Toolを発見できること。
-
-### Phase 7 — Chat AgentをGatewayへ変更
+### Phase 10 — Chat AgentをGatewayへ変更
 
 対象:
 
@@ -327,7 +401,7 @@ Existing AgentCore Gateway
 services/chat
 ```
 
-現在:
+Current:
 
 ```text
 Chat Agent
@@ -347,28 +421,34 @@ Existing AgentCore Gateway
   └─ Managed KB
 ```
 
-主な変更:
+維持:
+
+- LangGraph
+- model factory
+- DynamoDBSaver
+- SSE / FastAPI
+- thread handling
+
+変更:
 
 - Gateway MCP client
 - Tool discovery
-- Tool naming / namespace handling
-- Routing prompt
-- Citation response handling
+- namespace handling
+- routing prompt
+- citation handling
 - Gateway error handling
 
-Chat AgentのLangGraph / DynamoDBSaver / SSE部分は維持する。
+### Phase 11 — Query Routing Prompt
 
-### Phase 8 — Query Routing Prompt
-
-Chat AgentのSystem Promptに以下のPolicyを追加する。
+Chat Agent System PromptへPolicyを追加する。
 
 ```text
 Use Wiki when:
+- current project state
 - current decision
-- project state
-- relationships
 - topic summary
-- action status
+- action / issue / risk
+- relationships
 
 Use Managed KB when:
 - exact source wording
@@ -383,7 +463,7 @@ For important factual answers:
 3. answer with source citation
 ```
 
-### Phase 9 — UI変更
+### Phase 12 — UI変更
 
 対象:
 
@@ -398,10 +478,10 @@ Domains / Datasets
 → Projects / Sources
 
 Data Harvest
-→ Meeting Harvest
+→ Knowledge Harvest
 
 Dataset Browser
-→ Wiki Browser
+→ Project Knowledge Browser
 ```
 
 維持:
@@ -411,32 +491,42 @@ Dataset Browser
 - Chat panel
 - Harvest status
 
-既存Fargate Front / Authに合わせてCognito依存を外す。
+MeetingはProject Knowledge内の1 Viewとして扱う。
 
-### Phase 10 — E2E / Evaluation
+### Phase 13 — E2E / Evaluation
 
-代表Question Setを作る。
-
-例:
+代表Source Setを作る。
 
 ```text
-Q1. 今回の会議で何が決まった？
-Q2. Project Aの現在のDecisionは？
-Q3. このDecisionの根拠は？
-Q4. 過去のDecisionから何が変わった？
-Q5. 未完了Actionは？
-Q6. このTopicに関連するMeetingは？
-Q7. 原文ではどう書かれていた？
+Meeting A: Gatewayを検討
+Meeting B: Gatewayを採用
+Architecture Spec: Gateway経由でKBとWiki MCPを利用
+Issue: Gateway認証エラー
+Meeting C: Gateway案を変更/撤回
+```
+
+代表Questions:
+
+```text
+Q1. Projectの現在のDecisionは？
+Q2. Gateway採用の経緯は？
+Q3. そのDecisionの根拠Sourceは？
+Q4. 仕様書ではどう定義されている？
+Q5. Gateway関連のIssueは？
+Q6. 未完了Actionは？
+Q7. 過去Decisionから何が変わった？
 ```
 
 評価軸:
 
-- Knowledge extraction accuracy
+- extraction accuracy
 - duplicate rate
+- reconciliation accuracy
+- lifecycle correctness
 - conflict detection
 - link correctness
 - semantic search recall
-- raw evidence retrieval
+- evidence retrieval
 - citation correctness
 - answer faithfulness
 - latency
@@ -446,16 +536,16 @@ Q7. 原文ではどう書かれていた？
 
 | Component | 方針 | 改修量 |
 |---|---|---:|
-| `services/harvest` | Meeting Wiki化 | 大 |
-| `services/okf_core` | schema追加 | 中 |
-| `services/control_api` | source/project化 | 中 |
-| `services/incremental` | document update化 | 中 |
+| `services/harvest` | Project Knowledge化 | **大** |
+| `services/okf_core` | schema / lifecycle追加 | 中 |
+| `services/control_api` | project/source化 | 中 |
+| `services/incremental` | source update化 | 中 |
 | `services/reindex` | 原則維持 | 小 |
 | `services/consumption_mcp` | terminology / Gateway | 小〜中 |
 | `services/chat` | direct tools → Gateway | 中 |
 | `infra/durable` | 基本維持 / Cognito整理 | 小〜中 |
 | `infra/compute` | Existing Gateway integration | 中 |
-| `ui` | Meeting Wiki terminology | 中 |
+| `ui` | Project Knowledge UI | 中 |
 
 ## 5. AWS Environment
 
@@ -497,38 +587,42 @@ Existing Gateway
 ### Day 1
 
 - Baseline起動
-- Meeting schema
-- Source input固定
+- Project Knowledge schema
+- Source Adapter contract
 
 ### Day 2
 
-- Harvest Agent Meeting対応
-- Meeting / Topic / Decision抽出
+- Meeting / Document Adapter
+- Knowledge Candidate extraction
 
 ### Day 3
 
-- Action / Risk
-- Existing Wiki update
-- Link / Backlink
-- S3 Vectors確認
+- Knowledge Reconciler
+- Decision / Requirement lifecycle
+- Source provenance
 
 ### Day 4
 
-- Consumption MCP Meeting対応
-- Existing GatewayへWiki MCP Target追加
-- GatewayからManaged KB + Wiki Tool確認
+- Action / Risk / Issue / Artifact
+- Link / Backlink
+- Reviewer / Guard
 
 ### Day 5
 
-- Chat Agent Gateway接続
-- Routing Prompt
-- Wiki + Raw Evidence E2E
+- S3 Vectors確認
+- Consumption MCP Project Knowledge対応
+- Existing GatewayへWiki MCP Target追加
 
-### Day 6〜8
+### Day 6
+
+- Chat Agent Gateway接続
+- Wiki + Managed KB routing
+- Citation
+
+### Day 7〜8
 
 - UI調整
-- conflict / duplicate改善
-- Citation
+- duplicate / conflict改善
 - trace / error handling
 
 ### Day 9〜10
@@ -540,12 +634,12 @@ Existing Gateway
 ## 7. Estimate
 
 ```text
-PoC                 3〜5営業日
-Internal MVP        5〜10営業日
-Production hardening 3〜6週間
+PoC                    3〜5営業日
+Internal MVP           5〜10営業日
+Production hardening   3〜6週間
 ```
 
-最大の不確実性はInfrastructureではなくHarvest品質。
+最大の不確実性はInfrastructureではなく、**Knowledge Reconciliation品質**。
 
 ## 8. Do Not Optimize Early
 
@@ -565,23 +659,25 @@ MVPで先にやらないもの:
 ```text
 1. 元Repoをそのまま動かす
        ↓
-2. HarvestだけMeeting Wiki化
+2. Source Adapter + Project Knowledge Schema
        ↓
-3. Wiki Retrievalが壊れていないことを確認
+3. HarvestをProject Knowledge化
        ↓
-4. Existing GatewayへWiki MCP追加
+4. Knowledge Reconcilerを完成させる
        ↓
-5. Chat AgentをGatewayへ接続
+5. Wiki Retrievalが壊れていないことを確認
        ↓
-6. Existing Managed KBとのHybrid回答
+6. Existing GatewayへWiki MCP追加
        ↓
-7. UI / Evaluation
+7. Chat AgentをGatewayへ接続
+       ↓
+8. Existing Managed KBとのHybrid回答
+       ↓
+9. UI / Evaluation
 ```
-
-最初から全レイヤーを同時に改修しない。特にS3 Vectors / reindexは完成度が高いため、Harvest改修と切り離して扱う。
 
 ## 10. Final Implementation Principle
 
-> **元Repoの「Knowledgeを作る・Linkする・Semanticに探す」部分は残し、社内の既存Gateway / Managed KBを「Knowledge Access / Evidence」側へ接続する。**
+> **元Repoの「Knowledgeを保存・Link・Semanticに探す」部分は残し、Harvestの知能を「Data理解」から「Project Knowledge Compilation / Reconciliation」へ置き換える。既存Gateway / Managed KBはKnowledge Access / Evidence側へ接続する。**
 
-これにより改修範囲をHarvest中心へ集中できる。
+この順序なら議事録からPoCを始めても、議事録専用アーキテクチャにならない。
