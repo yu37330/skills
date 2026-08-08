@@ -286,17 +286,90 @@ Thin Ontology / Typed Relations / GraphRAG。必要な場合のみ。
 - 新規Custom Vector DB
 - 新規Custom RAG Platform
 
-## 11. 最終ドキュメント
+## 11. Writer Architecture Update — OpenWiki Brainsを追加Writerとして採用
+
+2026-08-08のArchitecture Decisionとして、AWS Harvest Agentを全面的にProject Knowledge Harvestへ置き換えるのではなく、**OpenWiki Brainsを議事録・Project Knowledge用の追加Writerとして導入する**方針を採用する。
+
+```text
+                    Writer Layer
+
+        ┌──────────────────────────────┐
+        │                              │
+        ▼                              ▼
+OpenWiki Brains                 AWS Harvest Agent
+Meeting / Project               Engineering Data
+Knowledge Writer                Knowledge Writer
+        │                              │
+        └──────────────┬───────────────┘
+                       ▼
+                  OKF Adapter
+                       ▼
+              Canonical OKF v0.2
+                       ▼
+                      S3
+                       ▼
+       Link / Backlink + S3 Vectors
+                       ▼
+                     MCP
+                       ▼
+                   Common UI
+                       ▼
+                Consumer Agent
+```
+
+正式な設計原則:
+
+> **OKFを共通契約にし、Writerはプラガブルにする。**
+
+役割分担:
+
+```text
+OpenWiki Brains  = 議事録・文書・Project KnowledgeのWiki Authoring Engine
+AWS Harvest      = Glue / Athena / Redshiftを使ったData / Process Knowledge Writer
+OKF Adapter      = Writer固有出力をCanonical OKF v0.2へ正規化
+S3               = Knowledge Source of Truth
+S3 Vectors       = Writer共通Semantic Discovery
+Wiki MCP         = Writer共通Knowledge Access
+AWS UI           = Writer共通Browse / Graph / Search / History
+```
+
+工程データ側ではAWS Harvest Agentの`sample_rows` / `run_sql` / Grain / Join / Gotcha verificationを維持する。OpenWiki Brainsへ完全置換しない。
+
+OpenWiki BrainsはFargate上でlocal filesystemをWorking Copyとして使い、S3からRaw Sourceと前回Wikiを同期し、更新後のOKFをS3へPublishする。
+
+```text
+S3 meeting-raw + meeting-wiki
+          ↓
+Fargate Local Workspace
+          ↓
+OpenWiki Brains
+          ↓
+OKF Adapter / Normalizer
+          ↓
+S3 meeting-wiki
+          ↓
+S3 Vectors / MCP / AWS UI
+```
+
+この境界により、将来OpenWikiまたはOKFのversionが上がっても、原則としてOpenWiki Adapter / OKF Normalizerのみを差し替え、S3以降のStorage / Vector Search / MCP / UIへの影響を抑える。
+
+詳細は [OPENWIKI_WRITER_INTEGRATION.md](./OPENWIKI_WRITER_INTEGRATION.md)。
+
+なお、[HARVEST_MIGRATION.md](./HARVEST_MIGRATION.md) のAWS Harvest全面改修案は、将来Custom Project Knowledge Writerを自作する場合の参考設計として残す。現行PoCでは**OpenWiki Brains追加Writer方式を優先**する。
+
+## 12. 最終ドキュメント
 
 - [FINAL_REPORT.md](./FINAL_REPORT.md) — 最終アーキテクチャ
 - [REQUIREMENTS.md](./REQUIREMENTS.md) — 改修要件
 - [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — 実装計画
-- [HARVEST_MIGRATION.md](./HARVEST_MIGRATION.md) — Harvest本丸の移行仕様
+- [HARVEST_MIGRATION.md](./HARVEST_MIGRATION.md) — Harvest全面改修案 / 将来Custom Writer参考
+- [OPENWIKI_WRITER_INTEGRATION.md](./OPENWIKI_WRITER_INTEGRATION.md) — **OpenWiki Brains追加Writer方針・最新Architecture Decision**
 - [OKF_V02_PROFILE.md](./OKF_V02_PROFILE.md) — **OKF v0.2準拠ルールの正本**
 
-## 12. 参考
+## 13. 参考
 
 - OKF v0.2 Specification: `GoogleCloudPlatform/knowledge-catalog/okf/SPEC.md`
 - Base Repo: `aws-samples/sample-okf-llm-wiki`
+- OpenWiki: `langchain-ai/openwiki`
 
-> **AWS上にOKF v0.2準拠のProject Knowledge Wikiを構築し、Managed KBをRaw Evidence Layer、OKFをCompiled Knowledge Layer、AgentCore GatewayをKnowledge Access Layerとして利用する。**
+> **AWS SampleをOKF Knowledge Platformとして維持し、OpenWiki BrainsとAWS Harvest AgentをプラガブルなWriterとして共存させる。S3以降のLink / Backlink、S3 Vectors、MCP、UIは共通化する。**
